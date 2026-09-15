@@ -900,3 +900,28 @@ h1 {
     transform: translateY(0);
   }
 }
+
+/* ---- Scrape Target Selector (Spinner UI) ---- */
+.scrape-target-container {
+  transition: all 0.2s ease;
+}
+
+.scrape-target-container:hover {
+  border-color: #0056c6 !important;
+  box-shadow: 0 2px 10px rgba(0, 86, 198, 0.1) !important;
+}
+
+#selScrapeTarget {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+#selScrapeTarget:hover {
+  border-color: #0056c6;
+}
+
+#selScrapeTarget:focus {
+  border-color: #0056c6;
+  box-shadow: 0 0 0 3px rgba(0, 86, 198, 0.15);
+}

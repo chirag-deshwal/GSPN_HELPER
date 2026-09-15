@@ -1,0 +1,541 @@
+/*  SamsnugSDS / Kim Eun Seon  */
+/*  Date : 2010-04-12		   */
+
+/*---------- Basic Style ----------*/
+body {
+	overflow-x:auto;
+	overflow-y:auto;
+	scrollbar-3dlight-color: #B4B4B4;
+	scrollbar-arrow-color: #333333;
+	scrollbar-base-color: #ffffff;
+	scrollbar-darkshadow-color: #FFFFFF;
+	scrollbar-face-color: #ffffff;
+	scrollbar-highlight-color: #FFFFFF;
+    scrollbar-shadow-color: #B4B4B4;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	background-position: top;
+} 
+img {border:0}
+
+a:link {
+	color: #002d70;
+	text-decoration: none;
+}
+a:visited {
+	color: #002d70;
+	text-decoration: none;
+}
+a:active {
+	color: #002d70;
+	text-decoration: none;
+}
+a:hover {
+	color: #002d70;
+	text-decoration: underline;
+}
+
+/*---------- site layout 관련 ----------*/
+.lay_pad {
+	padding-left: 20px;
+	height: 100%;
+}
+.top_bg {
+	background-image: url(/img/top_bg.gif);
+	background-repeat: repeat-x;
+	background-position: top;
+	padding-right: 20px;
+	padding-left: 20px;
+}
+
+
+
+/*---------- GNB Global navigation bar 관련 ----------*/
+.gnb {
+	background-image: url(/img/gnb_left.gif);
+	background-repeat: no-repeat;
+	height: 34px;
+	font-family: arial;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFFFFF;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+.gnb_left {
+	background-image: url(/img/gnb.gif);
+	background-repeat: repeat-x;
+	
+}
+.gnb_right {
+	background-image: url(/img/gnb_right.gif);
+	background-repeat: no-repeat;
+	height: 34px;
+	width: 13px;
+}
+.gnb_menu {
+	font-family: arial;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-image: url(/img/gnb_verbar.gif);
+	background-repeat: no-repeat;
+	background-position: right center;
+	padding-right: 25px;
+	padding-left: 25px;
+}
+.gnb_menu a:link {
+	color: #fcff08;
+	text-decoration: none;
+}
+.gnb_menu a:visited {
+	color: #ffffff;
+	text-decoration: none;
+}
+.gnb_menu a:active {
+	color: #ffffff;
+	text-decoration: none;
+}
+.gnb_menu a:hover {
+	color: #fcff08;
+	text-decoration: none;
+}
+/*---------- common menu관련 ----------*/
+.combar_left {
+	background-image: url(/img/combar_left.gif);
+	background-repeat: no-repeat;
+	height: 22px;
+	width: 25px;
+}
+.combar {
+	background-image: url(/img/combar.gif);
+	font-family: arial;
+	font-size: 10px;
+	color: #FFFFFF;
+	background-repeat: repeat-x;	
+	padding-bottom:3px;
+}
+.combar_right {
+	background-image: url(/img/combar_right.gif);
+	background-repeat: no-repeat;
+	height: 22px;
+	width: 25px;
+}
+
+
+/*---------- left navigation layout관련 ----------*/
+
+.lenavi_ti_left {
+	background-image: url(/img/lenavi_title_left.gif);
+	background-repeat: no-repeat;
+	background-position: top;
+	height: 40px;
+	width: 9px;
+}
+.lenavi_ti {
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-image: url(/img/lenavi_title.gif);
+	background-repeat: repeat-x;
+	height: 34px;
+	padding-left: 3px;
+}
+.lenavi_ti_txtR {
+	font-family: Arial;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-image: url(/img/lenavi_title.gif);
+	background-repeat: repeat-x;
+	height: 34px;
+	text-align: right;
+}
+.lenavi_ti_right {
+	background-image: url(/img/lenavi_title_right.gif);
+	background-repeat: no-repeat;
+	background-position: top;
+	width: 9px;
+	height: 40px;
+}
+.left_bg {
+	background-color: #f9f9f9;
+	border-left:#d6d6d6 1px solid;
+	border-right:#d6d6d6 1px solid;
+	padding: 3px 0px;
+}
+.lenavi_bm_left {
+	background-image: url(/img/lenavi_bottom_left.gif);
+	background-repeat: no-repeat;
+	background-position: top;
+	height: 6px;
+	width: 9px;
+}
+.lenavi_bm {
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-image: url(/img/lenavi_bottom.gif);
+	background-repeat: repeat-x;
+}
+.lenavi_bm_right {
+	background-image: url(/img/lenavi_bottom_right.gif);
+	background-repeat: no-repeat;
+	background-position: top;
+	height: 6px;
+	width: 9px;
+}
+.lenavi_arrow {
+	background-position: center;
+}
+
+/*---------- left menu관련 ----------*/
+.inb_01 {
+	font-family: arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #666666;
+	background-image: url(/img/lnb_bul_out_1dep.gif);
+	background-repeat: no-repeat;
+	padding: 5px 5px 5px 24px;
+	background-position: left center;
+	border-bottom-width : 95%;
+   border-color : #F5F5F5;
+   border-style; soild;
+	
+}
+.inb_01 a:link {
+	color: #666666;
+	text-decoration: none;
+}
+.inb_01 a:visited {
+	color: #666666;
+	text-decoration: none;
+}
+.inb_01 a:active {
+	color: #666666;
+	text-decoration: none;
+}
+.inb_01 a:hover {
+	color: #0066cc;
+	text-decoration: none;
+}
+.inb_01_ov {
+	font-family: arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #0066cc;
+	background-image: url(/img/lnb_bul_over_1dep.gif);
+	background-repeat: no-repeat;
+	padding: 5px 5px 5px 24px;
+	background-position: left center;
+	
+}
+.inb_01_ov  a:link {
+	color: #0066cc;
+	text-decoration: none;
+}
+.inb_01_ov  a:visited {
+	color: #0066cc;
+	text-decoration: none;
+}
+.inb_01_ov  a:active {
+	color: #0066cc;
+	text-decoration: none;
+}
+.inb_01_ov  a:hover {
+	color: #0066cc;
+	text-decoration: none;
+}
+.inb_02 {
+	font-family: arial;
+	font-size: 11px;
+	font-weight: bold;
+	color: #444444;
+	background-image: url(/img/lnb_bul_out_2dep.gif);
+	background-repeat: no-repeat;
+	padding: 3px 3px 3px 30px;
+	background-position: left center;
+}
+.inb_02 a:link {
+	color: #444444;
+	text-decoration: none;
+}
+.inb_02 a:visited {
+	color: #444444;
+	text-decoration: none;
+}
+.inb_02 a:active {
+	color: #444444;
+	text-decoration: none;
+}
+.inb_02 a:hover {
+	color: #2188d2;
+	text-decoration: none;
+}
+
+.inb_02_ov {
+	font-family: arial;
+	font-size: 11px;
+	font-weight: bold;
+	color: #2188d2;
+	background-image: url(/img/lnb_bul_over_2dep.gif);
+	background-repeat: no-repeat;
+	padding: 3px 3px 3px 30px;
+	background-position: left center;
+}
+.inb_02_ov a:link {
+	color: #2188d2;
+	text-decoration: none;
+}
+.inb_02_ov a:visited {
+	color: #2188d2;
+	text-decoration: none;
+}
+.inb_02_ov a:active {
+	color: #2188d2;
+	text-decoration: none;
+}
+.inb_02_ov a:hover {
+	color: #2188d2;
+	text-decoration: none;
+}
+
+
+.inb_03 {
+	font-family: arial;
+	font-size: 11px;
+	color: #666666;
+	background-image: url(/img/lnb_bul_3dep.gif);
+	background-repeat: no-repeat;
+	padding: 3px 3px 3px 37px;
+	background-position: left center;
+}
+.inb_03 a:link {
+	color: #666666;
+	text-decoration: none;
+}
+.inb_03 a:visited {
+	color: #666666;;
+	text-decoration: none;
+}
+.inb_03 a:active {
+	color: #666666;
+	text-decoration: none;
+}
+.inb_03 a:hover {
+	color: #d37311;
+	text-decoration: none;
+}
+.inb_03_ov {
+	font-family: arial;
+	font-size: 11px;
+	color: #d37311;
+	padding: 3px 3px 3px 37px;
+	background-image: url(/img/lnb_bul_3dep.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	background-color: #e7e7e7;
+}
+.inb_03_ov a:link {
+	color: #d37311;
+	text-decoration: none;
+}
+.inb_03_ov a:visited {
+	color: #d37311;
+	text-decoration: none;
+}
+.inb_03_ov a:active {
+	color: #d37311;
+	text-decoration: none;
+}
+.inb_03_ov a:hover {
+	color: #d37311;
+	text-decoration: none;
+}
+
+
+/*---------- copyright 관련 ----------*/
+.copy {
+	background-image: url(/img/copy.gif);
+	background-repeat: repeat-x;
+	text-align: right;
+	vertical-align: bottom;
+	padding-bottom: 7px;
+	height: 65px;
+}
+.copy_bg {
+	background-image: url(/img/copy_bg.gif);
+	background-repeat: repeat-x;
+	text-align: center;
+	vertical-align: bottom;
+	height: 65px;
+	padding-right: 20px;
+	padding-left: 20px;
+}
+
+/*---------- login 관련 ----------*/
+.login_bg {
+	background-color: #f8f8f8;
+	background-image: url(/img/login_bg.gif);
+	background-repeat: repeat-x;
+	text-align: center;
+}
+.login_topbg {
+	background-image: url(/img/login_img_bg.gif);
+	background-repeat: repeat-x;
+}
+.login_lay {
+	padding-top: 28px;
+	text-align: center;
+}
+
+/*---------- login form 관련 ----------*/
+.log_input {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	background-color: #FFFFFF;
+	border: 1px solid #cccccc;
+	width: 200px;
+}
+
+/*---------- login Box관련 ----------*/
+.loginB_bgL {
+	background-image: url(/img/loginB_01.gif);
+	background-repeat: repeat-x;
+	height: 120px;
+	background-position: center;
+	vertical-align: middle;
+	width: 400px;
+	padding: 15px 15px 15px 30px;
+}
+.loginB_bgR {
+	background-image: url(/img/loginB_02.gif);
+	background-repeat: repeat-x;
+	height: 120px;
+	width: 170px;
+	padding: 15px;
+	vertical-align: top;
+}
+.loginB_brdr {
+	background-image: url(/img/loginB_brdr.gif);
+	background-repeat: no-repeat;
+	height: 120px;
+	width: 1px;
+}
+/*---------- login 텍스트 관련 ----------*/
+.login_txt {
+	font-family: arial;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	padding-right: 5px;
+}
+.txtW {
+	font-family: arial;
+	font-size: 11px;
+	color: #FFFFFF;
+	padding: 3px;
+}
+.txtW a:link {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.txtW a:visited {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.txtW a:active {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.txtW a:hover {
+	color: #FFFFFF;
+	text-decoration: underline;
+}
+
+
+
+.txtR {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	text-align: right;
+	padding: 3px;
+}
+
+.inb_line {
+	background-image: url(/img/lnb_line.gif);
+	background-repeat: no-repeat;
+	height: 1px;
+	background-position: center;
+}
+
+
+
+/*---------- logot관련 ----------*/
+.btn_logout_left {
+	background-image: url(/img/btn_logout_left.gif);
+	background-repeat: no-repeat;
+	height: 14px;
+	width: 13px;
+}
+.btn_logout_right {
+	background-image: url(/img/btn_logout_right.gif);
+	height: 14px;
+	width: 7px;
+}
+.btn_logout {
+	font-family: arial, Tahoma, CordiaUPC;
+	font-size: 10px;
+	color: #333333;
+	background-image: url(/img/btn_logout.gif);
+	background-repeat: repeat-x;
+	vertical-align: middle;
+	height: 17px;
+	line-height: 110%;
+}
+.btn_logout  a:link {
+	color: #333333;
+	text-decoration: none;
+}
+.btn_logout  a:visited {
+	color: #333333;
+	text-decoration: none;
+}
+.btn_logout  a:active {
+	color: #333333;
+	text-decoration: none;
+}
+.btn_logout a:hover {
+	color: #333333;
+	text-decoration: none;
+}
+
+
+/*---------- 테이블 내 스크롤 관련 ----------*/
+.divS {
+scrollbar-face-color: #FFFFFF; 
+scrollbar-shadow-color: #D2E5F4; 
+scrollbar-highlight-color: #D2E5F4; 
+scrollbar-3dlight-color: #FFFFFF; 
+scrollbar-darkshadow-color: #FFFFFF; 
+scrollbar-track-color: #FFFFFF; 
+scrollbar-arrow-color: #D2E5F4;
+}
+.divbox  {
+	background-color: #FFFFFF;
+	border-top:#f3f3f3 1px solid;
+	border-bottom:#f3f3f3 1px solid;
+	
+}
+
+/*---------- Support Link ----------*/
+
+.suport_link{width:71px; height:29px;background:url("/img/feme/box_tit.gif") no-repeat;padding-left:23px;border-right: 1px solid #b6b5b5;padding-top:1px;font-weight:bold;font-size:12px;}
+.suport_link1{width:51px; height:29px;background:url("/img/feme/box_tit.gif") no-repeat;padding-left:23px;padding-top:1px;font-weight:bold;font-size:12px;}

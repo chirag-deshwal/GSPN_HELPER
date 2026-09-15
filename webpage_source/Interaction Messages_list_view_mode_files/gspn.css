@@ -1,0 +1,2845 @@
+/*  SamsnugSDS / Kim Eun Seon  */
+/*  Date : 2010-04-12		   */
+
+
+
+/*---------- Basic Style ----------*/
+body {
+	overflow-x:auto;
+	overflow-y:auto;
+	scrollbar-3dlight-color: #B4B4B4;
+	scrollbar-arrow-color: #333333;
+	scrollbar-base-color: #ffffff;
+	scrollbar-darkshadow-color: #FFFFFF;
+	scrollbar-face-color: #ffffff;
+	scrollbar-highlight-color: #FFFFFF;
+    scrollbar-shadow-color: #B4B4B4;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	background-position: top;
+}
+
+form {display:inline;}
+
+img {border:0}
+td {
+	font-size: 11px;
+	color: #333333;
+	line-height: 14px;
+	font-family: Arial;
+}
+tr {
+	font-size: 11px;
+	color: #0066cc;
+	line-height: 14px;
+	font-family: Arial;
+}
+a:link {
+	color: #002d70;
+	text-decoration: none;
+}
+a:visited {
+	color: #002d70;
+	text-decoration: none;
+}
+a:active {
+	color: #002d70;
+	text-decoration: none;
+}
+a:hover {
+	color: #002d70;
+	text-decoration: underline;
+}
+
+
+
+
+
+
+
+
+
+/*---------- body layout 占쎌슱�숋옙占�---------*/
+
+
+.tbR_pad {
+	vertical-align: top;	
+}
+
+.padR_2 {
+	padding-right: 2px;
+}
+
+.footer_bg {
+	background-image: url(/img/footer_bg.gif);
+	background-repeat: repeat-x;
+	text-align: right;
+	height:30px;
+}
+.btn_top {
+	text-align: right;
+	height: 40px;
+	padding-right: 20px;
+	vertical-align: bottom;
+	background-image: url(/img/ico_top_b.gif);
+	background-repeat: no-repeat;
+	background-position: right bottom;
+	font-family: arial;
+	font-size: 10px;
+	font-weight: bold;
+	color: #336ebc;
+	padding-bottom: 6px;	
+}
+.btn_top  a:link {
+	color: #336ebc;
+	text-decoration: none;
+}
+.btn_top  a:visited {
+	color: #336ebc;
+	text-decoration: none;
+}
+.btn_top  a:active {
+	color: #336ebc;
+	text-decoration: none;
+}
+.btn_top  a:hover {
+	color: #336ebc;
+	text-decoration: none;
+}
+
+.line {
+	background-color: #cccccc;
+	height: 1px;
+}
+.line_bottom {border-bottom:1px solid #000000; }
+.line_top {border-top:1px solid #000000; padding:4px 0 4px 0;}
+
+
+
+.dot_line {
+	background-image: url(/img/dot_line.gif);
+	background-repeat: repeat-x;
+	height: 11px;
+}
+.blue_line {
+	
+	background-color: #f0f4f6;
+	height: 5px;
+	
+}
+
+/*---------- �좎럥��옙�륁삕�좎뜽苑닷뜝�뚯죨 ----------*/
+.txt_org {
+	font-family: arial;
+	font-size: 11px;
+	color: #ff6e04;
+}
+.txt_red {
+	font-family: arial;
+	font-size: 14px;
+	font-weight: bold;
+	color: #e90000;
+}
+.txt_11 {
+    font-family: arial;
+	font-size: 11px;
+	line-height: 120%;
+	color: #666666;
+}
+.txt_12 {
+	font-family: arial;
+	font-size: 12px;
+	line-height: 130%;
+	color: #333333;
+}
+.txt_20 {
+	font-family: arial;
+	font-size: 20px;
+	line-height: 130%;
+	color: #666666;
+}
+.txt_bule {
+	font-family: arial;
+	font-size: 11px;
+	color: #0066cc;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+.blue { 
+    font-size: 11px;
+    color:#4483b5;
+}
+.blueBold {color: #4483b5; font-weight: bold;}
+.green {
+    font-size: 11px;  
+    color:#6e9e6b;
+}
+
+
+/*---------- locater 占쎌슱�숋옙占�---------*/
+.locater {
+	font-family: verdana;
+	font-size: 11px;
+	color: #666666;
+	text-align: right;
+	background-position: right;
+	letter-spacing: -1px;
+	vertical-align: top;
+	height: 22px;
+}
+.locater_ov {
+	font-family: verdana;
+	font-size: 11px;
+	color: #d37311;
+	text-align: right;
+	background-position: right;
+	letter-spacing: -1px;
+}
+
+/*---------- form占쎌슱�숋옙占�---------*/
+.input_date {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #FFFFFF;
+	width:70px; 
+	text-align: center;
+	padding-right: 2px;
+	padding-left: 2px;
+	word-break:break-all;
+	
+}
+.inputIDS_date {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #ffffc6;
+	width:70px; 
+	text-align: center;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+.inputDS_date {
+	font-family: arial;
+	font-size: 11px;
+	color: #a6a6a6;
+	border: 1px solid #b4b4b4;
+	background-color: #eaeaea;
+	width:70px; 
+	text-align: center;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+.inputRO_date {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #f1f1f1;
+	width:70px; 
+	text-align: center;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+.input {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #FFFFFF;
+	width: 150px;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+.inputF {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #FFFFFF;
+	width: 100%;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+.inputSN {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #FFFFFF;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+.inputFR {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #FFFFFF;
+	text-align: right;
+	width: 100%;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+.inputRO {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #f1f1f1;
+	width: 150px;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+.inputROF {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #f1f1f1;
+	width: 100%;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+.inputIDS {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #ffffc6;
+	width: 150px;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+.inputIDSF {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #ffffc6;
+	width: 100%;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+.inputDS {
+	font-family: arial;
+	font-size: 11px;
+	color: #a6a6a6;
+	border: 1px solid #b4b4b4;
+	background-color: #eaeaea;
+	width: 150px;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+.inputDSF {
+	font-family: arial;
+	font-size: 11px;
+	width: 100%;
+	color: #a6a6a6;
+	border: 1px solid #b4b4b4;
+	background-color: #eaeaea;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+
+.inputTW {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: none;
+	background-color: transparent;	
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+.inputTWF {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	width: 100%;
+	border: none;
+	background-color: transparent;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+
+
+.select {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #FFFFFF;
+	width: 150px;
+	padding-right: 2px;
+	padding-left: 2px;
+}
+.selectF {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #FFFFFF;
+	width: 100%;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+.selectSN {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #FFFFFF;
+	width: 100%;
+	padding-right: 2px;
+	padding-left: 2px;
+}
+.selectRO {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #f1f1f1;
+	width: 150px;
+	padding-right: 2px;
+	padding-left: 2px;
+}
+.selectROF {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #f1f1f1;
+	width: 100%;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+.selectIDS {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #ffffc6;
+	width: 150px;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+.selectIDSF {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #ffffc6;
+	width: 100%;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+
+.selectDS {
+	font-family: arial;
+	font-size: 11px;
+	color: #a6a6a6;
+	border: 1px solid #b4b4b4;
+	background-color: #eaeaea;
+	width: 150px;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+.selectDSF {
+	font-family: arial;
+	font-size: 11px;
+	color: #a6a6a6;
+	border: 1px solid #b4b4b4;
+	background-color: #eaeaea;
+	width: 100%;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+
+.input_page {
+	font-family: arial;
+	font-size: 11px;
+	color: #ff6600;
+	font-weight: bold;
+	text-align: right;
+	border: 1px solid #b4b4b4;
+	background-color: #FFFFFF;
+	width: 30px;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+	
+}
+
+
+/*---------- title 占쎌슱�숋옙占�---------*/
+.title {
+	font-family: arial;
+	font-size: 14px;
+	font-weight: bold;
+	color: #1653a3;
+	height: 24px;
+	padding-bottom: 5px;
+	vertical-align: bottom;
+}
+
+.title_02 {
+	font-family: arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #333333;
+	vertical-align: bottom;
+	padding-bottom: 3px;
+}
+.subtitle {
+	font-family: arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #333333;
+	vertical-align: bottom;
+	padding-bottom: 3px;
+	height: 30px;
+	background-image: url(/img/ico_sub_title.gif);
+	padding-left: 20px;
+	background-repeat: no-repeat;
+	background-position: left bottom;
+}
+
+.subtitleNoImage {
+	font-family: arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #333333;
+	vertical-align: bottom;
+	padding-bottom: 3px;
+	height: 30px;
+	padding-left: 20px;
+	background-repeat: no-repeat;
+	background-position: left bottom;
+}
+
+.title_pop {
+
+	font-family: arial;
+	font-size: 17px;
+	font-weight: bold;
+	color: #fb9a02;
+	height: 24px;
+	padding-bottom: 5px;
+	vertical-align: bottom;
+}
+
+
+/*---------- �뺢퀗�듸옙占쏙옙�몄삕占쏙옙----------*/
+/*---------- �롪퍜�숁틦�⑤┛熬곥굥諭�占쎌슱�숋옙占�---------*/
+.ser_btn_left {
+	background-image: url(/img/btn_ser_left.gif);
+	height: 19px;
+	width: 9px;
+	width: 9px\9;
+	min-width: 9px;
+}
+.ser_btn {
+	background-image: url(/img/btn_ser.gif);
+	text-align: center;
+	vertical-align: middle;
+	height: 19px;
+	background-repeat: repeat-x;
+	font-family: arial;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	
+}
+.ser_btn a:link {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.ser_btn a:visited {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.ser_btn a:active {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.ser_btn a:hover {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.ser_btn_right {
+	background-image: url(/img/btn_ser_right.gif);
+	height: 19px;
+	width: 9px;
+	width: 9px\9;
+	min-width: 9px;
+}
+/*---------- �좎뜫�됵옙��뿉占쎈베援��뺢퀗�듸옙占쏙옙�몄삕占쏙옙----------*/
+.btn_down_left {
+	background-image: url(/img/btn_down_left.gif);
+	height: 19px;
+	width: 20px;
+	width: 20px\9;
+	min-width: 20px;
+}
+.btn_down {
+	background-image: url(/img/btn_down.gif);
+	text-align: center;
+	vertical-align: middle;
+	height: 19px;
+	font-family: arial;
+	font-size: 11px;
+	color: #FFFFFF;
+	background-repeat: repeat-x;
+	
+}
+.btn_down a:link {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.btn_down a:visited {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.btn_down a:active {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.btn_down a:hover {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+.btn_down_right {
+	background-image: url(/img/btn_down_right.gif);
+	height: 19px;
+	width: 7px;
+	width: 7px\9;
+	min-width: 7px;
+	background-repeat: no-repeat;
+}
+.btn_excel_left {
+	background-image: url(/img/btn_excel_left.gif);
+	height: 19px;
+	width: 20px;
+	width: 20px\9;
+	min-width: 20px;
+}
+.btn_bo_left {
+	background-image: url(/img/btn_bo_left.gif);
+	height: 19px;
+	width: 7px;
+	width: 7px\9;
+	min-width: 7px;
+}
+
+/*---------- �リ옇�∽옙占쎈┛熬곥굥諭�占쎌슱�숋옙占�---------*/
+.btn_left {
+	background-image: url(/img/btn_left.gif);
+	height: 19px;
+	width: 7px;
+	width: 7px\9;
+	min-width: 7px;
+}
+.btn {
+	background-image: url(/img/btn.gif);
+	text-align: center;
+	vertical-align: middle;
+	height: 19px;
+	font-family: arial;
+	font-size: 12px;
+	color: #585858;
+	font-weight: bold;
+	
+}
+.btn a:link {
+	color: #585858;
+	text-decoration: none;
+}
+.btn a:visited {
+	color: #585858;
+	text-decoration: none;
+}
+.btn a:active {
+	color: #585858;
+	text-decoration: none;
+}
+.btn a:hover {
+	color: #0066cc;
+	text-decoration: none;
+}
+.btn_right {
+	background-image: url(/img/btn_right.gif);
+	height: 19px;
+	width: 7px;
+	width: 7px\9;
+	min-width: 7px;
+}
+
+.btn_pad {
+	padding-top: 10px;
+	padding-bottom: 3px;
+	padding-left: 2px;
+	text-align: right;
+	background-position: right;
+}
+
+.btn_padT {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 2px;
+	text-align: right;
+	background-position: right;
+}
+.btn_pad2 {
+	padding-bottom: 3px;
+	padding-left: 2px;
+	text-align: right;
+	background-position: right;
+}
+
+
+
+/*---------- �좎럥�ｏ옙醫덈눀�좎룞�쇿뜝�쇰┛熬곥굥諭�占쎌슱�숋옙占�---------*/
+.blue_btn_box{
+	width:60px;
+	text-align:right;
+	padding-right:5px;
+}
+.blue_btn_left {
+	background-image: url(/img/feme/btn_ser_left.gif);
+	height: 19px;
+	width: 9px;
+	width: 9px\9;
+	min-width: 9px;
+}
+.blue_btn {
+	background-image: url(/img/feme/btn_ser.gif);
+	text-align: center;
+	vertical-align: middle;
+	height: 19px;
+	background-repeat: repeat-x;
+	font-family: Tahoma, Verdana, Segoe, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+.blue_btn a:link {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.blue_btn a:visited {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.blue_btn a:active {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.blue_btn a:hover {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.blue_btn_right {
+	background-image: url(/img/feme/btn_ser_right.gif);
+	height: 19px;
+	width: 9px;
+	width: 9px\9;
+	min-width: 9px;
+}
+
+
+.btnin_left {
+	background-image: url(/img/btnin_left.gif);
+	height: 19px;
+	width: 7px;
+	width: 7px\9;
+	min-width: 7px;
+	white-space: nowrap;
+}
+.btnin {
+	background-image: url(/img/btnin.gif);
+	text-align: center;
+	vertical-align: middle;
+	height: 19px;
+	font-family: arial;
+	font-size: 11px;
+	color: #0066cc;
+	font-weight: bold;
+	white-space: nowrap;
+}
+.btnin a:link {
+	color: #0066cc;
+	text-decoration: none;
+}
+.btnin a:visited {
+	color: #0066cc;
+	text-decoration: none;
+}
+.btnin a:active {
+	color: #0066cc;
+	text-decoration: none;
+}
+.btnin a:hover {
+	color: #0066cc;
+	text-decoration: none;
+}
+.btnin_right {
+	background-image: url(/img/btnin_right.gif);
+	height: 19px;
+	width: 7px;
+	width: 7px\9;
+	min-width: 7px;
+	white-space: nowrap;
+}
+
+
+.btnG {
+	background-image: url(/img/btnB.gif);
+	text-align: center;
+	vertical-align: middle;
+	height: 16px;
+	font-family: arial;
+	font-size: 11px;
+	color: #FFFFFF;
+	background-repeat: no-repeat;
+	padding-right: 2px;
+	padding-left: 7px;
+}
+.btnG a:link {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.btnG a:visited {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.btnG a:active {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.btnG a:hover {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.btnG_right {
+	background-image: url(/img/btnB_right.gif);
+	height: 16px;
+	width: 5px;
+}
+
+
+/*---------- tab 占쎌슱�숋옙占�---------*/
+.tab_left {
+	background-image: url(/img/tab_left.gif);
+	height: 25px;
+	width: 7px;
+	width: 7px\9;
+	min-width: 7px;
+}
+.tab {
+	background-image: url(/img/tab.gif);
+	text-align: center;
+	vertical-align: middle;
+	height: 25px;
+	font-family: arial;
+	font-size: 12px;
+	color: #666666;
+	padding-top: 3px;
+	padding-right: 3px;
+	padding-left: 3px;
+	font-weight: bold;
+	
+}
+.tab_right {
+	background-image: url(/img/tab_right.gif);
+	height: 25px;
+	width: 7px;
+	width: 7px\9;
+	min-width: 7px;
+}
+.tab_left_ov {
+	background-image: url(/img/tab_left_ov.gif);
+	height: 25px;
+	width: 7px;
+	width: 7px\9;
+	min-width: 7px;
+}
+.tab_ov {
+	background-image: url(/img/tab_ov.gif);
+	text-align: center;
+	vertical-align: middle;
+	height: 25px;
+	font-family: arial;
+	font-size: 12px;
+	color: #FFFFFF;
+	padding-top: 3px;
+	padding-right: 3px;
+	padding-left: 3px;
+	font-weight: bold;
+	
+}
+.tab_right_ov {
+	background-image: url(/img/tab_right_ov.gif);
+	height: 25px;
+	width: 7px;
+	width: 7px\9;
+	min-width: 7px;
+}
+.tab_pad {
+	vertical-align: bottom;
+	height: 35px;
+	padding-bottom: 1px;
+	padding-right: 1px;
+}
+
+.tabbox {
+	vertical-align: top;
+	background-color: #FFFFFF;
+	background-image: url(/img/boxMM.gif);
+	background-repeat: repeat-x;
+	padding: 3px 7px 7px;
+	border: 1px solid #cecece;
+	font-family: arial;
+	font-size: 11px;
+	line-height: 120%;
+	color: #666666;
+}
+
+
+/*---------- table 占쎌슱�숋옙占�---------*/
+/*---------- �좎럥�ｏ옙醫덈눀�좏뤉order 占쎌슱�숋옙占�---------*/
+.sertb_brdr3 {
+	background-color: #FFFFFF;
+	border: 1px solid #b6b5b5;
+}
+.sertb_brdr {
+	background-color: #FFFFFF;
+	border: 1px solid #b6b5b5;
+}
+.tb_brdr {
+	background-color: #dedede;
+	border-top:#a1a1a1 3px solid;
+	
+}
+.tb_brdr2 {
+	background-color: #dedede;
+	
+	
+}
+.tb_brdr3 {
+	background-color: #dedede;
+	border-top:#a1a1a1 3px solid;
+	table-layout:fixed;
+	word-wrap:break-word;
+	
+}
+
+/*---------- �롪퍜�숁틦占썲뜝�덉뒩占쎌쥏�▼뜝�멸슈�좎럩議�----------*/
+.ser_ti {
+	font-family: Arial;
+	background-color: #ebebeb;
+	background-image: url(/img/ico_td.gif);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	background-position: left center;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	font-size: 12px;
+	color: #333333;
+	white-space: nowrap;
+}
+.ser_td {
+	font-family: Arial;
+	background-color: #FaFaFa;
+	padding: 2px;
+	font-size: 11px;
+	color: #333333;
+	height: 24px;
+}
+.ser_ti_s {
+	font-family: Arial;
+	background-color: #ebebeb;
+	background-image: url(/img/ico_td.gif);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	background-position: left center;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	font-size: 11px;
+	color: #333333;
+	white-space: nowrap;
+}
+ser_ti_sub {
+
+	font-family: Arial;
+	background-color: #F3F3F3;
+	background-image: url(/img/ico_td.gif);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	background-position: left center;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	font-size: 12px;
+	color: #333333;
+	white-space: nowrap;
+}
+.serB_bg {
+	background-color: #f9f9f9;
+	padding: 4px;
+	width: 70px;
+	vertical-align: top;
+}
+.serB_bg2 {
+	background-color: #f9f9f9;
+	padding: 4px;
+	width: 70px;
+}
+.serB_bg3 {
+	background-color: #f9f9f9;
+	padding: 4px;
+	width: 100px;
+}
+
+/*---------- �곌랜��뵳占썲뜝�덉뒩占쎌쥏�▼뜝�멸슈�좎럩議�----------*/
+/*---------- Gray tone ----------*/
+.view_ti {
+	font-family: Arial;
+	background-color: #f7f6f6;
+	background-image: url(/img/ico_view.gif);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	background-position: left center;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	font-size: 11px;
+	color: #333333;
+}
+.view_td {
+	font-family: Arial;
+	font-size: 11px;
+	color: #333333;
+	background-color: #fafafa;
+	padding: 2px;
+	height: 22px;
+}
+/*---------- Blue tone ----------*/
+.viewB_ti {
+	font-family: Arial;
+	background-color: #edf1f4;
+	background-image: url(/img/ico_view.gif);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	background-position: left center;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	font-size: 11px;
+	color: #333333;
+}
+.viewB_td {
+	font-family: Arial;
+	font-size: 11px;
+	color: #333333;
+	background-color: #f0f4f6;
+	padding: 2px;
+	height: 22px;
+	
+}
+.viewB_td_red{
+	font-family: Arial;
+	font-size: 11px;
+	color: #e90000;
+	background-color: #f0f4f6;
+	padding: 2px;
+	height: 22px;
+	
+}
+.viewT_ti {
+	font-family: Arial;
+	background-image: url(/img/ico_view.gif);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	background-position: left center;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	font-size: 11px;
+	color: #34759f;
+	font-weight: bold;
+}
+
+/*---------- tr color占쎄퀡�썲뜝占폮tyle ----------*/
+.tr_bg1{
+ background-color: #FFFFFF;
+}
+
+.tr_bg2{
+ background-color: #f4f4f4;
+}
+
+
+/*---------- 占쎄톾�낅츩�좎룞�쇿뜝�덉뒩占쎌쥏�▼뜝�멸슈�좎럩議�----------*/
+.tb_ti {
+	font-family: verdana;
+	color: #585858;
+	background-color: #f6f6f6;
+	border-top:#ffffff 1px solid;
+	padding: 2px;
+	text-align: center;
+	font-size: 11px;
+	font-weight: bold;
+	
+	
+	
+}
+.tb_ti a:link {
+	color: #585858;
+	cursor: hand;
+	text-decoration: none;
+}
+.tb_ti  a:visited {
+	color: #585858;
+	text-decoration: none;
+}
+.tb_ti a:active {
+	color: #585858;;
+	text-decoration: none;
+}
+.tb_ti  a:hover {
+	color: #FF6600;
+	
+	text-decoration: underline;
+}
+.tb_ti_ver {
+	font-family: verdana;
+	color: #666666;
+	background-color: #f6f6f6;
+	border-top:#ffffff 1px solid;
+	padding: 2px;
+	font-size: 11px;
+	font-weight: bold;
+	writing-mode:tb-rl;
+}
+.td_al {
+    background-color: #FFFFFF;
+	padding: 2px;
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+}
+.td_al  a:link {
+	color: #0066cc;
+	text-decoration: none;
+}
+.td_al  a:visited {
+	color: #0066cc;
+	text-decoration: none;
+}
+.td_al  a:active {
+	color: #0066cc;
+	text-decoration: none;
+}
+.td_al  a:hover {
+	color: #0066cc;
+	text-decoration: underline;
+}
+
+
+.td_ar {
+    background-color: #FFFFFF;
+	padding: 2px;
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	text-align: right;
+}
+.td_ar  a:link {
+	color: #0066cc;
+	text-decoration: none;
+}
+.td_ac  a:visited {
+	color: #0066cc;
+	text-decoration: none;
+}
+.td_ar  a:active {
+	color: #0066cc;
+	text-decoration: none;
+}
+.td_ar  a:hover {
+	color: #0066cc;
+	text-decoration: underline;
+}
+
+.td_ar_yellow {
+    background-color: #ffffc6;
+	padding: 2px;
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	text-align: right;
+}
+.td_ar_yellow  a:link {
+	color: #0066cc;
+	text-decoration: none;
+}
+.td_ar_yellow  a:visited {
+	color: #0066cc;
+	text-decoration: none;
+}
+.td_ar_yellow  a:active {
+	color: #0066cc;
+	text-decoration: none;
+}
+.td_ar_yellow  a:hover {
+	color: #0066cc;
+	text-decoration: underline;
+}
+
+.td_ar_blue {
+    background-color: #f0f7f8;
+ 	padding: 2px;
+ 	font-family: Microsoft Yahei, Arial;
+ 	font-size: 11px;
+ 	color: #333333;
+ 	text-align: right;
+}
+
+.td_ac {
+    background-color: #FFFFFF;
+	padding: 2px;
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	text-align: center;
+}
+.td_ac  a:link {
+	color: #0066cc;
+	text-decoration: none;
+}
+.td_ac  a:visited {
+	color: #0066cc;
+	text-decoration: none;
+}
+.td_ac  a:active {
+	color: #0066cc;
+	text-decoration: none;
+}
+.td_ac  a:hover {
+	color: #0066cc;
+	text-decoration: underline;
+}
+
+.td_ac_blue {
+	background-color: #f0f7f8;
+	padding: 2px;
+	font-family: Microsoft Yahei, Arial;
+	font-size: 11px;
+	color: #333333;
+	text-align: center;
+}
+
+.td_ac_blue  a:link {
+	color: #0066cc;
+	text-decoration: none;
+}
+.td_ac_blue  a:visited {
+	color: #0066cc;
+	text-decoration: none;
+}
+.td_ac_blue  a:active {
+	color: #0066cc;
+	text-decoration: none;
+}
+.td_ac_blue  a:hover {
+	color: #0066cc;
+	text-decoration: underline;
+}
+
+.td_pad {
+	height: 10px;
+}
+.td_title_bar {
+	font-family: arial;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #80adca;
+	padding: 3px 2px 3px 7px;
+}
+
+.tb_subti {
+	font-family: arial;
+	font-size: 11px;
+	font-weight: bold;
+	color: #585858;
+	background-color:#f6f6f6;
+	text-align: center;
+	padding: 3px;
+}
+.tb_subtiB {
+	font-family: arial;
+	font-size: 11px;
+	font-weight: bold;
+	color: #006699;
+	background-color: #f8fdff;
+	text-align: center;
+	padding: 3px;
+}
+.tb_B {
+	font-family: arial;
+	font-size: 11px;
+	font-weight: bold;
+	color: #006699;
+	background-color: #ebf5f9;
+	text-align: center;
+	padding: 3px;
+}
+.tb_Num {
+	font-family: arial;
+	font-size: 11px;
+	font-weight: bold;
+	color: #0077cc;
+	background-color: #ffffff;
+	text-align: center;
+	padding: 3px;
+}
+.tb_Num a:link {
+	color: #0077cc;
+	text-decoration: none;
+}
+.tb_Num a:visited {
+	color: #0077cc;
+	text-decoration: none;
+}
+.tb_Num a:active {
+	color: #0077cc;
+	text-decoration: none;
+}
+.tb_Num a:hover {
+	color: #ff6e04;
+	text-decoration: underline;
+}
+
+.td_al_blue {
+    background-color: #f0f7f8;
+ 	padding: 2px;
+ 	font-family: arial;
+ 	font-size: 11px;
+ 	color: #333333;
+}
+
+.td_al_blue  a:link {
+ color: #0066cc;
+ text-decoration: none;
+}
+.td_al_blue  a:visited {
+ color: #0066cc;
+ text-decoration: none;
+}
+.td_al_blue  a:active {
+ color: #0066cc;
+ text-decoration: none;
+}
+.td_al_blue  a:hover {
+ color: #0066cc;
+ text-decoration: underline;
+}
+
+
+/*----------- total �좎럥�ｏ옙醫덈눀�좎뜽苑닷뜝�뚯죨 -------------*/
+.total_td {
+
+    background-color: #f8fdff;
+	padding: 3px;
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+}
+.total_td_ar {
+	background-color: #f8fdff;
+	padding: 3px;
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	text-align: right;
+}
+.total_td_Bar {
+	background-color: #f8fdff;
+	padding: 3px;
+	font-family: arial;
+	font-size: 11px;
+	color: #0066cc;
+	text-align: right;
+}
+.total_td_B {
+	padding: 3px;
+	font-family: arial;
+	font-size: 11px;
+	color: #0066cc;
+	background-color: #FFFFFF;
+	text-align: right;
+}
+.total_td_GB  {
+	font-family: verdana;
+	color: #0066cc;
+	background-color: #f6f6f6;
+	border-top:#ffffff 1px solid;
+	padding: 2px;
+	text-align: center;
+	font-size: 11px;
+	font-weight: bold;
+	
+	
+}
+
+
+/*---------- page viewer 占쎌슱�숋옙占�---------*/
+.page_navi {
+  font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	text-align: center;
+	height: 40px;
+	vertical-align: middle;
+	letter-spacing: 1px;
+}
+.page_navi a:link {
+	color: #333333;
+	text-decoration: none;
+}
+.page_navi a:visited {
+	color: #333333;
+	text-decoration: none;
+}
+.page_navi a:active {
+	color: #333333;
+	text-decoration: none;
+}
+.page_navi a:hover {
+	color:  #1653a3;
+	text-decoration: none;
+}
+
+.page_navi_ov {
+	color: #1653a3;
+	font-weight: bold;
+}
+.tdin_navi {
+	font-family: Arial;
+	font-size: 11px;
+	color: #333333;	
+	font-weight: bold;
+	background-color: #e3e3e3;
+	padding: 2px 10px 2px 2px;
+	text-align: right;
+}
+
+/*---------- box �좎룞�쇿뜝�덉뒩占쎌쥏�▼뜝�멸슈�좎럩議�----------*/
+.tb_ti_gray {
+	font-family: Arial;
+	background-image: url(/img/ico_arrowG.gif);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	background-position: left center;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	font-size: 11px;
+	color: #333333;
+	border-right:#e8e8e8 1px solid;
+	border-bottom:#e8e8e8 1px solid;
+}
+.tb_td_gray {
+	font-family: Arial;
+	padding-left: 5px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	font-size: 11px;
+	color: #333333;
+	border-bottom:#e8e8e8 1px solid;
+}
+.box_verline {
+	background-image: url(/img/box_verline.gif);
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+
+/*---------- popup 占쎌슱�숋옙占�---------*/
+.pop_title {
+	background-color: #336ebc;
+	background-image: url(/img/popT.gif);
+	background-repeat: repeat-y;
+	height: 35px;
+	font-family: arial;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFFFFF;
+	padding-left: 10px;
+	padding-top: 3px;
+}
+.popT_bg {
+	background-color: #336ebc;
+	padding-rightt: 10px;
+	padding-top: 3px;
+	text-align: center;
+	width: 50px;
+}
+.pop_pad {
+	padding: 10px;
+	vertical-align: top;
+}
+
+.popT_sd {
+	height: 9px;
+	background-image: url(/img/popT_sd_02.gif);
+	background-repeat: repeat-x;
+}
+
+
+
+/*---------- box 占쎌슱�숋옙占�---------*/
+.boxTL {
+	vertical-align: top;
+	height: 7px;
+	width: 7px;
+	width: 7px\9;
+	min-width: 7px;
+	background-image: url(/img/boxTL.gif);
+	background-repeat: no-repeat;
+}
+.boxTM {
+	vertical-align: top;
+	background-image: url(/img/boxTM.gif);
+	background-repeat: repeat-x;
+	background-color: #FFFFFF;	
+}
+.boxTR {
+	vertical-align: top;
+	background-image: url(/img/boxTR.gif);
+	height: 7px;
+	width: 7px;
+	width: 7px\9;
+	min-width: 7px;
+}
+.boxML {
+	vertical-align: top;
+	background-image: url(/img/boxML.gif);
+	background-repeat: repeat-y;
+}
+.boxMM {
+	vertical-align: top;
+	background-color: #FFFFFF;
+	background-image: url(/img/boxMM.gif);
+	background-repeat: repeat-x;
+	padding: 3px 7px;
+	font-family: arial;
+	font-size: 11px;
+	line-height: 120%;
+	color: #666666;
+}
+.boxMR {
+	vertical-align: top;
+	background-image: url(/img/boxMR.gif);
+	background-repeat: repeat-y;
+}
+.boxBL {
+	vertical-align: top;
+	height: 7px;
+	width: 7px;
+	width: 7px\9;
+	min-width: 7px;
+	background-image: url(/img/boxBL.gif);
+	background-repeat: no-repeat;
+}
+.boxBM {
+	vertical-align: top;
+	background-image: url(/img/boxBM.gif);
+	background-repeat: repeat-x;
+	background-color: #FFFFFF;
+}
+.boxBR {
+	vertical-align: top;
+	background-image: url(/img/boxBR.gif);
+	background-repeat: repeat-y;
+	height: 7px;
+	width: 7px;
+	width: 7px\9;
+	min-width: 7px;
+}
+
+
+/*---------- Main box 占쎌슱�숋옙占�---------*/
+.MboxTL {
+	vertical-align: top;
+	height: 10px;
+	width: 10px;
+	width: 10px\9;
+	min-width: 10px;
+	background-image: url(/img/MboxTL.gif);
+	background-repeat: no-repeat;
+}
+.MboxTM {
+	vertical-align: top;
+	background-image: url(/img/MboxTM.gif);
+	background-repeat: repeat-x;
+	background-color: #FFFFFF;	
+}
+.MboxTR {
+	vertical-align: top;
+	background-image: url(/img/MboxTR.gif);
+	height: 10px;
+	width: 10px;
+	width: 10px\9;
+	min-width: 10px;
+}
+.MboxML {
+	vertical-align: top;
+	background-image: url(/img/MboxML.gif);
+	background-repeat: repeat-y;
+}
+.MboxMM {
+	vertical-align: top;
+	background-color: #FFFFFF;
+	background-image: url(/img/MboxMM.gif);
+	background-repeat: repeat-x;
+	padding: 7px;
+	font-family: arial;
+	font-size: 11px;
+	line-height: 120%;
+	color: #666666;
+}
+.MboxMR {
+	vertical-align: top;
+	background-image: url(/img/MboxMR.gif);
+	background-repeat: repeat-y;
+}
+.MboxBL {
+	vertical-align: top;
+	height: 10px;
+	width: 10px;
+	width: 10px\9;
+	min-width: 10px;
+	background-image: url(/img/MboxBL.gif);
+	background-repeat: no-repeat;
+}
+.MboxBM {
+	vertical-align: top;
+	background-image: url(/img/MboxBM.gif);
+	background-repeat: repeat-x;
+}
+.MboxBR {
+	vertical-align: top;
+	background-image: url(/img/MboxBR.gif);
+	background-repeat: no-repeat;
+	height: 10px;
+	width: 10px;
+	width: 10px\9;
+	min-width: 10px;
+}
+
+
+/*---------- layout padding 占쎌슱�숋옙占�---------*/
+.lay_padLR {
+	padding-right: 20px;
+	padding-left: 20px;
+	vertical-align: top;
+}
+.lay_padR {
+	width: 20px;
+}
+
+/*---------- 嶺뚮∥��옙源띿삕占쎄퉭理잏춯琉대쳳餓ο옙占쎌슱�숋옙占�---------*/
+.label_left {
+	background-image: url(/img/label_left.gif);
+	background-repeat: no-repeat;
+	height: 25px;
+	width: 5px;
+	width: 5px\9;
+	min-width: 5px;
+}
+.label {
+	font-family: arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-image: url(/img/label_bg.gif);
+	background-repeat: repeat-x;
+	padding-left: 3px;
+	
+}
+.label_right {
+	background-image: url(/img/label_right.gif);
+	background-repeat: no-repeat;
+	height: 25px;
+	width: 5px;
+	width: 5px\9;
+	min-width: 5px;
+}
+
+.label02_left {
+	background-image: url(/img/label02_left.gif);
+	background-repeat: no-repeat;
+	height: 25px;
+	width: 5px;
+	width: 5px\9;
+	min-width: 5px;
+}
+.label02 {
+	font-family: arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #666666;
+	background-image: url(/img/label02_bg.gif);
+	padding-left: 3px;
+	
+}
+.label02_right {
+	background-image: url(/img/label02_right.gif);
+	background-repeat: no-repeat;
+	height: 25px;
+	width: 5px;
+	width: 5px\9;
+	min-width: 5px;
+}
+.label03 {
+	background-image: url(/img/label_03.gif);
+	font-family: arial;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-repeat: repeat-x;
+	height: 22px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+
+/*---------- �꾩룆踰∽옙占썲뜝�덈쐠占쎌쥜�숃쥈�밸쐨 占쎌슱�숋옙占�---------*/
+.boxB {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #dadada;
+	background-color: #ffffff;
+	line-height: 130%;
+	padding: 5px;
+	
+	
+}
+.boxB_gray {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #dadada;
+	background-color: #fbfbfb;
+	line-height: 130%;
+	padding: 5px;
+	
+	
+}
+
+/*-------- progress bar 占쎌슱�숋옙占�---------*/
+
+.progress {
+	border: 1px solid #b4b4b4;
+	background-color: #CCCCCC;
+	height: 12px;
+}
+.bar {
+	background-color: #208c24;
+	border: 1px solid #FFFFFF;
+	height: 12px;
+}
+
+/*---------- �좎럥梨룟폑�낆삕占쎈낑�숋옙洹먮봽�썲뜝�숈삕Box 占쎌슱�숋옙占�---------*/
+
+.corner_TL2 {width:20px; height:40px; background:url(/img/corner_tl02.gif) no-repeat top left;}
+.corner_TC2 {width:580px; height:40px; background:url(/img/corner_tc02.gif);}
+.corner_TR2 {width:20px; height:40px; background:url(/img/corner_tr02.gif) no-repeat top right;}
+.corner_ML2 {width:20px; background:url(/img/corner_ml.gif) no-repeat left bottom;	}
+.corner_MC2 {
+	width:580px;
+	background:url(/img/corner_mc.gif) repeat-x left bottom;
+	padding-top: 7px;
+	padding-bottom: 7px;
+}
+.corner_MC3 {
+	background:url(/img/corner_mc.gif) repeat-x left bottom;
+	padding-top: 7px;
+	padding-bottom: 7px;
+}
+.corner_BC3 { height:64px; background:url(/img/corner_bc02.gif); padding-bottom: 10px;}
+.corner_MR2 {width:20px; background:url(/img/corner_mr.gif) no-repeat right bottom; }
+.corner_MBL2 {width:20px;  background:url(/img/corner_bl_01.gif) repeat-y;}
+.corner_MBC2 {width:580px;  background:fcfcfc; padding-bottom: 10px;}
+.corner_MBR2 {width:20px;  background:url(/img/corner_br_01.gif) repeat-y;}
+.corner_BL2 {width:20px; height:64px; background:url(/img/corner_bl02.gif) no-repeat top left;}
+.corner_BC2 {width:580px; height:64px; background:url(/img/corner_bc02.gif); padding-bottom: 10px;}
+.corner_BR2 {width:20px; height:64px; background:url(/img/corner_br02.gif) no-repeat top right;}
+
+.lay_bo {
+	vertical-align: middle;
+}
+
+.boxMM_SN {
+	vertical-align: top;
+	background-color: #FFFFFF;
+	background-image: url(/img/boxMM.gif);
+	background-repeat: repeat-x;
+	font-family: arial;
+	font-size: 11px;
+	line-height: 120%;
+	color: #666666;
+}
+
+
+
+
+/*  SamsnugSDS / Kim Eun Jin  */
+/*-------- 2010-04-15 占쎄퀡�썲뜝占�---------*/
+.tx_orange {
+    color :#ff0000;
+ }
+.td_notice {
+ 	background-image: url(/img/ico_notice.gif);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	background-position: left center;
+	font-family: arial;
+	color: #666666;
+	font-size: 12px;
+	text-align: left;
+	padding-top: 3px;
+	white-space: nowrap;
+}
+.tb_ti_1 {
+ 	background-image: url(/img/bullet_1.gif);
+	background-repeat: no-repeat;
+	font-family: verdana;
+	color: #6082b0;
+	background-color: #ffffff;
+	padding-left: 16px;
+	padding-top: 6px;
+	padding-bottom: 3px;
+	text-align: left;
+	font-size: 11px;
+	font-weight: bold;
+}
+.tb_ti_2 {
+	font-family: verdana;
+	background-color: #f7f6f6;
+	padding: 3px 7px;
+	font-size: 11px;
+	color: #333333;
+	font-weight: bold;
+	
+}
+.tb_ti_3 {
+	font-family: Arial;
+	color: #585858;
+	background-color: #ffffff;
+	padding-left: 25px;
+	padding-bottom: 2px;
+	text-align: left;
+	font-size: 11px;
+	font-weight: bold;
+}
+.tb_ti_4 {
+	font-family: Arial;
+	color: #585858;
+	background-color: #ffffff;
+	padding-left:px;
+	padding-bottom: 2px;
+	text-align: left;
+	font-size: 11px;
+}
+.td_pd2 {
+    padding-left:2;
+}
+table.bg1{
+    border: 1px solid #b6b5b5; 
+    background-color: #f7f6f6;
+}
+table.bg2{
+    border: 1px solid #e0e0e0;
+    background-color: #ffffff;
+}
+.view_td2 {
+	font-family: Arial;
+	font-size: 11px;
+	color: #333333;
+	background-color: #ffffff;
+	padding: 2px;
+}
+
+/*---------- 04-19 占쎄퀡�썲뜝占�----------*/
+.btn_more {
+	background-image: url(/img/btn_more.gif);
+	background-repeat: no-repeat;
+	background-position: right bottom;
+	width: 50px;
+	vertical-align: bottom;
+	height: 20px;
+	
+}
+.m_tx_no {
+	font-family: verdana;
+	text-align: left;
+	font-size: 16px;
+	font-weight: bold;
+	color: c0bfbf;
+	height: 25px;
+	padding : 0px 8px 6px 0px;
+	vertical-align: bottom;
+}
+.m_tx {
+    font-family: verdana;
+	text-align: left;
+	font-size: 14px;
+	font-weight: bold;
+	color: 333333;
+	height: 25px;
+	padding-bottom : 6px;
+	vertical-align: bottom;
+}
+.mtb_brdr {
+	background-color: #FFFFFF;
+	border-top:3px solid #cfcfcf;
+	border-bottom:1px solid #d6d6d6;
+}
+.mtb_ti_r {
+	font-family: verdana;
+	color: #585858;
+	background-color: #f6f6f6;
+	border-top:#ffffff 1px solid;
+	padding: 2 8 2 2px;
+	text-align: right;
+	font-size: 11px;
+	white-space: nowrap;
+	
+}
+.mtb_ti {
+	background-image: url(/img/mtb.gif);
+	font-family: verdana;
+	color: #4c548d;
+	padding: 2px;
+	height: 26;
+	text-align: center;
+	font-size: 10px;
+	font-weight: bold;
+	white-space: nowrap;
+	line-height: 90%;
+	
+}
+.mtd_as {
+   	background-image: url(/img/bullet_mt.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	background-color: #FFFFFF;
+	padding-left: 12px;
+	height: 20;
+	text-align: left;
+	font-family: verdana;
+	font-size: 10px;
+	color: #636363;
+}
+.mtd_ac {
+	background-color: #FFFFFF;
+	padding: 2px;
+	height: 20;
+	text-align: center;
+	font-family: verdana;
+	font-size: 10px;
+	color: #636363;
+}
+
+/*---------- �좎럥�녶첎占쏙옙�몄삕占쏙옙-----------*/
+.lnb_tx01 { font-size:9pt; font-family:Arial; color:#4d4d4d; font-weight:bold; text-align:left; padding:0 0 15 3;}
+.lnb_tx02 { font-size:9pt; font-family:Arial; color:#0077cc; font-weight:bold; text-align:left; padding:0 0 15 3;}
+
+.orange { color:#ff0000;}
+.orange a:link {
+	color: #ff0000;
+	text-decoration: none;
+}
+.orange a:visited {
+	color: #ff0000;
+	text-decoration: none;
+}
+.orange a:active {
+	color: #ff0000;
+	text-decoration: none;
+}
+.orange a:hover {
+	color: #ff0000;
+	text-decoration: underline;
+}
+.tx_01 { padding:3 0 0 2; font-size:8pt; color:#f4580b;}
+
+.tx_q01 {color:#636363;}
+.tx_q02 {color:#295fa4; font-weight:bold; text-decoration:underline;}
+.tx_a01 {color:#888; background-color:f6f6f6;}
+.title_bar {
+	font-family: arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #333333;
+	text-align: center;
+	background-image: url(/img/ti_bar.gif);
+	background-repeat: repeat-x;
+	height: 29px;
+}
+.black_bar {
+	color: #999999;
+	text-align: center;
+	background-image: url(/img/ti_bar.gif);
+	background-repeat: repeat-x;
+	height: 10px;
+	padding-bottom: 0px;
+}
+.black_bar {
+	color: #999999;
+	text-align: center;
+	background-image: url(/img/ti_bar.gif);
+	background-repeat: repeat-x;
+	height: 10px;
+	padding-bottom: 0px;
+	border-bottom: 1px;
+}
+
+/*---------- �좎럥占썼キ�덉쾵�좎룞�숋옙諛몄뵜 -----------*/
+.pop_btm {border-top:1px #E4E4E4 solid;background:#E4E4E4;height:29;
+}
+.pop_brdr {border:1px solid #6A6253}
+.pop_td{ background:url(/img/m_topbg.gif); 
+         height:29;
+		 font-size: 13px;
+	     font-weight: bold;
+	     color: #1c4385;
+	     padding-left: 10px;
+	     padding-bottom: 3px;
+}
+.tb_til {
+	font-family: verdana;
+	color: #585858;
+	background-color: #f6f6f6;
+	border-top:#ffffff 1px solid;
+	padding: 2 2 2 10;
+	text-align: left;
+	font-size: 11px;
+	font-weight: bold;
+	white-space: nowrap;
+}
+.textarea {
+	font-family: arial;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #b4b4b4;
+	background-color: #FFFFFF;
+	width: 200px;
+	padding-right: 2px;
+	padding-left: 2px;
+	
+}
+
+/*---------- 04-29 占쎄퀡�썲뜝占�----------*/
+.po1_bg {
+	background-image: url(/img/po1_bg.gif);
+	height: 65px;
+}
+.po2_bg {
+	background-image: url(/img/po2_bg.gif);
+	height: 65px;
+}
+.po3_bg {
+	background-image: url(/img/po3_bg.gif);
+	height: 65px;
+}
+.po4_bg {
+	background-image: url(/img/po4_bg.gif);
+	height: 65px;
+}
+
+/*----------- 05-03 占쎄퀡�썲뜝占�------------*/
+.viewB_ti_detail {
+	font-family: Arial;
+	background-color: #f9f9f9;
+	background-repeat: no-repeat;
+	padding-left: 21px;
+	background-position: left center;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	font-size: 11px;
+	color: #333333;
+}
+.viewB_td_detail {
+	font-family: Arial;
+	font-size: 11px;
+	color: #333333;
+	background-color: #f9f9f9;
+	padding: 2px;
+}
+
+/*------------05-12 占쎄퀡�썲뜝占�------------*/
+/*---------- �좎럡�э옙�됱삕�좑옙----------*/
+.print_title {
+	height: 35px;
+	font-family: arial;
+	font-size: 14px;
+	font-weight: bold;
+	color: #333333;
+	text-align: center;
+	vertical-align: bottom;
+	padding-bottom: 10px;
+}
+.print_title_left {
+	height: 35px;
+	font-family: arial;
+	font-size: 16px;
+	font-weight: bold;
+	color: #333333;
+	text-align: left;
+	vertical-align: bottom;
+	padding-bottom: 10px;
+}
+
+/*  Bang Jae Hee 占쎄퀡�썲뜝占�*/
+
+/*---------- tab 占쎌슱�숋옙占�---------*/
+.tab_pad_i {
+	vertical-align: bottom;
+	height: 25px;
+	padding-bottom: 1px;
+	padding-right: 1px;
+	background-color: transparent;
+}
+
+/*---------- padding 占쎌슱�숋옙占�---------*/
+.l-pad10 {
+	padding-left: 10px;
+}
+
+.l-pad20 {
+	padding-left: 20px;
+}
+
+
+/*-------- List table 占쎌슱�숋옙占�---------*/
+.td_title_bar2 {
+	font-family: arial;
+	font-size: 11px;
+	font-weight: bold;
+	color: #585858;
+	background-color: #dce0e4;
+	padding: 3px 2px 3px 7px;
+}
+
+.3deph_subtitle {
+	font-family: arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #d97815;
+	vertical-align: bottom;
+	padding-bottom: 3px;
+	height: 25px;
+	padding-left: 15px;
+	background-repeat: no-repeat;
+	background-position: left bottom;
+}
+.txt_more {
+	font-family: arial;
+	font-size: 10px;
+	color: #4c548d;
+}
+
+
+/*-------- 2010.08.27占쎄퀡�썲뜝占�---------*/
+.viewB_td2 {
+	font-family: Arial;
+	font-size: 11px;
+	color: #333333;
+	background-color: #fafdff;
+	padding: 2px;
+	height: 22px;
+	border-top:#ebedef 1px solid;
+	border-bottom:#ebedef 1px solid;
+}
+
+.view_td_lig {
+	font-family: Arial;
+	font-size: 11px;
+	color: #333333;
+	background-color: #fcfcfc;
+	padding: 2px;
+	height: 22px;
+}
+
+.pad {
+	padding: 5px;
+}
+/*-------- 2010.08.27占쎄퀡�썲뜝占�---------*/
+
+
+/*---------- �β돦裕꾬옙�쏆삕筌뤿굞�끿춯濡녹삕Box 占쎌슱�숋옙占�---------*/
+
+.scorner_TL2 {width:20px; height:56px; background:url(/img/scorner_tl.gif) no-repeat top left;}
+.scorner_TC2 {width:475px; height:56px; background:url(/img/scorner_tc.gif); font:normal 11px arial; color: #8f8f8f;}
+.scorner_TR2 {width:20px; height:56px; background:url(/img/scorner_tr.gif) no-repeat top right;}
+.scorner_BL2 {width:20px; height:119px; background:url(/img/scorner_bl.gif) no-repeat top left;}
+.scorner_BC2 {width:475px; height:119px; background:url(/img/scorner_bc.gif) repeat; padding-bottom: 10px;}
+.scorner_BR2 {width:20px; height:119px; background:url(/img/scorner_br.gif) no-repeat top right;}
+
+
+/* �좎럡�э옙誘㏐껀�좎럡�꿨뜝�숈삕占썩뫀踰륅옙�쇱삕�믭옙���좎떬�녿뮔�좎럩瑗띰옙占썲뜝�щ걢�좎룞�숋옙源녿턄亦껋꼻�쇾빳占썲뜝�덈쐞�좑옙�좎룞�숋옙節륁삕占쎈쪋��嶺뚮씭�녻땻占쎌삕�좑옙/
+/* ==========================================================*/
+/* page number */
+.paging {
+	font-family: verdana;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: center;
+	height: 40px;
+	padding-top: 11px;
+}
+
+a.prev {
+	padding: 0 7px 0 7px;
+}
+
+a.prev:link,a.prev:visited {
+	color: #585858;
+	text-decoration: none;
+}
+
+a.prev:hover {
+	color: #1653a3;
+}
+
+a.next {
+	padding: 0 15px 0 7px;
+}
+
+a.next:link,a.next:visited {
+	color: #585858;
+	text-decoration: none;
+}
+
+a.next:hover {
+	color: #1653a3;
+}
+
+a.page_num {
+	padding: 0 7px 0 5px;
+	background: url(/img/etc/bar6px.gif) no-repeat right center;
+}
+
+a.page_num:link,a.page_num:visited {
+	color: #585858;
+	text-decoration: none;
+}
+
+a.page_num:hover {
+	color: #1653a3;
+}
+
+.paging .cur:link,.paging .cur:visited {
+	color: #1653a3;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.paging a.last {
+	padding: 0 7px 0 5px;
+	margin: 0;
+	background-image: none;
+}
+
+.paging a.btn_first_arrow {
+	position: relative;
+	top: 2px;
+}
+
+.paging a.btn_prev_arrow {
+	position: relative;
+	top: 2px;
+}
+
+.paging a.btn_next_arrow {
+	position: relative;
+	top: 2px;
+}
+
+.paging a.btn_last_arrow {
+	position: relative;
+	top: 2px;
+}
+
+a.btn_prev_arrow {
+	display: inline-block;
+	width: 18px;
+	height: 14px;
+	padding: 0 7px 0 7px;
+	background: url(/img/btn_prev01.gif) no-repeat 0 0px;
+}
+
+a.btn_prev_arrow:hover {
+	background-position: 0 0;
+}
+
+a.btn_prev_arrow span {
+	display: none;
+}
+
+a.btn_next_arrow {
+	display: inline-block;
+	width: 18px;
+	height: 14px;
+	padding: 0 15px 0 7px;
+	background: url(/img/btn_next01.gif) no-repeat 0 0px;
+}
+
+a.btn_next_arrow:hover {
+	background-position: 0 0;
+}
+
+a.btn_next_arrow span {
+	display: none;
+}
+
+a.btn_first_arrow {
+	display: inline-block;
+	width: 18px;
+	height: 14px;
+	padding: 0 15px 0 7px;
+	background: url(/img/btn_prev02.gif) no-repeat 0 0px;
+}
+
+a.btn_first_arrow:hover {
+	background-position: 0 0;
+}
+
+a.btn_first_arrow span {
+	display: none;
+}
+
+a.btn_last_arrow {
+	display: inline-block;
+	width: 18px;
+	height: 14px;
+	padding: 0 7px 0 7px;
+	background: url(/img/btn_next02.gif) no-repeat 0 0px;
+}
+
+a.btn_last_arrow:hover {
+	background-position: 0 0;
+}
+
+a.btn_last_arrow span {
+	display: none;
+}
+
+.iResult {
+	font-family: arial;
+	font-size: 11px;
+	color: #0000ff;
+}
+
+.readOnly {
+	background-color: #f1f1f1;	
+}
+
+.red {color: #e90000; font-weight: normal;}
+.redBold {color: #e90000; font-weight: bold;}
+
+.loarn_pre {
+		font-family: Arial;
+		font-size: 9px;
+		line-height: 13px;
+	}
+/* // container end */
+
+.login_body_wrap {width:100%; height:100%; background:#f8f8f8 url(../../img/login_bg.gif) repeat-x; font-family:arial;}
+.login_wrap {width:100%; height:100%; background:#f8f8f8 url(../../img/login_bg.gif) repeat-x; font-family:arial;}
+.login_wrap form {margin:0; padding:0;}
+.login_container {width:100%; height:100%;text-align: center;}
+.login_content {position:absolute; top:50%; left:50%; margin-left:-443px; margin-top:-260px; width:886px; height:520px;}
+.login_content h1 {margin:0; height:38px}
+.login_conceptImg {height:293px;}
+.login_form_wrap {position:relative; background:url(../../img/login_bg_form.png) repeat-x; width:752px; height:132px; margin:0 auto}
+.login_form {position:relative; width:380px; height:98px; float:left; margin-top:17px;}
+.recaptcha_wrap {width:328px; height:98px; float:right; background:url(../../img/login_line_form.png) no-repeat left top; padding-left:23px; text-align:left; margin-top:10px; margin-bottom:8px; _margin-right:23px;}
+.recaptcha_wrap input {width:200px; font:normal 13px arial; vertical-align:middle}
+
+.login_form_wrap02 {position:relative; background:url(../../img/login_bg_form.png) repeat-x; width:752px; height:132px; margin:0 auto}
+.login_form_wrap02 .login_form {position:absolute; left:155px; top:10px; width:430px}
+.login_form_wrap02 .login_form input {width:195px; _width:200px}
+.login_form_wrap02 .login_form input.checkbox {width:17px}
+.login_form_wrap02 .recaptcha_wrap {display:none}
+
+.login_caution {position:relative; width:750px; height:30px; text-align:left; margin:0 auto}
+.login_caution dl {margin:0}
+.login_caution dt, .login_caution dd {position:absolute; display:block; float:left; font:bold 11px arial; color:#bd4444; margin: 7px 0 0 0}
+.login_caution dd {left:52px}
+
+.login_footer {position:fixed; _position:absolute; bottom:0; right:0; height:50px; width:100%; background:url(../../img/login_bg_footer.png) repeat-x; text-align:right}
+.login_footer p {padding:7px 20px 0 0; margin-top:0; vertical-align:top}
+.login_footer img {vertical-align:top}
+
+/*---------- login form �울옙��----------*/
+.recaptcha_txt {display:block; font:bold 12px arial; color:red; margin-top:5px;}
+.login_form dl {position:relative; text-align:left; left:30px; margin:0}
+.login_form dt, .login_form dd {position:absolute; display:block;}
+.login_form dt {color:white; font:bold 12px arial; margin-top:3px;}
+.login_form dd {margin:0; left:70px}
+.login_form .user_pwd {top:23px}
+.login_form .save_id {top:46px; color:white; font:normal 11px arial}
+.login_form .save_id input {text-align:left; padding-top:4px}
+.login_form input {width:146px; height:19px; border:1px solid #162545; padding:0 2px; color:#333; font:normal 11px arial; vertical-align:middle}
+.login_form input.checkbox {width:13px; border:0; padding:0; margin:0; vertical-align:middle}
+.login_form .login_btn {position:absolute; right:0; cursor:pointer}
+.recaptcha_form {position:relative; _position:absolute;  height:10px}
+.recaptcha_form img {position:relative; display:block; *position:absolute; display:inline-block; float:left; width:30px; margin-right:1px}
+.recaptcha_form:after {content:''; display:block; width:0; height:0; float:none; clear:both}
+.recaptcha_image {display:inline-block; border:1px solid #162545;}
+.recaptcha_audio {display:inline-block; background-color:#152344; padding:9px 18px 7px 18px}
+.recaptcha_audio img {vertical-align:middle; cursor:pointer}
+.recaptcha_audio_icon {margin: 7px 4px;}
+
+/*Auto Warranty Notice table*/
+.tabl_1{width:100%;background-color:#b4cce7;}
+.tabl_1 th{background-color:#e0edfc;font-weight:bold;font-size:11px;text-align:center;color:#1d55b2;height:27px;vertical-align:middle;border-top:#b4cce7 1px solid;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-shadow:1px 1px 1px rgba(0,0,0,0.090);}
+.tabl_1 th span{line-height:27px;}
+.tabl_1 th img{vertical-align:middle;}
+.tabl_1 th.left{text-align:left;}
+.tabl_1 thead td{background-color:#e0edfc;font-weight:bold;font-size:11px;text-align:center;color:#1d55b2;height:27px;vertical-align:middle;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-shadow:1px 1px 1px rgba(0,0,0,0.090);}
+.tabl_1 tbody tr:hover td{background-color: #BCD4E6; cursor: pointer;}
+.tabl_1 tbody tr.odd td{background-color: #F2F3F4;}
+.tabl_1 tbody tr.odd:hover td{background-color: #BCD4E6; cursor: pointer;}
+.tabl_1 tbody td{color:#000000;font-size:11px;text-align:center;vertical-align:top;padding:4px 2px 4px 2px;background-color:#ffffff;line-height:18px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-shadow:1px 1px 1px rgba(0,0,0,0.090);}
+.tabl_1 tbody td.red{color:#e9685a;font-size:11px;vertical-align:top;padding:4px 2px 4px 2px;background-color:#ffffff;line-height:18px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-shadow:1px 1px 1px rgba(0,0,0,0.090);}
+.tabl_1 tbody td.left{text-align:left;padding-left:2px;}
+.tabl_1 tbody td.right{text-align:right;padding-right:2px;}
+.tabl_1 tbody td.vertical_m{vertical-align:middle;}
+.tabl_1 tbody td.alert{color:#f7297b;}
+.tabl_1 tbody td.bg_ck{background-color:#F99;border-bottom:#F06 1px solid;}
+.tabl_1 table.tabl_1_in{text-align:center !important;}
+.tabl_1 table.tabl_1_in td{margin:0;padding:4px 2px 4px 2px;text-align:center;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-shadow:1px 1px 1px rgba(0,0,0,0.090);}
+
+
+
+.tx_bl {color:#25569d; font-weight: bold;}
+
+/*---------- 占쎈챷弛놅옙�볩옙�귐딄쉽占쏙옙Box �울옙��----------*/
+
+.corner_TL2 {width:20px; height:40px; background:url(/img/corner_tl02.gif) no-repeat top left;}
+.corner_TC2 {width:580px; height:40px; background:url(/img/corner_tc02.gif);}
+.corner_TR2 {width:20px; height:40px; background:url(/img/corner_tr02.gif) no-repeat top right;}
+.corner_ML2 {width:20px; background:url(/img/corner_ml.gif) no-repeat left bottom;	}
+.corner_MC2 {
+	width:580px;
+	background:url(/img/corner_mc.gif) repeat-x left bottom;
+	padding-top: 7px;
+	padding-bottom: 7px;
+}
+.corner_MR2 {width:20px; background:url(/img/corner_mr.gif) no-repeat right bottom; }
+.corner_MBL2 {width:20px;  background:url(/img/corner_bl_01.gif) repeat-y;}
+.corner_MBC2 {width:580px;  background:fcfcfc; padding-bottom: 10px;}
+.corner_MBR2 {width:20px;  background:url(/img/corner_br_01.gif) repeat-y;}
+.corner_BL2 {width:20px; height:64px; background:url(/img/corner_bl02.gif) no-repeat top left;}
+.corner_BC2 {width:580px; height:64px; background:url(/img/corner_bc02.gif); padding-bottom: 10px;}
+.corner_BR2 {width:20px; height:64px; background:url(/img/corner_br02.gif) no-repeat top right;}
+
+.lay_bo {
+	vertical-align: middle;
+}
+
+/*---------- �⑤벊占쏙옙�鍮놅옙�밸씜 �울옙��----------*/
+.divS {
+scrollbar-face-color: #FFFFFF; 
+scrollbar-shadow-color: #D2E5F4; 
+scrollbar-highlight-color: #D2E5F4; 
+scrollbar-3dlight-color: #FFFFFF; 
+scrollbar-darkshadow-color: #FFFFFF; 
+scrollbar-track-color: #FFFFFF; 
+scrollbar-arrow-color: #D2E5F4;
+line-height: 80%;
+}
+
+.pop_pad2 {
+	padding: 10px 0px 10px 20px;
+	vertical-align: top;
+}
+ 
+/*  SamsnugSDS / Bang Jae Hee	*/
+/*  Date : 2012-10-09 		*/
+/*-------- txt �울옙��----------*/
+.txt_ach_level{
+	font-family: Microsoft YaHei, Arial;
+	font-size: 11px;
+	color: #333333;
+	padding-top: 10px;
+}
+/*-------- textarea �울옙��----------*/
+textarea {
+	font-family: Microsoft YaHei, Arial;
+	font-size: 11px;
+	color:#333333;
+	border: 1px solid #ababab;
+	width:100%;
+}
+/*-------- 野껓옙源�table �울옙��----------*/
+.ser_td_pro {
+	font-family: Microsoft YaHei, Arial;
+	background-color: #F9F9F9;
+	padding: 2px;
+	font-size: 11px;
+	color: #333333;
+	height: 24px;
+	text-align: center;
+}
+
+/*-------- table �울옙��----------*/
+.td_ac_sub {
+	background-color: #f3f8fd;
+	padding: 3px;
+	font-family: Microsoft Yahei, Arial;
+	font-size: 11px;
+	color: #333333;
+	text-align: center;
+}
+.td_ac_sub2 {
+	background-color: #f1efef;
+	padding: 3px;
+	font-family: Microsoft Yahei, Arial;
+	font-size: 11px;
+	color: #333333;
+	text-align: center;
+}
+.td_al_2depth {
+	background-color: #FFFFFF;
+	padding-top: 3px;
+	padding-left: 10px;
+	padding-right: 3px;
+	padding-bottom: 3px;
+	font-family: Microsoft Yahei, Arial;
+	font-size: 11px;
+	color: #333333;
+}
+.td_al_3depth {
+	background-color: #FFFFFF;
+	padding-top: 3px;
+	padding-left: 20px;
+	padding-right: 3px;
+	padding-bottom: 3px;
+	font-family: Microsoft Yahei, Arial;
+	font-size: 11px;
+	color: #333333;
+}
+.td_att_pad {
+	padding-top: 1px;
+	padding-right: 1px;
+}
+.td_emph {
+ 	font-family: Microsoft Yahei, Arial;
+ 	font-size: 11px;
+ 	background-color: #fff4e6;
+ 	padding: 2px;
+ 	text-align: center;
+}
+
+/*-------- explain �울옙��----------*/
+.exp_pad {
+	background-color: #ffffee;
+	font-family: Microsoft Yahei, Arial;
+	font-size: 11px;
+	color: #333333;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 10px;
+	padding-right: 5px;
+	border-top:#cbcbcb 1px solid;
+	border-bottom:#cbcbcb 1px solid;
+}
+
+.exp_pad a:link {
+	color: #3466dc;
+	text-decoration: none;
+}
+.exp_pad a:visited {
+	color: #3466dc;
+	text-decoration: none;
+}
+.exp_pad a:active {
+	color: #3466dc;
+	text-decoration: none;
+}
+.exp_pad a:hover {
+	color: #4f7dea;
+	text-decoration: none;
+}
+
+/*---------- Gray tone ----------*/
+.view_ti2 {
+	font-family: Microsoft Yahei, Arial;
+	background-color: #f7f6f6;
+	background-repeat: no-repeat;
+	padding: 2px;
+	background-position: left center;
+	font-size: 11px;
+	color: #333333;
+	text-align: center;
+}
+
+/*---------- Blue tone ----------*/
+.viewT_ti2 {
+	font-family: Microsoft Yahei, Arial;
+	background-image: url(/img/ico_view.gif);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	background-position: left center;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	font-size: 12px;
+	color: #34759f;
+	font-weight: bold;
+}
+.view_td2 {
+	font-family: Microsoft Yahei, Arial;
+	font-size: 11px;
+	color: #333333;
+	padding-left: 20px;
+	line-height: 17px;
+}
+.view_td3 {
+	font-family: Microsoft  Yahei, Arial;
+	font-size: 11px;
+	color: #333333;
+	background-color: #FFFFFF;
+	padding: 2px;
+	height: 22px;
+}
+
+/*-------- List table �울옙��----------*/
+.td_title_bar2 {
+	font-family: Microsoft Yahei, Arial;
+	font-size: 11px;
+	color: #585858;
+	background-color: #dce0e4;
+	padding: 3px 2px 3px 7px;
+}
+
+/*-------- 占싼됱젾 table �울옙��----------*/
+.td_cal_tit {
+	font-family: Microsoft Yahei, Arial;
+	font-size: 12px;
+	font-weight: bold;
+	padding:10px 0px 5px 0px;
+	text-align: center;
+ 	z-index:101;
+}
+.td_cal {
+	background-color: #FFFFFF;
+	padding: 2px;
+	font-family: Arial;
+	font-size: 11px;
+	color: #333333;
+}
+.td_calR {
+	font-family: Arial;
+	background-color: #FFFFFF;
+	padding: 2px;
+	font-size: 11px;
+	color:#dc5050;
+}
+.td_calG {
+	background-color: #f9f9f9;
+	padding: 2px;
+	font-family: Arial;
+	font-size: 11px;
+	color: #333333;
+}
+.cal_num {
+	font-family: Arial;
+	font-size: 11px;
+	color:#999999; 
+	float:right;
+	*margin-top:-13px;
+}
+.cal_num a:link {
+	color:#999999; 
+	text-decoration: none;
+}
+.cal_num a:visited {
+	color:#999999; 
+	text-decoration: none;
+}
+.cal_num a:active {
+	color:#999999; 
+	text-decoration: none;
+}
+.cal_num a:hover {
+	color:#999999; 
+	text-decoration: none;
+}
+
+/*-------- OTB Management 筌띾뜆��옙占쏙옙�살쒔 layer �울옙��----------*/
+.otm_mlayerL {
+	background-image: url(/img/img_mlayerL.gif);
+	height: 16px;
+	width: 5px;
+}
+.otm_mlayer {
+	font-family: Microsoft Yahei, Arial;
+	background-image: url(/img/img_mlayer.gif);
+	color: #FFFFFF;
+	font-size: 11px;
+}
+.otm_mlayerR {
+	background-image: url(/img/img_mlayerR.gif);
+	height: 16px;
+	width: 5px;
+}
+/*-------- �⑤벊�숋옙占쏙옙�울옙 color �울옙��----------*/
+.eguan_otb {
+	background-color:#3e57c2;
+}
+.eguan_mobile {
+	background-color:#2dcda5;
+}
+.eguan_forbid {
+	background-color:#ec3c4d;
+}
+.eguan_gi {
+	background-color:#4fa8e0;
+}
+.eguan_available {
+	background-color:#ededed;
+}
+.eguan_limit {
+	background-color:#ff9c43;
+}
+
+/*---------- 嚥≪뮄�뉛옙紐낆넅筌롳옙Box �울옙��----------*/
+.scorner_TL2 {width:20px; height:56px; background:url(/img/scorner_tl.gif) no-repeat top left;}
+.scorner_TC2 {width:475px; height:56px; background:url(/img/scorner_tc.gif); font:normal 11px arial; color: #8f8f8f;}
+.scorner_TR2 {width:20px; height:56px; background:url(/img/scorner_tr.gif) no-repeat top right;}
+.scorner_BL2 {width:20px; height:119px; background:url(/img/scorner_bl.gif) no-repeat top left;}
+.scorner_BC2 {width:475px; height:119px; background:url(/img/scorner_bc.gif) repeat; padding-bottom: 10px;}
+.scorner_BR2 {width:20px; height:119px; background:url(/img/scorner_br.gif) no-repeat top right;}
+ 
+ 
+ 
+.td_al_blue {
+    background-color: #f0f7f8;
+    padding: 2px;
+    font-family: arial;
+    font-size: 11px;
+    color: #333333;
+}
+.td_al_blue  a:link {
+    color: #0066cc;
+    text-decoration: none;
+}
+.td_al_blue  a:visited {
+    color: #0066cc;
+    text-decoration: none;
+}
+.td_al_blue  a:active {
+    color: #0066cc;
+    text-decoration: none;
+}
+.td_al_blue  a:hover {
+    color: #0066cc;
+    text-decoration: underline;
+}
+ 
+.tit_error {
+    font-family: Microsoft Yahei, Arial;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fb9a02;
+    height: 24px;
+    padding-bottom: 5px;
+    vertical-align: bottom;
+}
+
+.blue_btn_box{
+	width:60px;
+	text-align:right;
+	padding-right:5px;
+}
+.blue_btn_left {
+	background-image: url(/img/blue_btn_ser_left.gif);
+	height: 19px;
+	width: 9px;
+	width: 9px\9;
+	min-width: 9px;
+}
+.blue_btn {
+	background-image: url(/img/blue_btn_ser.gif);
+	text-align: center;
+	vertical-align: middle;
+	height: 19px;
+	background-repeat: repeat-x;
+	font-family: Tahoma, Verdana, Segoe, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+.blue_btn a:link {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.blue_btn a:visited {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.blue_btn a:active {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.blue_btn a:hover {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.blue_btn_right {
+	background-image: url(/img/blue_btn_ser_right.gif);
+	height: 19px;
+	width: 9px;
+	width: 9px\9;
+	min-width: 9px;
+}
+ 

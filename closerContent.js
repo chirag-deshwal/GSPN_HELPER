@@ -48,6 +48,7 @@
   const NEW_TAB_PREF_KEY = 'openRequestsInNewTab';
   const PAGE_PREF_KEY = '__gspnOpenNewTabEnabled';
   let useNewTabForPopups = false;
+  let isGhostModeActive = false;
 
   function updatePopupRedirectPreference(enabled) {
     useNewTabForPopups = !!enabled;
@@ -76,7 +77,12 @@
           window[prefKey] = !!enabled;
         };
 
+        window.__gspnSetGhostMode = function(enabled) {
+          window['__gspnGhostModeEnabled'] = !!enabled;
+        };
+
         window.__gspnSetPopupOpenMode(false);
+        window.__gspnSetGhostMode(false);
 
         function getDialogTitle(url, target) {
           const u = (url || '').toLowerCase();
@@ -198,6 +204,10 @@
             normalizedUrl.includes('customer') ||
             normalizedUrl.includes('print') ||
             normalizedUrl.includes('detail');
+
+          if (window['__gspnGhostModeEnabled'] || window[prefKey]) {
+            return originalOpen(url, target, features);
+          }
 
           if (looksLikePopup || normalizedTarget === '_blank') {
             return createInPageModal(url, target);
@@ -349,15 +359,56 @@
   }
 
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === 'local' && Object.prototype.hasOwnProperty.call(changes, NEW_TAB_PREF_KEY)) {
-      updatePopupRedirectPreference(changes[NEW_TAB_PREF_KEY].newValue);
+    if (area === 'local') {
+      if (Object.prototype.hasOwnProperty.call(changes, NEW_TAB_PREF_KEY)) {
+        updatePopupRedirectPreference(changes[NEW_TAB_PREF_KEY].newValue);
+      }
+      if (Object.prototype.hasOwnProperty.call(changes, 'ghostModeEnabled')) {
+        updateGhostMode(!!changes.ghostModeEnabled.newValue);
+      }
     }
   });
+
+  function updateGhostMode(isGhost) {
+    isGhostModeActive = !!isGhost;
+    try {
+      if (typeof window !== 'undefined') {
+        window['__gspnGhostModeEnabled'] = isGhostModeActive;
+        if (typeof window.__gspnSetGhostMode === 'function') {
+          window.__gspnSetGhostMode(isGhostModeActive);
+        }
+      }
+    } catch (e) {}
+
+    if (isGhostModeActive) {
+      const panel = document.getElementById('closerHelperPanel');
+      if (panel) panel.remove();
+      const styleEl = document.getElementById('closerHelperStyle');
+      if (styleEl) styleEl.remove();
+
+      const gspnPanel = document.getElementById('gspnHelperPanel');
+      if (gspnPanel) gspnPanel.remove();
+
+      document.querySelectorAll('[id^="gspnInPageModalOverlay_"]').forEach(el => el.remove());
+      document.querySelectorAll('.gspn-open-new-tab-cell').forEach(el => el.remove());
+    } else {
+      if (isTopFrame) {
+        chrome.storage.local.get(['closerHelperEnabled'], (d) => {
+          if (d.closerHelperEnabled !== false) {
+            injectPanel();
+          }
+        });
+      }
+      injectConsumerChangeButton();
+      injectOpenNewTabPrintButton();
+    }
+  }
 
   /* ========================================================================
    *  PART 1 — INJECT CUSTOMER SEARCH PANEL (run before top-frame return)
    * ======================================================================== */
   function injectConsumerChangeButton() {
+    if (isGhostModeActive) return;
     injectConsumerButtonStyle();
     const consumerInput = document.getElementById('CONSUMER')
       || document.querySelector('input[name="CONSUMER"]')
@@ -431,6 +482,7 @@
   }
 
   function injectOpenNewTabPrintButton() {
+    if (isGhostModeActive) return;
     if (!document.getElementById('gspnOpenNewTabScriptInjected')) {
       const script = document.createElement('script');
       script.id = 'gspnOpenNewTabScriptInjected';
@@ -486,11 +538,20 @@
     });
   }
 
-  injectConsumerChangeButton();
-  injectOpenNewTabPrintButton();
+  chrome.storage.local.get(['ghostModeEnabled', NEW_TAB_PREF_KEY], (data) => {
+    isGhostModeActive = !!data.ghostModeEnabled;
+    updatePopupRedirectPreference(data[NEW_TAB_PREF_KEY]);
+    if (isGhostModeActive) {
+      updateGhostMode(true);
+    } else {
+      injectConsumerChangeButton();
+      injectOpenNewTabPrintButton();
+    }
+  });
 
   if (document.body) {
     const observer = new MutationObserver(() => {
+      if (isGhostModeActive) return;
       if (document.getElementById('CONSUMER') && !document.getElementById('gspnHelperPanel')) {
         injectConsumerChangeButton();
       }
@@ -502,12 +563,11 @@
   /* ========================================================================
    *  PART 2 — TOP FRAME: inject floating Closer Helper bar (if enabled)
    * ======================================================================== */
-  /* ========================================================================
-   *  PART 2 — TOP FRAME: inject floating Closer Helper bar (if enabled)
-   * ======================================================================== */
   if (isTopFrame) {
     const initPanel = () => {
-      chrome.storage.local.get('closerHelperEnabled', (data) => {
+      chrome.storage.local.get(['closerHelperEnabled', 'ghostModeEnabled'], (data) => {
+        isGhostModeActive = !!data.ghostModeEnabled;
+        if (isGhostModeActive) return;
         const enabled = data.closerHelperEnabled !== false;
         if (enabled) {
           if (document.readyState === 'loading') {
@@ -525,15 +585,21 @@
 
     // Listen for toggle changes from popup (live enable/disable)
     chrome.storage.onChanged.addListener((changes, area) => {
-      if (area === 'local' && changes.closerHelperEnabled) {
-        const enabled = changes.closerHelperEnabled.newValue !== false;
-        const existing = document.getElementById('closerHelperPanel');
-        if (enabled && !existing) {
-          injectPanel();
-        } else if (!enabled && existing) {
-          existing.remove();
-          const styleEl = document.getElementById('closerHelperStyle');
-          if (styleEl) styleEl.remove();
+      if (area === 'local') {
+        if (Object.prototype.hasOwnProperty.call(changes, 'ghostModeEnabled')) {
+          updateGhostMode(!!changes.ghostModeEnabled.newValue);
+        }
+        if (changes.closerHelperEnabled) {
+          if (isGhostModeActive) return;
+          const enabled = changes.closerHelperEnabled.newValue !== false;
+          const existing = document.getElementById('closerHelperPanel');
+          if (enabled && !existing) {
+            injectPanel();
+          } else if (!enabled && existing) {
+            existing.remove();
+            const styleEl = document.getElementById('closerHelperStyle');
+            if (styleEl) styleEl.remove();
+          }
         }
       }
     });
@@ -544,6 +610,7 @@
    *  PART 3 — INNER FRAME: listen for fill commands from the top frame
    * ======================================================================== */
   window.addEventListener('message', (e) => {
+    if (isGhostModeActive) return;
     if (e.data && e.data.type === 'CLOSER_HELPER_FILL') {
       applyPreset(e.data.preset);
     }

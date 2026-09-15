@@ -4,7 +4,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GSPN Data Scraper</title>
+  <title>GSPN Helper Tool</title>
+  <link rel="icon" type="image/png" href="icons/icon48.png">
   <!-- Compiled Local Tailwind v4 Stylesheet -->
   <link rel="stylesheet" href="tailwind.min.css">
   <!-- Material Symbols -->
@@ -482,7 +483,7 @@
           </svg>
         </div>
         <h2 class="login-title">System Authentication</h2>
-        <p class="login-subtitle">Sign in to access GSPN Data Scraper</p>
+        <p class="login-subtitle">Sign in to access GSPN Helper Tool</p>
       </div>
 
       <!-- Login Form -->
@@ -565,26 +566,24 @@
       <div class="flex justify-between items-center mb-3">
         <div class="flex items-center gap-3">
           <div
-            class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center border border-outline-variant">
-            <div class="grid grid-cols-2 gap-0.5 p-1">
-              <div class="w-3.5 h-3.5 rounded-sm bg-primary"></div>
-              <div class="w-3.5 h-3.5 rounded-sm bg-tertiary-fixed-dim"></div>
-              <div class="w-3.5 h-3.5 rounded-sm bg-secondary"></div>
-              <div class="w-3.5 h-3.5 rounded-sm bg-secondary-container"></div>
-            </div>
+            class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center border border-outline-variant p-1">
+            <img src="icons/icon48.png" alt="GSPN Helper Tool" class="w-7 h-7 object-contain">
           </div>
           <div>
-            <h1 class="font-headline-md text-headline-md font-bold text-primary">GSPN Data Scraper</h1>
+            <h1 class="font-headline-md text-headline-md font-bold text-primary">GSPN Helper Tool</h1>
             <p class="font-body-sm text-xs text-on-surface-variant">Samsung Service Portal</p>
           </div>
         </div>
 
         <div class="flex items-center gap-2">
-          <button id="btnToggleLogs"
-            class="p-2 rounded-full hover:bg-surface-container-high transition-colors text-primary"
-            title="Toggle Logs View">
-            <span class="material-symbols-outlined">sync</span>
+          <!-- Ghost Mode Toggle Button -->
+          <button id="btnGhostToggleHeader"
+            class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-slate-200 bg-slate-100/80 text-slate-500 hover:bg-slate-200/80 transition-all duration-200 cursor-pointer select-none text-xs font-semibold opacity-80 hover:opacity-100"
+            title="Ghost Mode: Off (Floating buttons active — click to turn ON)" role="switch" aria-checked="false">
+            <span id="btnGhostHeaderIcon" class="text-sm leading-none select-none">👻</span>
+            <span id="btnGhostHeaderLabel" class="text-[11px] font-bold">Ghost Off</span>
           </button>
+          <button id="btnToggleLogs" class="hidden" aria-hidden="true"></button>
           <button id="btnProfiles"
             class="p-2 rounded-full hover:bg-surface-container-high transition-colors text-primary"
             title="Manage Profiles">
@@ -614,20 +613,17 @@
 
         <!-- Tool Grid (Bento Layout) -->
         <div class="grid grid-cols-4 gap-2">
-          <!-- Scrape Data -->
+          <!-- Scrape / Add More (smart toggle button) -->
           <button id="btnScrape"
-            class="flex flex-col items-center justify-center p-2 bg-primary text-on-primary rounded-lg hover:bg-primary-container transition-all duration-200 active:scale-95 h-20 col-span-1">
-            <span class="material-symbols-outlined text-3xl mb-1">search</span>
-            <span class="font-label-caps text-[9px] font-bold text-center uppercase tracking-tight">Scrape</span>
+            class="flex flex-col items-center justify-center p-2 bg-primary text-on-primary rounded-lg hover:opacity-90 transition-all duration-200 active:scale-95 h-20 col-span-1"
+            title="Scrape data from current GSPN page">
+            <span id="btnScrapeIcon" class="material-symbols-outlined text-3xl mb-1">search</span>
+            <span id="btnScrapeLabel"
+              class="font-label-caps text-[9px] font-bold text-center uppercase tracking-tight">Scrape</span>
           </button>
 
-          <!-- Add More Data -->
-          <button id="btnAppendScrape"
-            class="flex flex-col items-center justify-center p-2 bg-secondary-container text-on-primary rounded-lg hover:opacity-90 transition-all duration-200 active:scale-95 h-20 col-span-1 disabled:opacity-40 disabled:cursor-not-allowed"
-            disabled>
-            <span class="material-symbols-outlined text-3xl mb-1">add_circle</span>
-            <span class="font-label-caps text-[9px] font-bold text-center uppercase tracking-tight">Add More</span>
-          </button>
+          <!-- hidden shim kept for JS compatibility (btnAppendScrape) -->
+          <button id="btnAppendScrape" class="hidden" aria-hidden="true" disabled></button>
 
           <!-- Download & Copy Grouped -->
           <div class="grid grid-rows-2 gap-1 h-20 col-span-1">
@@ -651,6 +647,48 @@
             <span class="material-symbols-outlined text-3xl mb-1">delete_sweep</span>
             <span class="font-label-caps text-[9px] font-bold text-center uppercase tracking-tight">Reset</span>
           </button>
+        </div>
+
+        <!-- Scrape Target Spinner Selector (Fixed UI) -->
+        <div
+          class="scrape-target-container w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2 flex items-center gap-2 shadow-xs">
+          <div class="flex items-center gap-1.5 flex-shrink-0">
+            <span class="material-symbols-outlined text-primary" style="font-size:16px;">tune</span>
+            <span
+              class="font-label-caps text-[10px] font-bold text-on-surface-variant uppercase tracking-wider whitespace-nowrap">Target:</span>
+          </div>
+          <div class="relative flex-1 min-w-0">
+            <select id="selScrapeTarget"
+              class="w-full appearance-none bg-white border border-outline-variant hover:border-primary focus:border-primary text-primary font-bold text-xs rounded-lg py-1.5 pl-2.5 pr-6 transition-all cursor-pointer outline-none">
+              <option value="print_command" selected>Print Command (Default)</option>
+              <option value="interaction_message">Interaction Message</option>
+              <option value="management_lite">Manegment Lite</option>
+            </select>
+            <span
+              class="material-symbols-outlined pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 text-primary"
+              style="font-size:15px;">unfold_more</span>
+          </div>
+        </div>
+
+        <!-- Excel Template Selector -->
+        <div
+          class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2 flex items-center gap-2 shadow-xs">
+          <div class="flex items-center gap-1.5 flex-shrink-0">
+            <span class="material-symbols-outlined text-tertiary" style="font-size:16px;">table_chart</span>
+            <span
+              class="font-label-caps text-[10px] font-bold text-on-surface-variant uppercase tracking-wider whitespace-nowrap">Template:</span>
+          </div>
+          <div class="relative flex-1 min-w-0">
+            <select id="selExcelTemplate"
+              class="w-full appearance-none bg-white border border-outline-variant hover:border-tertiary focus:border-tertiary text-tertiary font-bold text-xs rounded-lg py-1.5 pl-2.5 pr-6 transition-all cursor-pointer outline-none">
+              <option value="GGN_OPEN_PENDING" selected>GGN_OPEN_PENDING (Default)</option>
+              <option value="GGN_TRIM_DATA_ML">GGN_TRIM_DATA_ML</option>
+              <option value="RAW_DATA">Raw Data (All Columns)</option>
+            </select>
+            <span
+              class="material-symbols-outlined pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 text-tertiary"
+              style="font-size:15px;">unfold_more</span>
+          </div>
         </div>
 
         <!-- Status Enrichment Card -->
@@ -836,8 +874,11 @@
                 <span class="material-symbols-outlined group-hover:rotate-12 transition-transform">open_in_new</span>
                 <span>Print in New Tab</span>
               </button>
-              <label class="flex items-center justify-center cursor-pointer bg-white px-3 py-3 border border-outline-variant rounded-xl hover:bg-surface-container transition-colors" title="Open into New Tab">
-                <input type="checkbox" id="chkPrintNewTab" class="w-4 h-4 rounded text-primary focus:ring-primary accent-primary cursor-pointer" checked>
+              <label
+                class="flex items-center justify-center cursor-pointer bg-white px-3 py-3 border border-outline-variant rounded-xl hover:bg-surface-container transition-colors"
+                title="Open into New Tab">
+                <input type="checkbox" id="chkPrintNewTab"
+                  class="w-4 h-4 rounded text-primary focus:ring-primary accent-primary cursor-pointer" checked>
               </label>
             </div>
             <p class="text-center text-[10px] text-on-surface-variant/70 italic">
@@ -851,7 +892,8 @@
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="material-symbols-outlined text-primary">toggle_on</span>
-              <h3 class="font-label-caps text-xs font-bold text-on-surface-variant uppercase tracking-wider">Module Toggles</h3>
+              <h3 class="font-label-caps text-xs font-bold text-on-surface-variant uppercase tracking-wider">Module
+                Toggles</h3>
             </div>
             <button id="btnCloserSettings"
               class="bg-primary text-white font-bold text-[10px] py-1 px-2.5 rounded-lg flex items-center gap-1 hover:bg-primary-container transition-colors">
@@ -871,7 +913,8 @@
               <span class="material-symbols-outlined text-primary text-base">security</span>
               <div>
                 <span class="font-bold text-[11px] text-on-surface block">Others (Closer Helper)</span>
-                <span id="chkCloserStatus" class="font-normal text-[10px] text-on-surface-variant/80 block">Disabled — toggle to enable on GSPN page</span>
+                <span id="chkCloserStatus" class="font-normal text-[10px] text-on-surface-variant/80 block">Disabled —
+                  toggle to enable on GSPN page</span>
               </div>
             </div>
             <label class="switch">
@@ -887,7 +930,8 @@
               <span class="material-symbols-outlined text-primary text-base">auto_mode</span>
               <div>
                 <span class="font-bold text-[11px] text-on-surface block">1-1-1 Scraper</span>
-                <span id="chk111Status" class="font-normal text-[10px] text-on-surface-variant/80 block">Disabled — toggle auto-add tickets</span>
+                <span id="chk111Status" class="font-normal text-[10px] text-on-surface-variant/80 block">Disabled —
+                  toggle auto-add tickets</span>
               </div>
             </div>
             <label class="switch">
@@ -903,7 +947,8 @@
               <span class="material-symbols-outlined text-primary text-base">health_and_safety</span>
               <div>
                 <span class="font-bold text-[11px] text-on-surface block">Health Check Dialog</span>
-                <span id="chkHealthStatus" class="font-normal text-[10px] text-on-surface-variant/80 block">Disabled — toggle to enable dialog</span>
+                <span id="chkHealthStatus" class="font-normal text-[10px] text-on-surface-variant/80 block">Disabled —
+                  toggle to enable dialog</span>
               </div>
             </div>
             <label class="switch">
@@ -913,13 +958,15 @@
           </div>
 
           <!-- Ghost Mode (Turn Off All Floating Buttons & Functions) -->
-          <div
-            class="flex items-center justify-between py-2 px-3 bg-red-50/60 rounded-lg border border-red-200 hover:bg-red-50 transition-colors">
+          <div id="ghostModeCard"
+            class="flex items-center justify-between py-2 px-3 bg-slate-50 rounded-lg border border-slate-200 hover:bg-slate-100/80 transition-colors">
             <div class="flex items-center gap-2 flex-grow pr-2">
-              <span class="material-symbols-outlined text-red-600 text-base">visibility_off</span>
+              <span class="text-base select-none">👻</span>
               <div>
-                <span class="font-bold text-[11px] text-red-900 block">Ghost Mode (Disable Floating Features)</span>
-                <span id="chkGhostStatus" class="font-normal text-[10px] text-red-700 block">Off — floating buttons active</span>
+                <span class="font-bold text-[11px] text-slate-800 block">Ghost Mode (Hide All Floating Features &amp;
+                  Icon)</span>
+                <span id="chkGhostStatus" class="font-normal text-[10px] text-slate-500 block">Off — floating buttons
+                  &amp; icon active</span>
               </div>
             </div>
             <label class="switch">
@@ -935,7 +982,8 @@
               <span class="material-symbols-outlined text-primary text-base">hide</span>
               <div>
                 <span class="font-bold text-[11px] text-on-surface block">Hide Health Floating Button</span>
-                <span id="chkHideHealthStatus" class="font-normal text-[10px] text-on-surface-variant/80 block">Off — Health button visible on GSPN</span>
+                <span id="chkHideHealthStatus" class="font-normal text-[10px] text-on-surface-variant/80 block">Off —
+                  Health button visible on GSPN</span>
               </div>
             </div>
             <label class="switch">
@@ -951,7 +999,8 @@
               <span class="material-symbols-outlined text-primary text-base">cancel</span>
               <div>
                 <span class="font-bold text-[11px] text-on-surface block">Hide "Add 1-1-1 Data" Button</span>
-                <span id="chkHide111Status" class="font-normal text-[10px] text-on-surface-variant/80 block">Off — Add 1-1-1 button visible on GSPN</span>
+                <span id="chkHide111Status" class="font-normal text-[10px] text-on-surface-variant/80 block">Off — Add
+                  1-1-1 button visible on GSPN</span>
               </div>
             </div>
             <label class="switch">
@@ -1009,7 +1058,8 @@
     <footer
       class="flex justify-between items-center px-4 py-3 bg-surface-container-lowest border-t border-outline-variant">
       <div class="flex flex-col">
-        <span class="font-label-caps text-[10px] font-bold text-secondary uppercase">v1.1.1</span>
+        <span class="font-label-caps text-[10px] font-bold text-secondary uppercase">v1.1.2 - Open Source by
+          Nakabposh</span>
         <span class="font-body-sm text-[10px] text-on-surface-variant">Works only on <span
             class="font-bold">biz2.samsungcsportal.com</span></span>
       </div>

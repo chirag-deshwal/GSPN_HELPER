@@ -1,0 +1,637 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- saved from url=(0048)https://biz2.samsungcsportal.com/B2BLeftMenu.jsp -->
+<html lang="en" style="overflow:hidden;"><style id="gspnCustomBtnStyle">
+        .gspn-helper-panel {
+          display: inline-flex;
+          flex-direction: column;
+          gap: 8px;
+          padding: 10px 12px;
+          margin-left: 8px;
+          background: rgba(79, 70, 229, 0.12);
+          border: 1px solid rgba(124, 58, 237, 0.2);
+          border-radius: 14px;
+          box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+          color: #eef2ff;
+          font-size: 12px;
+          min-width: 180px;
+        }
+        .gspn-helper-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+        }
+        .gspn-helper-title {
+          font-weight: 700;
+          color: #eef2ff;
+          letter-spacing: 0.15px;
+        }
+        .gspn-toggle-group {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          cursor: pointer;
+          user-select: none;
+        }
+        .gspn-toggle-group input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+          position: absolute;
+        }
+        .gspn-toggle-slider {
+          width: 36px;
+          height: 18px;
+          border-radius: 999px;
+          background: rgba(148, 163, 184, 0.22);
+          position: relative;
+          transition: background 0.25s;
+        }
+        .gspn-toggle-slider::after {
+          content: '';
+          position: absolute;
+          top: 2px;
+          left: 2px;
+          width: 14px;
+          height: 14px;
+          border-radius: 999px;
+          background: #fff;
+          transition: transform 0.25s;
+        }
+        .gspn-toggle-group input:checked + .gspn-toggle-slider {
+          background: linear-gradient(135deg, #7c3aed, #6366f1);
+        }
+        .gspn-toggle-group input:checked + .gspn-toggle-slider::after {
+          transform: translateX(18px);
+        }
+        .gspn-toggle-text {
+          color: #c7d2fe;
+          font-size: 11px;
+          font-weight: 600;
+        }
+        .gspn-button-row {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        .gspn-btn {
+          flex: 1 1 auto;
+          min-width: 70px;
+          border: none;
+          border-radius: 999px;
+          padding: 8px 12px;
+          color: #ffffff;
+          background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+          font-weight: 700;
+          letter-spacing: 0.1px;
+          cursor: pointer;
+          transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+        }
+        .gspn-btn:hover {
+          transform: translateY(-1px);
+          filter: brightness(1.05);
+        }
+        .gspn-btn:active {
+          transform: translateY(0);
+        }
+        .gspn-secondary-btn {
+          background: rgba(255, 255, 255, 0.12);
+          color: #e0e7ff;
+          box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.18);
+        }
+        .gspn-helper-fragment {
+          padding: 8px 10px;
+          border-radius: 10px;
+          background: rgba(255, 255, 255, 0.08);
+          color: #c7d2fe;
+          font-size: 11px;
+          line-height: 1.4;
+        }
+      </style><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>GSPN</title>
+
+<meta http-equiv="X-UA-Compatible" content="requiresActiveX=true">
+
+<link rel="stylesheet" type="text/css" href="./gspn.css">
+
+<link rel="stylesheet" type="text/css" href="./jquery-ui-1.8.18.custom.css">
+<link rel="stylesheet" type="text/css" href="./timePicker.css">
+<link rel="stylesheet" type="text/css" href="./layout.css">
+<link rel="stylesheet" type="text/css" href="./protoload.css">
+
+<style type="text/css">
+<!--
+.loading {
+	background-position: center center;
+	text-align: center;	
+	background-color: transparent;
+}
+
+
+-->
+</style>
+
+<script type="text/javascript" src="./dragtable.js.download"></script>
+<script type="text/javascript" src="./hashtable.js.download"></script>
+<script type="text/javascript" src="./json_sans_eval.js.download"></script>
+<script type="text/javascript" src="./paging.js.download"></script>
+<script type="text/javascript" src="./common.js.download"></script>
+<script type="text/javascript" src="./prototype.js.download"></script>
+<script type="text/javascript" src="./protoload.js.download"></script>
+<script type="text/javascript" src="./sorttable.js.download"></script>
+<script type="text/javascript" src="./jquery-1.7.1.min.js.download"></script>
+<script type="text/javascript" src="./jquery-ui-1.8.18.custom.min.js.download"></script>
+<script type="text/javascript" src="./jquery.timePicker.min.js.download"></script>
+<script type="text/javascript" src="./jquery.printElement.min.js.download"></script>
+<script type="text/javascript" src="./jquery.tablesorter.min.js.download"></script>
+<script type="text/javascript">
+	/**
+	 * Prototype.js 와 jQuery 와의 충돌을 방지 (jQuery를 사용하는 변수에는 $ 대신 $j 를  사용)
+	 */
+	var $j = jQuery.noConflict();
+</script>
+<script type="text/javascript">
+	var dateFormat = 'dd/mm/yy';
+	var zeroDate = '00/00/0000';
+</script>
+<script type="text/javascript" src="./date.js.download"></script>
+
+<script type="text/javascript">
+	var loginUserDateFormat = "dd/MM/yyyy";
+	
+	/**
+	 * 법인별 사용자 boolean변수
+	 */
+	var isAmericaRegion = false;
+	var isEuropeRegion = false;
+	var isAsiaRegion = true;
+	var isChinaRegion = false;	
+
+	var isAfUser = false;
+	var isMeaUser = false;
+	var isCisUser = false;
+	var isEuUser = false;
+
+	var isEaUser = false;
+	var isJpUser = false;
+	var isWaUser = true;
+	var isCnUser = false;
+
+	var isLaUser = false;
+	var isNaUser = false;
+
+	/*
+	 * 중국 법인통합
+	 */
+	var isNewChina = false;
+	/**
+	 * 사용자Center Type
+	 */
+	var isFscUser = false;
+
+	/**
+	 * 로그인 사용자의 법인 정보
+	 */
+	var loginUserCorpCode = "C550";
+	var loginUserCorpName = "SIEL";
+	var svcUserCorpCode = "C550";
+	
+	var isWtyIntegrationCorpCode = true;
+	var isWtyIntegration = true;
+
+	var isBlockFlash = true;
+
+	/**
+	 * paging.js에서 사용
+	 */
+	var prevPageChar = 'Prev.';
+	var nextPageChar = 'Next';
+
+	/**
+	 * common.js에서 사용
+	 */
+	var addToCartSuccessMsg = 'successfuly added into Cart';
+	var addToCartFailMsg = 'failed';
+	var dataNotFoundMsg = 'No Data Found.';
+	
+	var Gmsg = new Array();
+	Gmsg[0] = "item should be filled up";
+	Gmsg[1] = "You can input only number.";
+	Gmsg[2] = "Incorrect E-mail Format!";
+	/**
+	 * 페이징 처리시 한 페이지당 화면에 출력할 개수
+	 */
+	var numPerPage = '100'
+
+	/**
+	 * 현재 선택된 페이지 번호
+	 */
+	var searchPageNo = 0;
+
+	/**
+	 * 현재 선택된 블럭번호
+	 */
+	var searchBlckNo = 0;
+
+	/**
+	 * 그리드 데이터의 출력 시작번호
+	 */
+	var displayBeginRow = 0;
+
+	/**
+	 * 그리드 데이터의 출력 마지막 번호
+	 */
+	var displayFinishRow = 0;
+
+	/**
+	 * 총 그리드 데이터
+	 */
+	var totRow = 0;
+
+	/**
+	 * Url Mapping Controller
+	 */
+	var urlPattern = '/gspn/operate.do';
+
+	/**
+	 * Cache Url Mapping Controller
+	 */
+	var cacheUrlPattern = '/gspn/cache.do';
+
+	/**
+	 * SAP 데이터를 그리드에 페이징 처리를
+	 * 위한 시작 데이터와 마지막 데이터의 처리함수.
+	 */
+	function setDisplayRow() {
+		if (searchPageNo == 0) {
+			displayBeginRow = 0;
+			displayFinishRow = (searchPageNo + 1) * numPerPage;
+		} else {
+			displayBeginRow = searchPageNo * numPerPage;
+			displayFinishRow = (searchPageNo + 1) * numPerPage;					
+		}
+	}
+
+	/**
+	 * 변수 데이터 초기화
+	 */
+	function initialDisplayRowVariable() {
+		searchPageNo = 0;
+		searchBlckNo = 0;
+		displayBeginRow = 0;
+		displayFinishRow = 0;
+		totRow = 0;
+	}
+
+	/**
+	 * IE and Opera
+	 */
+	if (window.attachEvent) {
+		window.attachEvent("onload", neviDir);
+		window.attachEvent("onunload", neviDir);
+	} else {
+		window.addEventListener("DOMContentLoaded", neviDir, false);
+		window.addEventListener("unload", neviDir, false);
+	}
+
+	
+	function neviDir() {
+		try{
+			if (eval("parent.rightContents") == undefined) {
+				return;
+			}
+	
+			if (parent.$('leftMenuForm') != null) {
+				var navigation = "";
+				var title = "";
+				var menuUrl = "";
+				if (parent.$('leftMenuForm').naviDir != null) {
+					navigation = parent.$('leftMenuForm').naviDir.value;
+				}
+				if (parent.$('leftMenuForm').titleDir != null) {
+					title = parent.$('leftMenuForm').titleDir.value;
+				}
+				var naviDir = "<img src='/img/locater_arrow.gif' width='9' height='9' align='absmiddle'> " + navigation;
+				if (parent.$('leftMenuForm').menuUrl != null) {
+					menuUrl = parent.$('leftMenuForm').menuUrl.value;
+				}
+	
+				if (document.getElementById('naviDiv') != null) {
+					document.getElementById('naviDiv').innerHTML = naviDir;
+				}
+				if (document.getElementById('titleDiv') != null) {
+					document.getElementById('titleDiv').innerHTML = title;
+				}
+				
+	            /*
+	             * 미주 통합
+	             - RH-002
+	             - 화면상단 Support Link 제공                                 
+	             - 2015-10-26
+	          */  
+		          
+				
+	
+				if (menuUrl != "") {
+					authButton(menuUrl);
+				}
+			}
+		}catch(e){
+			
+		}
+	}
+
+	/**
+	 * Display command-registred buttons.
+	 */
+	function authButton(menuUrl) {
+		$('authForm').action = urlPattern;
+		$('authForm').cmd.value = 'AuthCommandListCmd';
+		$('authForm').menuUrl.value = menuUrl;
+		AjaxRequest(urlPattern, "authForm", setJsonObject);
+	}
+
+	function setJsonObject(response) {
+		var jsonObjBtn = eval('(' + response.responseText + ')');
+
+		if (jsonObjBtn.success) {
+			var length = jsonObjBtn.cmdLists.length;
+			for ( var i = 0; i < length; i++) {
+				if (document.getElementById(jsonObjBtn.cmdLists[i].commandId) != null) {
+					document.getElementById(jsonObjBtn.cmdLists[i].commandId).style.display = "block";
+				}
+			}
+		}
+	}
+
+	/**
+	 * Timezone 날짜 함수
+	 */
+	function calcTzDate(offset) {
+		// create Date object for current location
+		var d = new Date();
+
+		// convert to msec
+		// add local time zone offset 
+		// get UTC time in msec
+		var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+
+		// create new Date object for different city
+		// using supplied offset
+		var nd = new Date(utc + (3600000 * offset));
+
+		var tmpyy = nd.getFullYear();
+		var ls_yy = (tmpyy > 99) ? tmpyy : 1900 + tmpyy;
+
+		var tmpmon = nd.getMonth();
+		var ls_mon = (tmpmon < 9) ? "0" + (tmpmon + 1) : tmpmon + 1;
+
+		var tmpday = nd.getDate();
+		var ls_day = (tmpday < 10) ? "0" + tmpday : tmpday;
+
+		var tmphh = nd.getHours();
+		var ls_hh = (tmphh < 10) ? "0" + tmphh : tmphh;
+
+		var tmpmm = nd.getMinutes();
+		var ls_mm = (tmpmm < 10) ? "0" + tmpmm : tmpmm;
+
+		// return time as a string
+		return ls_yy.toString() + ls_mon.toString() + ls_day.toString();
+	}
+
+	/**
+	 * Timezone 시간 함수
+	 */
+	function calcTzTime(offset) {
+		// create Date object for current location
+		var d = new Date();
+
+		// convert to msec
+		// add local time zone offset 
+		// get UTC time in msec
+		var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+
+		// create new Date object for different city
+		// using supplied offset
+		var nd = new Date(utc + (3600000 * offset));
+
+		var tmphh = nd.getHours();
+		var ls_hh = (tmphh < 10) ? "0" + tmphh : tmphh;
+
+		var tmpmm = nd.getMinutes();
+		var ls_mm = (tmpmm < 10) ? "0" + tmpmm : tmpmm;
+
+		// return time as a string
+		return ls_hh.toString() + ls_mm.toString();
+	}
+
+	/**
+	 * 새로고침(F5), Ctrl+R, Ctrl+N 방지
+	 */
+	function preventRefreshEvent() {
+		if (event.keyCode == 116) {
+			event.keyCode = 2;
+			return false;
+		} else if (event.ctrlKey
+				&& (event.keyCode == 78 || event.keyCode == 82)) {
+			return false;
+		}
+	}
+
+	
+
+	document.onkeydown = preventRefreshEvent;
+	
+	function btnCommonFileUpload(callBackName, action) {
+    
+	    var url = "/common/commonFileUpload.jsp";
+	    	    
+	    w = window.open(url, "common_attach", 'toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,top=100,left=200,width=550,height=250');
+	    w.focus();
+	
+	    $('commonAttach').action = url;
+	    $('commonAttach').actionParam.value = action;
+	    $('commonAttach').callBackName.value = callBackName;
+	    $('commonAttach').target = "common_attach";
+	    $('commonAttach').submit();
+	    
+	    w.focus();
+	    
+	}
+</script>
+<style>
+
+</style>
+</head>
+
+<body style="background-color: transparent; height:100%;" scroll="no">
+<form id="formHelp" method="post" action="https://biz2.samsungcsportal.com/gspn/operate.do">
+<input type="hidden" name="cmd" value="">
+<input type="hidden" name="MENUID" value="">
+</form>
+<form id="commonAttach" method="post" action="https://biz2.samsungcsportal.com/B2BLeftMenu.jsp">
+<input type="hidden" id="callBackName" name="callBackName" value="">
+<input type="hidden" id="actionParam" name="actionParam" value="">
+</form>
+<form id="authForm" name="authForm" method="post" style="display: inline;">
+	<input type="hidden" name="cmd" value="">
+	<input type="hidden" name="menuUrl" value="">
+	<input type="hidden" name="subRegionCd" value="WA">
+	<input type="hidden" name="aclId" value="STBUSER">
+</form>
+<div id="progressloading" style="position:absolute; left:0px; top:0px; width:100%; height:100%; text-align:center; background:#fff; _background:none; opacity:.75; z-index:1; display: none;">
+    <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+        <tbody><tr>
+            <td class="loading"><img src="./loading.gif" width="32" height="32"></td>
+        </tr>
+    </tbody></table>
+</div>
+
+
+
+
+
+
+<title>GSPN</title>
+
+<script language="javascript" type="text/javascript">
+
+	var showLeftMenu = true;
+
+	/**
+	 * 좌측 메뉴 프레임 보이기/숨기기
+	 */
+	function toggleLeftMenu() {
+		var leftMenuContainer = parent.document.getElementById("leftMenuContainer");
+		
+		var tb = $('leftMenu');
+		var objs = document.getElementsByTagName('*');
+		var btnImg = $('btnLeftMenu');
+		var length = objs.length;
+		for (var i=0; i < length; i++) {
+			if (showLeftMenu) {
+				if (objs[i].getAttribute('id') == "tdLeftBody") {
+					objs[i].style.display = "none";
+				}
+			} else {
+				if (objs[i].getAttribute('id') == "tdLeftBody") {
+					objs[i].style.display = "";
+				}
+			}
+		}
+
+		if (showLeftMenu) {
+			tb.style.width = "0";
+			tb.parentNode.style.width = "0";
+			leftMenuContainer.width="32";
+			btnImg.src = "/img/lenavi_arrow_right.gif";
+		} else {
+			leftMenuContainer.width="240";
+			tb.style.width = "220";
+			tb.parentNode.style.width = "220";
+			btnImg.src = "/img/lenavi_arrow_left.gif";
+		}
+		showLeftMenu = !showLeftMenu;
+	}
+
+	function goHome() {
+		if ('06' == '09' 
+			|| '06' == '10'
+			|| '06' == '11') {
+			parent.forwardLeftMenu();
+			parent.forwardURI('/sb2bmain.jsp');
+			parent.naviDir('/sb2bmain.jsp', '::');
+		}else if (false) { // SEA OST user
+//	            parent.forwardLeftMenu();
+	            parent.forwardURI('/ost/index.jsp');
+	            parent.naviDir('/ost/index.jsp', '::');			
+		} else {
+			parent.forwardLeftMenu();
+			parent.forwardURI('/main.jsp');
+			parent.naviDir('/main.jsp', '::');
+		}
+	}
+
+	function goUnReadMessage() {
+		var url = "/home/MyMessage.jsp";
+		parent.messageForwardURI(url, '0');
+		parent.naviDir(url, 'My Information::My Message');
+	}
+
+	function goMessage() {
+		var url = "/home/MyMessage.jsp";
+		parent.forwardURI(url);
+		parent.naviDir(url, 'My Information::My Message');
+	}
+
+	function goShoppingCart() {
+		var url = "/home/CartInfo.jsp";
+		if (parent.checkAccessBlockedURIMethod(url)) {
+			parent.forwardURI(url);
+			parent.naviDir(url, 'Order Management:Purchase Order:Cart Information');
+		}
+	}
+
+	
+</script>
+
+
+
+<table id="tableLeftMenu" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+	<tbody><tr>
+		<td valign="top">
+		<table id="leftMenu" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+			<tbody><tr>
+				<td id="tdLeftBody" valign="top">
+				<!-- left navigation 시작 -->
+				<!-- left menu title 시작 -->
+				<table width="100%" border="0" cellpadding="0" cellspacing="0">
+					<tbody><tr>
+						<td class="lenavi_ti_left"></td>
+						<td class="lenavi_ti"><img src="./left_bullet.gif" width="18" height="19" style="vertical-align: middle;">Business</td>
+						<td width="100" class="lenavi_ti_txtR" "="">
+							<img src="./ico_left_home.gif" width="28" height="16" style="cursor: hand;" onclick="javascript:goHome();">
+							<img src="./ico_left_shoppingcart.gif" width="28" height="16" style="cursor: hand;" onclick="javascript:goShoppingCart();">
+							<img src="./ico_left_message.gif" width="14" height="16" style="cursor: hand;" onclick="javascript:goMessage();">
+						</td>
+						<td width="15" class="lenavi_ti_txtR" style="cursor: hand;" onclick="javascript:goUnReadMessage();">0</td>
+						<td class="lenavi_ti_right"></td>
+					</tr>
+				</tbody></table>
+				<!-- left menu title 끝 --></td>
+			</tr>
+			<tr>
+				<td id="tdLeftBody" height="100%" valign="top" class="left_bg">
+					<iframe id="b2BLeftMenuScroll" name="b2BLeftMenuScroll" scrolling="auto" frameborder="0" width="100%" height="100%" src="./B2BLeftMenuScroll.html" allowtransparency="true" class="divS">
+					</iframe>
+				</td>
+			</tr>
+			<tr>
+				<td id="tdLeftBody" valign="top">
+				<table width="100%" border="0" cellpadding="0" cellspacing="0">
+					<tbody><tr>
+						<td class="lenavi_bm_left">&nbsp;</td>
+						<td class="lenavi_bm">&nbsp;</td>
+						<td class="lenavi_bm_right">&nbsp;</td>
+					</tr>
+				</tbody></table>
+				<!-- left navigation 끝 --></td>
+			</tr>
+		</tbody></table>
+	</td>
+	<td width="20">
+	<!-- 왼쪽 화살표 시작 -->
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tbody><tr>
+			<td width="20"><!-- 왼쪽메뉴 접히는 부분입니다.> --><span style="cursor: pointer" onclick="javascript:toggleLeftMenu();">
+				<img id="btnLeftMenu" src="./lenavi_arrow_left.gif" width="13" height="69"></span></td>
+		</tr>
+	</tbody></table>
+	<!-- 왼쪽 화살표 끝 -->
+	</td>
+	</tr>
+</tbody></table>
+<!-- layout 시작 -->
+
+
+</body></html>

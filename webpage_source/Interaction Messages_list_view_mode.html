@@ -1,0 +1,1140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- saved from url=(0048)https://biz2.samsungcsportal.com/gspn/operate.do -->
+<html lang="en"><style id="gspnCustomBtnStyle">
+        .gspn-helper-panel {
+          display: inline-flex;
+          flex-direction: column;
+          gap: 8px;
+          padding: 10px 12px;
+          margin-left: 8px;
+          background: rgba(79, 70, 229, 0.12);
+          border: 1px solid rgba(124, 58, 237, 0.2);
+          border-radius: 14px;
+          box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+          color: #eef2ff;
+          font-size: 12px;
+          min-width: 180px;
+        }
+        .gspn-helper-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+        }
+        .gspn-helper-title {
+          font-weight: 700;
+          color: #eef2ff;
+          letter-spacing: 0.15px;
+        }
+        .gspn-toggle-group {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          cursor: pointer;
+          user-select: none;
+        }
+        .gspn-toggle-group input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+          position: absolute;
+        }
+        .gspn-toggle-slider {
+          width: 36px;
+          height: 18px;
+          border-radius: 999px;
+          background: rgba(148, 163, 184, 0.22);
+          position: relative;
+          transition: background 0.25s;
+        }
+        .gspn-toggle-slider::after {
+          content: '';
+          position: absolute;
+          top: 2px;
+          left: 2px;
+          width: 14px;
+          height: 14px;
+          border-radius: 999px;
+          background: #fff;
+          transition: transform 0.25s;
+        }
+        .gspn-toggle-group input:checked + .gspn-toggle-slider {
+          background: linear-gradient(135deg, #7c3aed, #6366f1);
+        }
+        .gspn-toggle-group input:checked + .gspn-toggle-slider::after {
+          transform: translateX(18px);
+        }
+        .gspn-toggle-text {
+          color: #c7d2fe;
+          font-size: 11px;
+          font-weight: 600;
+        }
+        .gspn-button-row {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        .gspn-btn {
+          flex: 1 1 auto;
+          min-width: 70px;
+          border: none;
+          border-radius: 999px;
+          padding: 8px 12px;
+          color: #ffffff;
+          background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+          font-weight: 700;
+          letter-spacing: 0.1px;
+          cursor: pointer;
+          transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+        }
+        .gspn-btn:hover {
+          transform: translateY(-1px);
+          filter: brightness(1.05);
+        }
+        .gspn-btn:active {
+          transform: translateY(0);
+        }
+        .gspn-secondary-btn {
+          background: rgba(255, 255, 255, 0.12);
+          color: #e0e7ff;
+          box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.18);
+        }
+        .gspn-helper-fragment {
+          padding: 8px 10px;
+          border-radius: 10px;
+          background: rgba(255, 255, 255, 0.08);
+          color: #c7d2fe;
+          font-size: 11px;
+          line-height: 1.4;
+        }
+      </style><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>GSPN</title>
+
+<meta http-equiv="X-UA-Compatible" content="requiresActiveX=true">
+
+<link rel="stylesheet" type="text/css" href="./Interaction Messages_list_view_mode_files/gspn.css">
+
+<link rel="stylesheet" type="text/css" href="./Interaction Messages_list_view_mode_files/jquery-ui-1.8.18.custom.css">
+<link rel="stylesheet" type="text/css" href="./Interaction Messages_list_view_mode_files/timePicker.css">
+<link rel="stylesheet" type="text/css" href="./Interaction Messages_list_view_mode_files/layout.css">
+<link rel="stylesheet" type="text/css" href="./Interaction Messages_list_view_mode_files/protoload.css">
+
+<style type="text/css">
+<!--
+.loading {
+	background-position: center center;
+	text-align: center;	
+	background-color: transparent;
+}
+
+
+-->
+</style>
+
+<script type="text/javascript" src="./Interaction Messages_list_view_mode_files/dragtable.js.download"></script>
+<script type="text/javascript" src="./Interaction Messages_list_view_mode_files/hashtable.js.download"></script>
+<script type="text/javascript" src="./Interaction Messages_list_view_mode_files/json_sans_eval.js.download"></script>
+<script type="text/javascript" src="./Interaction Messages_list_view_mode_files/paging.js.download"></script>
+<script type="text/javascript" src="./Interaction Messages_list_view_mode_files/common.js.download"></script>
+<script type="text/javascript" src="./Interaction Messages_list_view_mode_files/prototype.js.download"></script>
+<script type="text/javascript" src="./Interaction Messages_list_view_mode_files/protoload.js.download"></script>
+<script type="text/javascript" src="./Interaction Messages_list_view_mode_files/sorttable.js.download"></script>
+<script type="text/javascript" src="./Interaction Messages_list_view_mode_files/jquery-1.7.1.min.js.download"></script>
+<script type="text/javascript" src="./Interaction Messages_list_view_mode_files/jquery-ui-1.8.18.custom.min.js.download"></script>
+<script type="text/javascript" src="./Interaction Messages_list_view_mode_files/jquery.timePicker.min.js.download"></script>
+<script type="text/javascript" src="./Interaction Messages_list_view_mode_files/jquery.printElement.min.js.download"></script>
+<script type="text/javascript" src="./Interaction Messages_list_view_mode_files/jquery.tablesorter.min.js.download"></script>
+<script type="text/javascript">
+	/**
+	 * Prototype.js 와 jQuery 와의 충돌을 방지 (jQuery를 사용하는 변수에는 $ 대신 $j 를  사용)
+	 */
+	var $j = jQuery.noConflict();
+</script>
+<script type="text/javascript">
+	var dateFormat = 'dd/mm/yy';
+	var zeroDate = '00/00/0000';
+</script>
+<script type="text/javascript" src="./Interaction Messages_list_view_mode_files/date.js.download"></script>
+
+<script type="text/javascript">
+	var loginUserDateFormat = "dd/MM/yyyy";
+	
+	/**
+	 * 법인별 사용자 boolean변수
+	 */
+	var isAmericaRegion = false;
+	var isEuropeRegion = false;
+	var isAsiaRegion = true;
+	var isChinaRegion = false;	
+
+	var isAfUser = false;
+	var isMeaUser = false;
+	var isCisUser = false;
+	var isEuUser = false;
+
+	var isEaUser = false;
+	var isJpUser = false;
+	var isWaUser = true;
+	var isCnUser = false;
+
+	var isLaUser = false;
+	var isNaUser = false;
+
+	/*
+	 * 중국 법인통합
+	 */
+	var isNewChina = false;
+	/**
+	 * 사용자Center Type
+	 */
+	var isFscUser = false;
+
+	/**
+	 * 로그인 사용자의 법인 정보
+	 */
+	var loginUserCorpCode = "C550";
+	var loginUserCorpName = "SIEL";
+	var svcUserCorpCode = "C550";
+	
+	var isWtyIntegrationCorpCode = true;
+	var isWtyIntegration = true;
+
+	var isBlockFlash = true;
+
+	/**
+	 * paging.js에서 사용
+	 */
+	var prevPageChar = 'Prev.';
+	var nextPageChar = 'Next';
+
+	/**
+	 * common.js에서 사용
+	 */
+	var addToCartSuccessMsg = 'successfuly added into Cart';
+	var addToCartFailMsg = 'failed';
+	var dataNotFoundMsg = 'No Data Found.';
+	
+	var Gmsg = new Array();
+	Gmsg[0] = "item should be filled up";
+	Gmsg[1] = "You can input only number.";
+	Gmsg[2] = "Incorrect E-mail Format!";
+	/**
+	 * 페이징 처리시 한 페이지당 화면에 출력할 개수
+	 */
+	var numPerPage = '100'
+
+	/**
+	 * 현재 선택된 페이지 번호
+	 */
+	var searchPageNo = 0;
+
+	/**
+	 * 현재 선택된 블럭번호
+	 */
+	var searchBlckNo = 0;
+
+	/**
+	 * 그리드 데이터의 출력 시작번호
+	 */
+	var displayBeginRow = 0;
+
+	/**
+	 * 그리드 데이터의 출력 마지막 번호
+	 */
+	var displayFinishRow = 0;
+
+	/**
+	 * 총 그리드 데이터
+	 */
+	var totRow = 0;
+
+	/**
+	 * Url Mapping Controller
+	 */
+	var urlPattern = '/gspn/operate.do';
+
+	/**
+	 * Cache Url Mapping Controller
+	 */
+	var cacheUrlPattern = '/gspn/cache.do';
+
+	/**
+	 * SAP 데이터를 그리드에 페이징 처리를
+	 * 위한 시작 데이터와 마지막 데이터의 처리함수.
+	 */
+	function setDisplayRow() {
+		if (searchPageNo == 0) {
+			displayBeginRow = 0;
+			displayFinishRow = (searchPageNo + 1) * numPerPage;
+		} else {
+			displayBeginRow = searchPageNo * numPerPage;
+			displayFinishRow = (searchPageNo + 1) * numPerPage;					
+		}
+	}
+
+	/**
+	 * 변수 데이터 초기화
+	 */
+	function initialDisplayRowVariable() {
+		searchPageNo = 0;
+		searchBlckNo = 0;
+		displayBeginRow = 0;
+		displayFinishRow = 0;
+		totRow = 0;
+	}
+
+	/**
+	 * IE and Opera
+	 */
+	if (window.attachEvent) {
+		window.attachEvent("onload", neviDir);
+		window.attachEvent("onunload", neviDir);
+	} else {
+		window.addEventListener("DOMContentLoaded", neviDir, false);
+		window.addEventListener("unload", neviDir, false);
+	}
+
+	
+	function neviDir() {
+		try{
+			if (eval("parent.rightContents") == undefined) {
+				return;
+			}
+	
+			if (parent.$('leftMenuForm') != null) {
+				var navigation = "";
+				var title = "";
+				var menuUrl = "";
+				if (parent.$('leftMenuForm').naviDir != null) {
+					navigation = parent.$('leftMenuForm').naviDir.value;
+				}
+				if (parent.$('leftMenuForm').titleDir != null) {
+					title = parent.$('leftMenuForm').titleDir.value;
+				}
+				var naviDir = "<img src='/img/locater_arrow.gif' width='9' height='9' align='absmiddle'> " + navigation;
+				if (parent.$('leftMenuForm').menuUrl != null) {
+					menuUrl = parent.$('leftMenuForm').menuUrl.value;
+				}
+	
+				if (document.getElementById('naviDiv') != null) {
+					document.getElementById('naviDiv').innerHTML = naviDir;
+				}
+				if (document.getElementById('titleDiv') != null) {
+					document.getElementById('titleDiv').innerHTML = title;
+				}
+				
+	            /*
+	             * 미주 통합
+	             - RH-002
+	             - 화면상단 Support Link 제공                                 
+	             - 2015-10-26
+	          */  
+		          
+				
+	
+				if (menuUrl != "") {
+					authButton(menuUrl);
+				}
+			}
+		}catch(e){
+			
+		}
+	}
+
+	/**
+	 * Display command-registred buttons.
+	 */
+	function authButton(menuUrl) {
+		$('authForm').action = urlPattern;
+		$('authForm').cmd.value = 'AuthCommandListCmd';
+		$('authForm').menuUrl.value = menuUrl;
+		AjaxRequest(urlPattern, "authForm", setJsonObject);
+	}
+
+	function setJsonObject(response) {
+		var jsonObjBtn = eval('(' + response.responseText + ')');
+
+		if (jsonObjBtn.success) {
+			var length = jsonObjBtn.cmdLists.length;
+			for ( var i = 0; i < length; i++) {
+				if (document.getElementById(jsonObjBtn.cmdLists[i].commandId) != null) {
+					document.getElementById(jsonObjBtn.cmdLists[i].commandId).style.display = "block";
+				}
+			}
+		}
+	}
+
+	/**
+	 * Timezone 날짜 함수
+	 */
+	function calcTzDate(offset) {
+		// create Date object for current location
+		var d = new Date();
+
+		// convert to msec
+		// add local time zone offset 
+		// get UTC time in msec
+		var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+
+		// create new Date object for different city
+		// using supplied offset
+		var nd = new Date(utc + (3600000 * offset));
+
+		var tmpyy = nd.getFullYear();
+		var ls_yy = (tmpyy > 99) ? tmpyy : 1900 + tmpyy;
+
+		var tmpmon = nd.getMonth();
+		var ls_mon = (tmpmon < 9) ? "0" + (tmpmon + 1) : tmpmon + 1;
+
+		var tmpday = nd.getDate();
+		var ls_day = (tmpday < 10) ? "0" + tmpday : tmpday;
+
+		var tmphh = nd.getHours();
+		var ls_hh = (tmphh < 10) ? "0" + tmphh : tmphh;
+
+		var tmpmm = nd.getMinutes();
+		var ls_mm = (tmpmm < 10) ? "0" + tmpmm : tmpmm;
+
+		// return time as a string
+		return ls_yy.toString() + ls_mon.toString() + ls_day.toString();
+	}
+
+	/**
+	 * Timezone 시간 함수
+	 */
+	function calcTzTime(offset) {
+		// create Date object for current location
+		var d = new Date();
+
+		// convert to msec
+		// add local time zone offset 
+		// get UTC time in msec
+		var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+
+		// create new Date object for different city
+		// using supplied offset
+		var nd = new Date(utc + (3600000 * offset));
+
+		var tmphh = nd.getHours();
+		var ls_hh = (tmphh < 10) ? "0" + tmphh : tmphh;
+
+		var tmpmm = nd.getMinutes();
+		var ls_mm = (tmpmm < 10) ? "0" + tmpmm : tmpmm;
+
+		// return time as a string
+		return ls_hh.toString() + ls_mm.toString();
+	}
+
+	/**
+	 * 새로고침(F5), Ctrl+R, Ctrl+N 방지
+	 */
+	function preventRefreshEvent() {
+		if (event.keyCode == 116) {
+			event.keyCode = 2;
+			return false;
+		} else if (event.ctrlKey
+				&& (event.keyCode == 78 || event.keyCode == 82)) {
+			return false;
+		}
+	}
+
+	
+
+	document.onkeydown = preventRefreshEvent;
+	
+	function btnCommonFileUpload(callBackName, action) {
+    
+	    var url = "/common/commonFileUpload.jsp";
+	    	    
+	    w = window.open(url, "common_attach", 'toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,top=100,left=200,width=550,height=250');
+	    w.focus();
+	
+	    $('commonAttach').action = url;
+	    $('commonAttach').actionParam.value = action;
+	    $('commonAttach').callBackName.value = callBackName;
+	    $('commonAttach').target = "common_attach";
+	    $('commonAttach').submit();
+	    
+	    w.focus();
+	    
+	}
+</script>
+<style>
+
+</style>
+</head>
+
+<body style="background-color: transparent; height:100%;">
+<form id="formHelp" method="post" action="https://biz2.samsungcsportal.com/gspn/operate.do">
+<input type="hidden" name="cmd" value="">
+<input type="hidden" name="MENUID" value="">
+</form>
+<form id="commonAttach" method="post" action="https://biz2.samsungcsportal.com/gspn/operate.do">
+<input type="hidden" id="callBackName" name="callBackName" value="">
+<input type="hidden" id="actionParam" name="actionParam" value="">
+</form>
+<form id="authForm" name="authForm" method="post" style="display: inline;">
+	<input type="hidden" name="cmd" value="">
+	<input type="hidden" name="menuUrl" value="">
+	<input type="hidden" name="subRegionCd" value="WA">
+	<input type="hidden" name="aclId" value="STBUSER">
+</form>
+<div id="progressloading" style="position:absolute; left:0px; top:0px; width:100%; height:100%; text-align:center; background:#fff; _background:none; opacity:.75; z-index:1; display: none;">
+    <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+        <tbody><tr>
+            <td class="loading"><img src="./Interaction Messages_list_view_mode_files/loading.gif" width="32" height="32"></td>
+        </tr>
+    </tbody></table>
+</div>
+
+
+
+
+
+
+<title>GSPN</title>
+
+<script language="javascript" type="text/javascript">
+
+	/**
+	 * 프로그래바를 멈춘다.
+	 */
+	$('progressloading').stopWaiting();
+
+	/**
+	 * 조회된 json Data 임시 저장용 /svctracking/svcorder/ServiceOrderList.jsp <--- ServiceOrderDetail.jsp
+	 */
+	var jsonGlobalTemp = '';
+	/**
+	 * history.back() 여부.
+	 */
+	var backForward = false;
+	/**
+	 * Block 여부 객체
+	 */
+	var checkAccessBlockedURI = null;
+
+	/**
+	 * 화면 포워딩
+	 */
+	function forwardURI(jsppage, navi) {
+		var idx = jsppage.indexOf('http');
+		if (idx >= 0) {
+			if (jsppage.indexOf('sagspn.samsungportal.com') > 0) {
+				sedaForwardURI(jsppage);
+			} else if (jsppage.indexOf('ARAP') > 0) {
+				arApForwardURI(jsppage);
+			}
+		} else {
+			if(jsppage.indexOf('?menuBlockCheck=Y') > 0) {
+				wtyForwardURI(jsppage);
+			} else {				
+				$('rightContentsForm').action = '' + jsppage;
+				$('rightContentsForm').search_status.value = '';
+				$('rightContentsForm').menuBlock.value = '';
+				
+				$('rightContentsForm').method = 'get';
+				$('rightContentsForm').target = 'rightContents';
+				$('rightContentsForm').submit();
+			}
+		}
+	}
+
+	/**
+	 * 화면 포워딩
+	 */
+	function messageForwardURI(jsppage, param) {
+		$('rightContentsForm').action = '' + jsppage;
+		$('rightContentsForm').search_status.value = param;
+		
+		$('rightContentsForm').method = 'post';
+		$('rightContentsForm').target = 'rightContents';
+		$('rightContentsForm').submit();
+	}
+	
+	function wtyForwardURI(jsppage) {
+		$('rightContentsForm').action = '' + jsppage;
+		$('rightContentsForm').search_status.value = '';
+		$('rightContentsForm').menuBlock.value = 'Y';
+		$('rightContentsForm').method = 'post';
+		$('rightContentsForm').target = 'rightContents';
+		$('rightContentsForm').submit();
+	}
+
+	function forwardLeftMenu() {
+		$('leftMenuForm').action = '/B2BLeftMenu.jsp';
+		$('leftMenuForm').method = 'post';
+		$('leftMenuForm').target = 'leftMenus';
+		$('leftMenuForm').submit();
+	}
+
+	function arApForwardURI(jsppage) {
+		$('arApForm').action = jsppage;
+		$('arApForm').USERID.value = 'd5959172f317e3785206eadd6dca9ed94d9cc0bef556525bc71b3d5111c9d679';
+		$('arApForm').CORPCD.value = 'c6600beb1159a6d15c5222e66c3ce1bfc71b3d5111c9d679';
+		$('arApForm').submit();
+	}
+
+	function seedStockForwardURI(jsppage) {
+		$('seedStockForm').action = jsppage;
+		$('seedStockForm').USERID.value = 'd5959172f317e3785206eadd6dca9ed94d9cc0bef556525bc71b3d5111c9d679';
+		$('seedStockForm').submit();
+	}
+	function sedaForwardURI(jsppage) {
+		$('sedaForm').action = jsppage;
+		$('sedaForm').USERID.value = 'd5959172f317e3785206eadd6dca9ed94d9cc0bef556525bc71b3d5111c9d679';
+		$('sedaForm').part_code.value = 'c73a9c126be60401352ba0f8bbd94ed4584e5a5fd9c35958c71b3d5111c9d679';
+		$('sedaForm').CORPCD.value = 'c6600beb1159a6d15c5222e66c3ce1bfc71b3d5111c9d679';
+		$('sedaForm').submit();
+	}	
+
+	function naviDir(jsppage, navi) {
+		fNavi = navi.split(":")[0];
+		sNavi = navi.split(":")[1];
+		tNavi = "<span class='locater_ov'>" + navi.split(":")[2] + "</span>";
+		if (sNavi == '') {
+			strNavi = fNavi + " > " + tNavi;
+		} else {
+			strNavi = fNavi + " > " + sNavi + " > " + tNavi;
+		}
+		$('leftMenuForm').naviDir.value = strNavi;
+		$('leftMenuForm').titleDir.value = navi.split(":")[2];
+		$('leftMenuForm').menuUrl.value = jsppage;
+	}
+
+    function setBackForward() {
+        backForward = true;
+        setTimeout('backForward=false;', 2000);
+    }
+
+    function checkAccessBlockedURIMethod(url) {
+        /**
+         * 변수 초기화
+         */
+        if (checkAccessBlockedURI.get(url) != null) {
+	    	var arrayValue = checkAccessBlockedURI.get(url).split("/");
+	    	var blockStartDate = arrayValue[0];
+	    	var blockEndDate = arrayValue[1];
+	    	var blockStart = arrayValue[2];
+	    	var blockEnd = arrayValue[3];
+
+	    	/**
+			 * 메뉴 블럭 유무 체크
+			 */
+			var city = '';
+			var offset = '';
+			var gmt = '';
+			if ('AS' == 'EU') {
+				city = 'London';
+				offset = '+0';
+				gmt = 'GMT+00:00';
+			} else if ('AS' == 'AS') {
+				city = 'Singapore';
+				offset = '+8';
+				gmt = 'GMT+08:00';
+			} else if ('AS' == 'AM') {
+				city = 'NewYork';
+				offset = '-5';
+				gmt = 'GMT-05:00';
+			} else {
+				city = 'Seoul';
+				offset = '+9';
+				gmt = 'GMT+09:00';
+			}
+			var returnValue = '';
+			var currDate = parseInt(calcTzDate(offset));
+			var checkAccessBlock = false;
+			if (blockStartDate != '' || blockEndDate != '') {
+				if (blockStartDate != '' && blockEndDate != '') {
+					var nBlockStartDate = parseInt(blockStartDate);
+					var nBlockEndDate = parseInt(blockEndDate);
+					if ((currDate >= nBlockStartDate) && (currDate <= nBlockEndDate)) {
+						if ((currDate == nBlockStartDate) && (currDate == nBlockEndDate)) {
+							checkAccessBlock = true;
+						} else if ((currDate == nBlockStartDate) && (currDate < nBlockEndDate)) {
+							checkAccessBlock = false;
+							var nHour = new Number(calcTzTime(offset));
+							var nBlockStart = new Number(blockStart);
+							if (nHour > nBlockStart) {
+					  			alert("Temporarily cannot be accessed from " +  blockStartDate.substring(4, 6) + "/" + blockStartDate.substring(6, 8) + "/" +  blockStartDate.substring(0, 4) + " " + blockStart/100 + ":00 to " + blockEndDate.substring(4, 6) + "/" + blockEndDate.substring(6, 8) + "/" +  blockEndDate.substring(0, 4) + " " + blockEnd/100 + ":00 in " + city + " Time (" + gmt + ").");
+					  			return false;
+							}
+						} else if ((currDate > nBlockStartDate) && (currDate < nBlockEndDate)) {
+							checkAccessBlock = false;
+				  			alert("Temporarily cannot be accessed from " +  blockStartDate.substring(4, 6) + "/" + blockStartDate.substring(6, 8) + "/" +  blockStartDate.substring(0, 4) + " " + blockStart/100 + ":00 to " + blockEndDate.substring(4, 6) + "/" + blockEndDate.substring(6, 8) + "/" +  blockEndDate.substring(0, 4) + " " + blockEnd/100 + ":00 in " + city + " Time (" + gmt + ").");
+				  			return false;
+						} else if ((currDate < nBlockStartDate) && (currDate == nBlockEndDate)) {
+							checkAccessBlock = false;
+							var nHour = new Number(calcTzTime(offset));
+							var nBlockEnd	= new Number(blockEnd);
+							if (nHour < nBlockEnd) {
+					  			alert("Temporarily cannot be accessed from " +  blockStartDate.substring(4, 6) + "/" + blockStartDate.substring(6, 8) + "/" +  blockStartDate.substring(0, 4) + " " + blockStart/100 + ":00 to " + blockEndDate.substring(4, 6) + "/" + blockEndDate.substring(6, 8) + "/" +  blockEndDate.substring(0, 4) + " " + blockEnd/100 + ":00 in " + city + " Time (" + gmt + ").");
+					  			return false;
+							}
+						}
+					} else {
+						checkAccessBlock = false;
+					}
+				} else if (blockStartDate != '' && blockEndDate == '') {
+					var nBlockStartDate = parseInt(blockStartDate);
+					if (currDate >= nBlockStartDate) {
+						checkAccessBlock = true;
+					} else {
+						checkAccessBlock = false;
+					}
+				} else if (blockStartDate == '' && blockEndDate != '') {
+					var nBlockEndDate = parseInt(blockEndDate);
+					if (currDate <= nBlockEndDate) {
+						checkAccessBlock = true;
+					} else {
+						checkAccessBlock = false;
+					}
+				}
+
+				if (checkAccessBlock) {
+					var nHour = new Number(calcTzTime(offset));
+					var nBlockStart = new Number(blockStart);
+					var nBlockEnd	= new Number(blockEnd);
+
+					if (nBlockStart < nBlockEnd) {
+						if (nHour > nBlockStart && nHour < nBlockEnd) {
+							returnValue = "Temporarily cannot be accessed from " +  blockStart/100 + ":00 to " + blockEnd/100 + ":00 in " + city + " Time (" + gmt + ").";
+						}
+					} else if (nBlockStart > nBlockEnd) {
+						if (!(nHour < nBlockStart && nHour > nBlockEnd) ) {
+							returnValue = "Temporarily cannot be accessed from " +  blockStart/100 + ":00 to " + blockEnd/100 + ":00 in " + city + " Time (" + gmt + ").";
+						}
+					}
+				}
+			}
+
+			if (returnValue != '') {
+				alert(returnValue);
+				return false;
+			} else {
+				return true;
+			}
+        } else {
+			return true;
+        }
+    }
+
+</script>
+
+
+
+<!-- layout 시작 -->
+<form id="sedaForm" name="sedaForm" method="post" target="_blank">
+	<input type="hidden" id="USERID" name="USERID" value="">
+	<input type="hidden" id="CORPCD" name="CORPCD" value="">
+	<input type="hidden" id="part_code" name="part_code" value="">	
+</form>
+<form id="seedStockForm" name="seedStockForm" action="https://sagspn.samsungportal.com/GSPN/B2BLogin_seedStock.jsp" method="get" target="_blank">
+	<input type="hidden" name="USERID" value="">
+</form>
+<form id="arApForm" name="arApForm" action="https://sagspn.samsungportal.com/GSPN/B2BLogin_ARAP.jsp" method="get" target="_blank">
+	<input type="hidden" name="USERID" value="">
+	<input type="hidden" name="CORPCD" value="">
+</form>
+<form id="leftMenuForm" name="leftMenuForm" method="post" style="display: inline;">
+	<input type="hidden" name="cmd" value="">
+	<input type="hidden" name="naviDir" value="Service Tracking &gt; &lt;span class=&#39;locater_ov&#39;&gt;Interaction Messages&lt;/span&gt;">
+	<input type="hidden" name="titleDir" value="Interaction Messages">	
+	<input type="hidden" name="menuUrl" value="/svctracking/svcorder/InteractionMessage.jsp">
+	<input type="hidden" name="search_aclId" value="STBUSER">
+</form>
+<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+	<form id="rightContentsForm" name="rightContentsForm" action="https://biz2.samsungcsportal.com/svctracking/svcorder/InteractionMessage.jsp" method="get" target="rightContents"></form>
+		<input type="hidden" name="search_status" value="">
+		<input type="hidden" name="searchContent" value="">
+		<input type="hidden" name="menuBlock" value="">
+		<input type="hidden" name="menuUrl" value="">		
+		<input type="hidden" name="naviDirValue" value="">		
+	<tbody><tr>
+		<td height="100%" valign="top" class="lay_pad"><!-- body layout  -->
+		<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+			<tbody><tr>
+				<td id="leftMenuContainer" width="220" valign="top">
+					<iframe id="leftMenus" name="leftMenus" scrolling="no" frameborder="0" width="100%" height="100%" src="./Interaction Messages_list_view_mode_files/B2BLeftMenu.html" style="overflow:hidden;"></iframe>
+				</td>
+				<td id="rightContentsContainer" height="100%" valign="top">
+				
+					<iframe id="rightContents" name="rightContents" scrolling="auto" frameborder="0" width="100%" height="100%" src="./Interaction Messages_list_view_mode_files/main.html">
+					</iframe>
+				
+				</td>
+			</tr>
+		</tbody></table>
+		<!-- body layout  -->
+		</td>
+	</tr>
+	
+</tbody></table>
+<!-- layout 끝 -->
+
+
+</body><div id="gspn-fab-host-111" style="position: fixed !important; bottom: 0px !important; right: 0px !important; width: 0px !important; height: 0px !important; overflow: visible !important; z-index: 2147483647 !important; pointer-events: none !important; display: none; margin: 0px !important; padding: 0px !important; border-width: medium !important; border-style: none !important; border-color: currentcolor !important; border-image: none !important; background: transparent !important; transform: none !important;"><template shadowrootmode="open"><style>
+  :host {
+    all: initial;
+    display: block !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: visible !important;
+    z-index: 2147483647 !important;
+    pointer-events: none !important;
+  }
+
+  /* ── FAB Container ── */
+  .fab-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    pointer-events: auto !important;
+  }
+
+  /* ── Report Button ── */
+  .report-btn {
+    all: unset;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 20px;
+    height: 52px;
+    background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+    color: #ffffff;
+    font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.1px;
+    border-radius: 26px;
+    box-shadow: 0 6px 24px rgba(124,58,237,0.45), 0 2px 8px rgba(0,0,0,0.22);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    transition: transform 0.18s cubic-bezier(.22,1,.36,1),
+                box-shadow 0.18s ease,
+                filter 0.18s ease;
+    animation: fabIn 0.42s cubic-bezier(.22,1,.36,1) both;
+  }
+  .report-btn:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 10px 32px rgba(124,58,237,0.55), 0 4px 12px rgba(0,0,0,0.24);
+    filter: brightness(1.09);
+  }
+  .report-btn:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: 0 4px 16px rgba(124,58,237,0.35);
+  }
+
+  /* ── FAB button ── */
+  .fab-btn {
+    all: unset;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 20px 0 16px;
+    height: 52px;
+    background: linear-gradient(135deg, #1a56db 0%, #3b82f6 100%);
+    color: #ffffff;
+    font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.1px;
+    border-radius: 26px;
+    box-shadow: 0 6px 24px rgba(26,86,219,0.45), 0 2px 8px rgba(0,0,0,0.22);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    transition: transform 0.18s cubic-bezier(.22,1,.36,1),
+                box-shadow 0.18s ease,
+                filter 0.18s ease,
+                background 0.45s ease;
+    animation: fabIn 0.42s cubic-bezier(.22,1,.36,1) both;
+  }
+  @keyframes fabIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.86); }
+    to   { opacity: 1; transform: translateY(0)    scale(1);    }
+  }
+  .fab-btn:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 10px 32px rgba(26,86,219,0.55), 0 4px 12px rgba(0,0,0,0.24);
+    filter: brightness(1.09);
+  }
+  .fab-btn:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: 0 4px 16px rgba(26,86,219,0.35);
+  }
+  .fab-btn.loading {
+    pointer-events: none;
+    filter: brightness(0.82);
+  }
+
+  /* Icon & spinner inside button */
+  .fab-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .fab-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .fab-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.65s linear infinite;
+    display: none;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .fab-btn.loading .fab-spinner { display: block; }
+  .fab-btn.loading .fab-icon    { display: none;  }
+
+  /* ── Toast ── */
+  .fab-toast {
+    position: absolute;
+    bottom: 82px;
+    right: 20px;
+    min-width: 220px;
+    max-width: 340px;
+    padding: 13px 18px;
+    border-radius: 12px;
+    font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.5;
+    white-space: pre-line;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.24);
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+    transition: opacity 0.25s ease, transform 0.28s cubic-bezier(.22,1,.36,1);
+  }
+  .fab-toast.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .fab-toast.success { background: #0d9e4f; color: #fff; }
+  .fab-toast.error   { background: #dc2626; color: #fff; }
+  .fab-toast.info    { background: #1a56db; color: #fff; }
+
+  /* ── Dialog and Wrapper ── */
+  .health-wrapper {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147483647 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 24px !important;
+    background: rgba(11, 28, 48, 0.4) !important;
+    backdrop-filter: blur(8px) !important;
+    pointer-events: auto !important;
+    animation: fadeIn 0.25s ease-out;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .health-dialog {
+    width: min(92vw, 520px);
+    background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%);
+    border: 1px solid rgba(114,119,134,0.22);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 24px 70px rgba(0,0,0,0.25);
+    color: #0b1c30;
+    font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
+    animation: scaleIn 0.3s cubic-bezier(.22,1,.36,1);
+    pointer-events: auto !important;
+  }
+  @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+  .health-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+    color: white;
+  }
+  .health-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .health-header-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .health-header-title-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+  .health-header-title {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .health-header-subtitle {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.8;
+  }
+  .health-close-btn {
+    all: unset;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    line-height: 1;
+    background: rgba(255,255,255,0.16);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.22);
+    cursor: pointer;
+    transition: background 0.18s;
+  }
+  .health-close-btn:hover {
+    background: rgba(255,255,255,0.28);
+  }
+
+  .health-body {
+    padding: 18px 20px;
+  }
+  .health-meta {
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.5);
+    border: 1px dashed rgba(99,102,241,0.25);
+    border-radius: 10px;
+    font-size: 12px;
+    color: #424655;
+    line-height: 1.5;
+  }
+  .health-meta strong {
+    color: #0b1c30;
+  }
+
+  .health-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    background: #ffffff;
+    border: 1px solid rgba(114,119,134,0.15);
+    border-left: 4px solid #d92d20;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(11,28,48,0.02);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .health-card:last-child {
+    margin-bottom: 0;
+  }
+  .health-card.pass {
+    border-left-color: #1b8a4b;
+  }
+  .health-card.fail {
+    border-left-color: #d92d20;
+  }
+  .health-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(11,28,48,0.05);
+  }
+
+  .health-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    font-size: 15px;
+    background: linear-gradient(135deg, #d92d20 0%, #f04d3a 100%);
+  }
+  .health-card.pass .health-badge {
+    background: linear-gradient(135deg, #138a4b 0%, #1fb96a 100%);
+  }
+  .health-card-text {
+    flex-grow: 1;
+    min-width: 0;
+  }
+  .health-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0b1c30;
+  }
+  .health-card-subtitle {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #727786;
+    letter-spacing: 0.04em;
+    margin-top: 1px;
+  }
+  .health-card-details {
+    font-size: 11px;
+    color: #555;
+    text-align: right;
+    font-weight: 600;
+    word-break: break-word;
+    max-width: 180px;
+  }
+
+  .health-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 0 20px 18px;
+  }
+  .health-btn {
+    all: unset;
+    border: 1px solid rgba(114,119,134,0.25);
+    background: #ffffff;
+    color: #0b1c30;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.15s, background 0.15s;
+  }
+  .health-btn:hover {
+    background: #f6f8ff;
+    transform: translateY(-1px);
+  }
+  .health-btn.primary {
+    background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+    color: #ffffff;
+    border-color: transparent;
+  }
+  .health-btn.primary:hover {
+    filter: brightness(1.06);
+  }
+</style><div class="fab-container"><button class="report-btn" title="Open Health Check dialog" style="display: none;"><span class="fab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg></span><span class="fab-label">Health</span></button><button class="fab-btn" title="Add current service order to 1-1-1 Report (no download)" style="display: none;"><span class="fab-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></span><span class="fab-spinner"></span><span class="fab-label">Add 1-1-1 Report</span></button></div><div class="fab-toast"></div></template></div></html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supported Formats — GSPN Helper Tools</title>
+  <meta name="description" content="Guide to supported data formats in GSPN Tools — Management Lite, Print Command, sample data, and copy tips.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    .format-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .format-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .format-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #eff6ff;
+      color: var(--primary);
+      border: 1px solid rgba(37,99,235,0.2);
+    }
+    .code-preview {
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      overflow-x: auto;
+      max-height: 260px;
+      white-space: pre;
+    }
+    .cols-tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+    .col-tag {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-soft);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <!-- TOP NAVBAR -->
+  <nav class="top-nav glass-nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <span class="brand-name">GSPN Tools</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="tools.html" class="nav-link">Tools</a>
+        <a href="custom-template.html" class="nav-link">Template Builder</a>
+        <a href="reports.html" class="nav-link">Reports</a>
+        <a href="formats.html" class="nav-link active">Formats</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-layout">
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div class="page-title-row" style="margin-bottom: 24px;">
+          <div class="page-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="page-title">Supported Data Formats</h1>
+            <p class="page-subtitle">Learn about how GSPN data is parsed from plain text or HTML.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-content" style="max-width: 960px; margin: 0 auto;">
+
+      <!-- Management Lite Format Card -->
+      <div class="format-card">
+        <div class="format-header">
+          <div>
+            <span class="format-badge">Two-Row Tabular Format</span>
+            <h2 style="font-size: 20px; font-weight: 700; margin-top: 6px;">1. Management Lite (Pending / Open Calls)</h2>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-secondary" onclick="copyMlSample()">Copy Sample</button>
+            <button class="btn-primary" onclick="openWithMlSample()">Open in Tools</button>
+          </div>
+        </div>
+        <p style="font-size: 13px; color: var(--text-soft); margin-bottom: 14px;">
+          Copied directly from the Management Lite screen. Each call is represented across two sequential rows: primary service call metadata followed by customer & appointment details.
+        </p>
+
+        <div class="code-preview" id="mlSamplePreview">No	Service Order No.	ASC Job No	Created	Assigned	Assigned Time	Model	Serial	Wty Status	VOC	REDO	Risk Sensing	RED	High Priority
+Customer Name	City	App Date	App Time	Service Type	Status	Reason	B2B	Risk Reason
+1	 4441809308  Edit	4441809308	09.04.2026	09.04.2026	17:58:10	WT70M3000UU/TL	M000	Out of Warranty		N		N	N
+SUMIT KUMAR	GURGAON	09.05.2026	13:00:00	IN-HOME	Engineer Assigned	Repair in progress		
+2	 4441809490  Edit	4441809490	09.04.2026	09.04.2026	09:18:47	WT1007AG/TL	M000	Out of Warranty		N		N	N
+RAJIV SHARMA .	GURGAON	09.05.2026	12:00:00	IN-HOME	Engineer Assigned	Repair in progress		</div>
+
+        <h4 style="font-size: 13px; font-weight: 700; margin-top: 16px;">Extracted Output Columns:</h4>
+        <div class="cols-tag-list">
+          <span class="col-tag">No</span>
+          <span class="col-tag">Service Order No</span>
+          <span class="col-tag">ASC Job No</span>
+          <span class="col-tag">Created</span>
+          <span class="col-tag">Assigned</span>
+          <span class="col-tag">Assigned Time</span>
+          <span class="col-tag">Model</span>
+          <span class="col-tag">Product</span>
+          <span class="col-tag">Serial</span>
+          <span class="col-tag">Wty Status</span>
+          <span class="col-tag">VOC</span>
+          <span class="col-tag">REDO</span>
+          <span class="col-tag">Customer Name</span>
+          <span class="col-tag">City</span>
+          <span class="col-tag">App Date</span>
+          <span class="col-tag">App Time</span>
+          <span class="col-tag">Service Type</span>
+          <span class="col-tag">Status</span>
+          <span class="col-tag">Reason</span>
+        </div>
+      </div>
+
+      <!-- Print Command Format Card -->
+      <div class="format-card">
+        <div class="format-header">
+          <div>
+            <span class="format-badge" style="background:#fdf2f8; color:#db2777; border-color:rgba(219,39,119,0.2);">Block Key-Value Format</span>
+            <h2 style="font-size: 20px; font-weight: 700; margin-top: 6px;">2. Print Command (Service Order Sheets)</h2>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-secondary" onclick="copyPcSample()">Copy Sample</button>
+            <button class="btn-primary" onclick="openWithPcSample()">Open in Tools</button>
+          </div>
+        </div>
+        <p style="font-size: 13px; color: var(--text-soft); margin-bottom: 14px;">
+          Generated when using the GSPN Print Command button. Data appears as labeled key-value blocks per customer containing addresses, contact phone numbers, assigned engineer, and symptom comments.
+        </p>
+
+        <div class="code-preview" id="pcSamplePreview">Customer Name	Pankaj Ahlawat	Service Order No	4441813170	Customer No	 6874593500
+Address	mandir Gurugram Gurugram Narsinghpur Village shikohopur opp navyug litle Pride near by kirshna GURGAON HARYANA 07 IN 122004	Model Name	WA80F08S2CTL 
+E-Mail	 	Engineer	Santosh Sah 
+Telephone(Home)	7015058052 	Customer Preferred Date	00/00/0000 	Service Type	IH 
+Telephone(Office)	 	Purchase Date	00/00/0000 	Appointment Date	05/09/2026 (12:00:00)
+Telephone(Mobile)	9818750288 	ASC Assigned	04/09/2026 (10:28:36) 	 	 
+Symptom 1	M2 Operation	Symptom 2	05 Not Working	Symptom 3	01 Doesn 't spin
+1st Service Comment	  (1hr) conf on 9818750288 05-09 time 12-13 eng visit santosh
+Remark	 (1hr) conf on 9818750288 05-09 time 12-13 eng visit santosh</div>
+
+        <h4 style="font-size: 13px; font-weight: 700; margin-top: 16px;">Extracted Output Columns:</h4>
+        <div class="cols-tag-list">
+          <span class="col-tag">Service Order No</span>
+          <span class="col-tag">Customer Name</span>
+          <span class="col-tag">Customer No</span>
+          <span class="col-tag">Address</span>
+          <span class="col-tag">Model Name</span>
+          <span class="col-tag">Product</span>
+          <span class="col-tag">Engineer</span>
+          <span class="col-tag">Telephone(Home)</span>
+          <span class="col-tag">Telephone(Mobile)</span>
+          <span class="col-tag">Service Type</span>
+          <span class="col-tag">Appointment Date</span>
+          <span class="col-tag" style="color:var(--primary); font-weight:700;">App Date</span>
+          <span class="col-tag" style="color:var(--primary); font-weight:700;">App Time</span>
+          <span class="col-tag">ASC Assigned</span>
+          <span class="col-tag" style="color:var(--primary); font-weight:700;">Assigned</span>
+          <span class="col-tag" style="color:var(--primary); font-weight:700;">Assigned Time</span>
+          <span class="col-tag">Symptom 1</span>
+          <span class="col-tag">Symptom 2</span>
+          <span class="col-tag">1st Service Comment</span>
+          <span class="col-tag">Remark</span>
+        </div>
+      </div>
+
+      <!-- Quick Copy Tip Card -->
+      <div class="format-card" style="background: linear-gradient(135deg, #f8fafc, #eff6ff); border-color: rgba(37,99,235,0.2);">
+        <h3 style="font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 8px;">💡 Pro-Tips for Copy-Pasting</h3>
+        <ul style="font-size: 13px; color: var(--text-soft); line-height: 1.7; padding-left: 20px;">
+          <li><strong>Direct Paste:</strong> You can directly select the table rows on the GSPN web page with your mouse, press <kbd>Ctrl+C</kbd>, and paste into the text area with <kbd>Ctrl+V</kbd>.</li>
+          <li><strong>HTML or Plain Text:</strong> Both are auto-detected. Whether you copy rendered text or right-click "View Selection Source" HTML, the parser will extract all fields cleanly.</li>
+          <li><strong>Auto-Product Category:</strong> The tool automatically infers the product category (WM, REF, RAC, TV, MWO) based on Samsung model code prefixes.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- BOTTOM NAVBAR -->
+  <nav class="bottom-nav glass-nav">
+    <div class="bottom-nav-inner">
+      <a href="index.html" class="bottom-nav-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+      <a href="tools.html" class="bottom-nav-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span>Tools</span></a>
+      <a href="reports.html" class="bottom-nav-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Reports</span></a>
+      <a href="formats.html" class="bottom-nav-item active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Formats</span></a>
+    </div>
+  </nav>
+
+  <script src="assets/js/core.js"></script>
+  <script>
+    function copyMlSample() {
+      var text = document.getElementById('mlSamplePreview').textContent;
+      navigator.clipboard.writeText(text).then(function() {
+        showToast('Management Lite sample copied to clipboard!', 'success');
+      });
+    }
+
+    function openWithMlSample() {
+      var text = document.getElementById('mlSamplePreview').textContent;
+      sessionStorage.setItem('gspn_preload_tab', 'ml');
+      sessionStorage.setItem('gspn_preload_data', text);
+      window.location.href = 'tools.html';
+    }
+
+    function copyPcSample() {
+      var text = document.getElementById('pcSamplePreview').textContent;
+      navigator.clipboard.writeText(text).then(function() {
+        showToast('Print Command sample copied to clipboard!', 'success');
+      });
+    }
+
+    function openWithPcSample() {
+      var text = document.getElementById('pcSamplePreview').textContent;
+      sessionStorage.setItem('gspn_preload_tab', 'pc');
+      sessionStorage.setItem('gspn_preload_data', text);
+      window.location.href = 'tools.html';
+    }
+  </script>
+</body>
+</html>

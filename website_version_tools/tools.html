@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tools — GSPN Helper Tools</title>
+  <meta name="description" content="Parallel multi-step data extraction and combiner for Samsung GSPN portal.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Orbs -->
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <!-- TOP NAVBAR -->
+  <nav class="top-nav glass-nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <span class="brand-name">GSPN Tools</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="tools.html" class="nav-link active">Tools</a>
+        <a href="custom-template.html" class="nav-link">Template Builder</a>
+        <a href="reports.html" class="nav-link">Reports</a>
+        <a href="formats.html" class="nav-link">Formats</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE LAYOUT -->
+  <div class="page-layout">
+
+    <!-- Page Header -->
+    <div class="page-header" style="padding-bottom: 24px;">
+      <div class="page-header-inner">
+        <div class="page-title-row" style="margin-bottom: 0;">
+          <div class="page-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="page-title">Data Extraction &amp; Combiner Tools</h1>
+            <p class="page-subtitle">Paste data into Step 1 and/or Step 2 in parallel &mdash; both steps work together to produce a combined master report.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <div class="page-content" style="max-width: 1280px;">
+
+      <!-- Status Bar -->
+      <div class="status-bar status-idle" id="globalStatusBar" style="margin-bottom: 20px;">
+        <div class="status-dot"></div>
+        <span id="globalStatusText">Paste data into Step 1 or Step 2 below, then click Extract &amp; Combine Data.</span>
+      </div>
+
+      <!-- ============================================================
+           PAGE 1 [TOOLS]: PARALLEL 2-STEP GRID
+           ============================================================ -->
+      <div class="steps-grid">
+
+        <!-- STEP 1: PRINT TEXT DATA -->
+        <div class="step-card">
+          <div class="step-card-header">
+            <div class="step-card-title-group">
+              <div class="section-icon icon-purple" style="width:38px; height:38px; margin-bottom:0; flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+              </div>
+              <div>
+                <div style="font-size: 15px; font-weight: 700; color: var(--text);">Step 1: Print Text Data</div>
+                <div style="font-size: 11.5px; color: var(--text-muted);">Plain text copied from print view</div>
+              </div>
+            </div>
+            <span class="step-badge-pill" style="background:#fdf2f8; color:#db2777; border-color:rgba(219,39,119,0.25); margin-bottom:0;">STEP 1</span>
+          </div>
+
+          <div class="step-card-body">
+            <label class="form-label" for="inputStep2">PASTE PRINT TEXT DATA</label>
+            <textarea class="form-textarea" id="inputStep2" rows="8"
+              placeholder="Paste plain text copied from GSPN Print page here...&#10;&#10;• Open Multi-Print view&#10;• Select all (Ctrl+A) → Copy (Ctrl+C) → Paste here"></textarea>
+            <div class="step-hint">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              Extracts tab/space separated customer key-values
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: MANAGEMENT LITE DATA -->
+        <div class="step-card">
+          <div class="step-card-header">
+            <div class="step-card-title-group">
+              <div class="section-icon icon-orange" style="width:38px; height:38px; margin-bottom:0; flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/>
+                </svg>
+              </div>
+              <div>
+                <div style="font-size: 15px; font-weight: 700; color: var(--text);">Step 2: Management Lite</div>
+                <div style="font-size: 11.5px; color: var(--text-muted);">2-row call tables / text</div>
+              </div>
+            </div>
+            <span class="step-badge-pill" style="background:#fef3c7; color:#b45309; border-color:rgba(217,119,6,0.25); margin-bottom:0;">STEP 2</span>
+          </div>
+
+          <div class="step-card-body">
+            <label class="form-label" for="inputStep3">PASTE MANAGEMENT LITE DATA</label>
+            <textarea class="form-textarea" id="inputStep3" rows="8"
+              placeholder="Paste Management Lite tabular data here...&#10;&#10;• Select rows on Management Lite page&#10;• Copy (Ctrl+C) and paste here (Ctrl+V)"></textarea>
+            <div class="step-hint">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              Extracts warranty status, created dates &amp; call statuses
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /steps-grid -->
+
+
+      <!-- ============================================================
+           OPTIONS & UNIFIED ACTION BAR
+           ============================================================ -->
+
+      <div class="section-card" style="padding: 22px 26px; margin-bottom: 32px;">
+        <!-- Template Selection -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+          <div>
+            <label class="form-label" style="margin-bottom:2px;">OUTPUT TEMPLATE</label>
+            <div style="font-size:12px;color:var(--text-muted);">Choose standard layout or build a custom puzzle template</div>
+          </div>
+          <a href="custom-template.html" class="btn-ghost" style="padding:6px 14px;font-size:12px;display:inline-flex;align-items:center;gap:6px;text-decoration:none;border-color:var(--primary);color:var(--primary);font-weight:700;border-radius:8px;background:rgba(37,99,235,0.04);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+            🧩 Custom Template Builder
+          </a>
+        </div>
+        <div class="template-grid" id="combinedTemplateGrid" style="margin-bottom:20px;">
+          <div class="template-card selected" data-template="GGN_STANDARD" onclick="selectCombinedTemplate('GGN_STANDARD', this)">
+            <div class="template-badge badge-blue" style="margin-bottom: 6px;">GGN Standard</div>
+            <div class="template-name">GGN Standerd</div>
+            <div class="template-desc">Standard 28-column Samsung format with Aging, TAT colors, REDO &amp; full details.</div>
+          </div>
+          <div class="template-card" data-template="RAW_DATA" onclick="selectCombinedTemplate('RAW_DATA', this)">
+            <div class="template-badge badge-purple" style="margin-bottom: 6px;">Raw</div>
+            <div class="template-name">Raw Data</div>
+            <div class="template-desc">All extracted columns in their original captured order.</div>
+          </div>
+        </div>
+
+        <!-- Action Buttons — clean 2-row grid -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <button class="btn-primary" id="btnExtractAll" onclick="extractAllCombined()" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Extract &amp; Combine Data
+          </button>
+          <button class="btn-ghost" onclick="clearAllInputs()" style="display:flex;align-items:center;justify-content:center;gap:8px;color:#dc2626;border-color:#fca5a5;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            Clear All
+          </button>
+          <button class="btn-secondary" id="btnExportCombined" onclick="exportCombinedExcel()" disabled style="display:flex;align-items:center;justify-content:center;gap:8px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export Excel
+          </button>
+          <button class="btn-secondary" id="btnCopyCombined" onclick="copyCombinedExcel()" disabled style="display:flex;align-items:center;justify-content:center;gap:8px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy All
+          </button>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           PAGE 2 [SHOWING DATA]: RESULTS SECTION (SCROLLING TO BOTTOM)
+           ============================================================ -->
+      <div class="results-section hidden" id="combinedResultsSection">
+
+        <!-- Results Divider -->
+        <div class="results-divider">
+          <div class="results-divider-line"></div>
+          <div class="results-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            Page 2: Extracted & Combined Data Results
+          </div>
+          <div class="results-divider-line"></div>
+        </div>
+
+        <!-- Summary Statistics Strip -->
+        <div class="section-card" style="margin-bottom: 20px;">
+          <div class="stats-strip" id="combinedStats"></div>
+        </div>
+        <!-- Master Data Preview Card -->
+        <div class="section-card">
+          <div class="section-header">
+            <div class="section-title-group">
+              <div class="section-icon icon-green">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                </svg>
+              </div>
+              <div>
+                <div class="section-title">Master Data Table</div>
+                <div class="section-subtitle" id="combinedPreviewInfo">Showing extracted &amp; combined calls</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items:center;">
+              <!-- Search Box -->
+              <div style="position:relative;">
+                <svg style="position:absolute;left:8px;top:50%;transform:translateY(-50%);pointer-events:none;" width="13" height="13" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input id="tableSearchBox" type="text" oninput="onTableSearch()" placeholder="Search table..." style="padding:6px 10px 6px 28px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:12px;outline:none;width:160px;font-family:inherit;" />
+              </div>
+              <button class="btn-secondary" onclick="exportCombinedExcel()" style="display:flex;align-items:center;gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export Excel
+              </button>
+              <button class="btn-secondary" onclick="copyCombinedExcel()" style="display:flex;align-items:center;gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy All
+              </button>
+              <button class="btn-ghost" onclick="scrollToTop()" style="display:flex;align-items:center;gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+                Back ↑
+              </button>
+            </div>
+          </div>
+
+          <div class="preview-wrapper" style="overflow-x: auto; max-height: 540px; overflow-y: auto;">
+            <table class="preview-table">
+              <thead id="combinedPreviewHead"></thead>
+              <tbody id="combinedPreviewBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /combinedResultsSection -->
+
+    </div><!-- /page-content -->
+  </div><!-- /page-layout -->
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- BOTTOM NAVBAR -->
+  <nav class="bottom-nav glass-nav">
+    <div class="bottom-nav-inner">
+      <a href="index.html" class="bottom-nav-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+      <a href="tools.html" class="bottom-nav-item active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span>Tools</span></a>
+      <a href="reports.html" class="bottom-nav-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Reports</span></a>
+      <a href="formats.html" class="bottom-nav-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Formats</span></a>
+      <a href="learning.html" class="bottom-nav-item bottom-nav-learn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>Learning</span></a>
+    </div>
+  </nav>
+
+  <!-- Floating Print FAB -->
+  <button class="fab-print" id="fabPrintBtn" title="Quick Print">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
+    </svg>
+  </button>
+
+  <!-- Print Dialog (website version) -->
+  <div id="webPrintDialog" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(15,23,42,0.55);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:12px;">
+    <div style="background:#fff;border-radius:16px;padding:22px;width:100%;max-width:420px;box-shadow:0 20px 50px rgba(0,0,0,0.25);display:flex;flex-direction:column;gap:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="background:#eff6ff;border-radius:10px;padding:8px;display:flex;">
+            <svg width="18" height="18" fill="none" stroke="#2563eb" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          </div>
+          <div>
+            <div style="font-size:15px;font-weight:700;color:#0f172a;">Quick Print</div>
+            <div style="font-size:11px;color:#64748b;">100+ IDs → auto batched per tab</div>
+          </div>
+        </div>
+        <button id="closeWebPrintDialog" style="background:#f1f5f9;border:none;border-radius:8px;padding:6px 10px;cursor:pointer;color:#64748b;font-weight:700;">✕</button>
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#475569;display:block;margin-bottom:6px;">Service Order Numbers</label>
+        <textarea id="webPrintIds" rows="6" style="width:100%;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px;font-family:monospace;font-size:12px;color:#0f172a;resize:vertical;outline:none;box-sizing:border-box;" placeholder="4437419726&#10;4437419727&#10;4437419728"></textarea>
+      </div>
+      <button id="webPrintGenerateBtn" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:10px;padding:12px;font-size:13px;font-weight:700;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Generate Print URL(s)
+      </button>
+      <div id="webPrintResults" style="display:none;flex-direction:column;gap:8px;max-height:200px;overflow-y:auto;"></div>
+      <div id="webPrintOpenAll" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/parser.js"></script>
+  <script src="assets/js/excel.js"></script>
+  <script src="assets/js/tools.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+  (function() {
+    const BATCH = 100;
+    const BASE = 'https://biz2.samsungcsportal.com/gspn/operate.do?print_type=SIEL_ENG&ascCode=*&cmd=ServiceRequestMultiPrintCmd';
+
+    function buildUrls(ids) {
+      var urls = [];
+      for (var i = 0; i < ids.length; i += BATCH) {
+        var batch = ids.slice(i, i + BATCH);
+        urls.push(BASE + '&' + batch.map(function(id){ return 'objectId=' + encodeURIComponent(id); }).join('&'));
+      }
+      return urls;
+    }
+
+    var fab = document.getElementById('fabPrintBtn');
+    var dialog = document.getElementById('webPrintDialog');
+    var closeBtn = document.getElementById('closeWebPrintDialog');
+    var genBtn = document.getElementById('webPrintGenerateBtn');
+    var idsArea = document.getElementById('webPrintIds');
+    var results = document.getElementById('webPrintResults');
+    var openAll = document.getElementById('webPrintOpenAll');
+
+    if (fab) fab.addEventListener('click', function() {
+      dialog.style.display = 'flex';
+    });
+    if (closeBtn) closeBtn.addEventListener('click', function() {
+      dialog.style.display = 'none';
+    });
+    if (dialog) dialog.addEventListener('click', function(e) {
+      if (e.target === dialog) dialog.style.display = 'none';
+    });
+
+    if (genBtn) genBtn.addEventListener('click', function() {
+      var raw = idsArea.value.trim();
+      if (!raw) { idsArea.style.borderColor = '#dc2626'; setTimeout(function(){ idsArea.style.borderColor = '#e2e8f0'; }, 1000); return; }
+      var ids = raw.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
+      if (!ids.length) return;
+      var urls = buildUrls(ids);
+
+      results.innerHTML = '';
+      urls.forEach(function(url, i) {
+        var row = document.createElement('div');
+        row.style.cssText = 'background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;';
+        var batchEnd = Math.min((i + 1) * BATCH, ids.length);
+        row.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;">'
+          + '<span style="font-size:10px;font-weight:700;color:#2563eb;text-transform:uppercase;">Tab ' + (i+1) + ' (calls ' + (i*BATCH+1) + '–' + batchEnd + ')</span>'
+          + '<button data-url="' + url + '" class="wpo-btn" style="font-size:10px;font-weight:700;color:#2563eb;background:#eff6ff;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;">Open ↗</button>'
+          + '</div>'
+          + '<div style="font-family:monospace;font-size:9px;color:#475569;word-break:break-all;max-height:40px;overflow:hidden;">' + url.substring(0, 180) + (url.length > 180 ? '…' : '') + '</div>';
+        results.appendChild(row);
+      });
+      results.querySelectorAll('.wpo-btn').forEach(function(b) {
+        b.addEventListener('click', function() { window.open(b.dataset.url, '_blank'); });
+      });
+      results.style.display = 'flex';
+
+      openAll.innerHTML = '<button style="width:100%;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;border-radius:10px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;">🖨️ Open All ' + urls.length + ' Tab' + (urls.length > 1 ? 's' : '') + '</button>';
+      openAll.style.display = 'block';
+      openAll.querySelector('button').addEventListener('click', function() {
+        urls.forEach(function(u) { window.open(u, '_blank'); });
+        dialog.style.display = 'none';
+      });
+    });
+  })();
+  </script>
+</body>
+</html>

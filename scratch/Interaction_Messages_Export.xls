@@ -1,0 +1,2853 @@
+
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:x="urn:schemas-microsoft-com:office:excel"
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <style>
+    table { border-collapse: collapse; }
+    th {
+      background-color: #1a56db;
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 11pt;
+      padding: 8px 12px;
+      border: 1px solid #999999;
+      text-align: center;
+      white-space: nowrap;
+    }
+    td {
+      font-size: 10pt;
+      padding: 6px 10px;
+      border: 1px solid #cccccc;
+      vertical-align: top;
+    }
+    tr:nth-child(even) td {
+      background-color: #f0f4ff;
+    }
+    .num { mso-number-format:\@; }
+  </style>
+</head>
+<body>
+  <table>
+    <thead>
+      <tr>
+        <th>S.No</th>
+        <th>No</th>
+        <th>Service Order No</th>
+        <th>Product</th>
+        <th>Interaction Code</th>
+        <th>Status</th>
+        <th>Created Date</th>
+        <th>Created By</th>
+        <th>Changed Date</th>
+        <th>Changed By</th>
+        <th>Comment</th>
+        <th>Feedback</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align:center;">1</td>
+        <td>1</td>
+        <td class="num">4434696524</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>04/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM Case #46512309 INQUIRY : DELAY IN TECH VISIT customer said in month of may last complain and technician is visit and replace the parts but after tech visit he still facing this issue and he call again but technician is not visit that time then customer is go out of station then now he said why charges paid of visiting because his concern is before two months kindly contact customer and resolve the concern Refrigerator not working properly, slow cooling, and billing issues. STEPS TAKEN : Kindly arrange tech visit on urgent basic plz as soon as possible to resolve the concern OUTCOME : SIM RAISED 6299005_charu_HA_TP_Mohali</td>
+        <td>cx issue has been reoslved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">2</td>
+        <td>2</td>
+        <td class="num">4437916385</td>
+        <td>CTV14</td>
+        <td>Part pending case</td>
+        <td>Confirmed by ASC</td>
+        <td>15/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>16/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>As per customer he raised his complaint on 27.06.2026 and engineer changed the display but he has not given the bill to cx when cx ask for the original bill and he told that new display will be ordered after that i change the display after that cx has not received aby update . kindly do needful asap. Service order no- 4437916385.</td>
+        <td>COMMUNICATION DONE WITH CUSTOMER AND INFROM PART IN ORDER STATUS AND ETA IS 23/08</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">3</td>
+        <td>3</td>
+        <td class="num">4437916385</td>
+        <td>CTV14</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>23/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>CASE-#50201639 SIM a) Inquiry Customer wants the technician visit as soon as possible. b) Steps taken Sim raised c) Outcome Customer Request Sukhpreetkaur_6405853_HHP-HA_digital_TPMohali</td>
+        <td>Communication Done With Customer , part in transit our technciian will viosit along with part on 25 th auguust</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">4</td>
+        <td>4</td>
+        <td class="num">4437916385</td>
+        <td>CTV14</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>18/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>19/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM Sprinkler Case ::-#49187931 CMD:-9265782570 Customer Inquiry :-Repair status of dtv Customer Sentiment:-Neutral Risk Level :-intermediate Purchase Intention:-None Samsung AI Generated Call Summary Agent Answer The agent provided information on the current status of the repair and offered to escalate the issue for faster resolution. Summary The customer inquired about the status of their TV repair and expressed dissatisfaction with the delay. The agent provided information on the current status and offered to escalate the issue for faster resolution. Additional Remarks : - COMMUNICATION DONE WITH CUSTOMER AND INFROM PART IN ORDER STATUS AND ETA IS 23/08SIM raised Tagged By : -Vishal_100000000548175_Av/it_Mohali</td>
+        <td>communiation done with customer our technician will visit tomorrow by 23RD AUG ALONG WITH PART</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">5</td>
+        <td>5</td>
+        <td class="num">4438041626</td>
+        <td>REF03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>14/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>16/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM Inquiry CX IS VERY IRATE AND WANTS TO KNOW ABOUT THE RESOLUTION FOR THE DEP AMOUNT BECAUSE IT&#039;S BEEN MORE THAN 50 DAYS NO ONE IS CALLING FOR THE RESOLUTION AND THE SVC IS SAYING THAT THEY CAN&#039;T DO ANYTHING TO INCREASE THE DEP AMOUNT AND CX WANTS TO TALK WITH SENIOR MANAGER TO GET SOME MORE DEP AMOUNT APPROVAL AND CX WANTS IT ASAP Steps Taken CALLED SVC @ 9227047898 CALL NOT ANSWERED THEN CALLED ON @ 9773190717 CALL NOT CONNECTED THEN CALLED ASM @ 9981659915 THEY SAID THAT WE HAVE RAISED THE REQUEST TO INCREASE IT 5-6% MORE AND THE TOTAL DEP AMOUNT WILL COME AROUND 34000.RS APPROX BUT IT IS NOT CONFIRMED YET, AND IT WILL GET CONFIRMED TILL MONDAY AND I WILL ARRANGE A CALLBACK FOR CX FROM SVC GUIDED CX TO WAIT FOR THE RESOLUTION kindly give a call back for the resolution asap Outcome SIM raised Premium - Customer Request 100000000775856_Lovish_Premium_ TPMohali</td>
+        <td>Communciaiton donw with customer ,dep. amount confirmation pending from customer</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">6</td>
+        <td>6</td>
+        <td class="num">4438041626</td>
+        <td>REF03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>03/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM Inquiry CX asking about product deap amount, he said that he need more deap amount and concern is pending from many days, check his concern. b) Steps taken We discussed the concern with asm sir (9981659915, Vivek Patel) he said he already give deap approval and repair charges will be refund by asc, but ASC said cx need more deap amount that approval is pending, concern escalated on knox, Kindly contact cx. Escalation Probability: -- Irate c) Outcome SIM Raised 100000000739245_Sukhdevdogra_PREMIUM SUPPORT_Mohali</td>
+        <td>Communciaiton donw with customer , and inform that pcb needs to be replace so part in transit and it will b done within 4 days</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">7</td>
+        <td>7</td>
+        <td class="num">4438167461</td>
+        <td>REF03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>05/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM Inquiry CX IS VERY IRATE AND WANTS TO KNOW ABOUT THE STATUS OF THE REFUND COUPON FOR HIS REF BECAUSE IT&#039;S BEEN MORE THAN A MONTH NO ONE IS CALLING AND NO ONE IS GIVING PROPER ANSWER AND THE CASE HANDLER PRANJUL YADAV WAS SO RUDE WHILE TALKING AND WITHOUT CONFIRMATION AND DELIVERY OF THE COUPON HE JUST CLOSED THE REQUEST AND ALSO MENTIONED FAKE REMARKS THAT HE CALLED AND NOW CX WANTS TO RAISE THE COMPLAINT AGAINST THAT SENIOR TEAM CASE HANDLER AND WANTS TO RAISE A GRIEVANCE COMPLAINT AGAINST SAMSUNG PATHETIC SERVICE Steps Taken CALLED SVC @ 9558471229 CALL NOT ANSWERED THEN CALLED ON @ 9558710571 CALL NOT ANSWERED THEN CALLED ON @ 7778875779 THEN CALLED ASM @ 9981659915 THEY SAID HE IS AT THE SVC AND THEN HANDOVER THE CALL TO MSC EXECUTIVE THEY SAID THE COUPON IS AVAILABLE AT OUR MSC AND I WILL GET IT COMPLETE WITHIN 2 DAYS AND I WILL CALL CX SOON FOR THE UPDATE GUIDED CX TO WAIT FOR THE VISIT kindly give a call back for the resolution asap Outcome SIM raised Premium - Customer Request 100000000775856_Lovish_Premium_ TPMohalih</td>
+        <td>cOMMUNICATION dONE WITH CUSTOMER AND INFORM TOMORROW COUPON HANDOVER TO CUSTOMER AND COLLECT REF</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">8</td>
+        <td>8</td>
+        <td class="num">4438338035</td>
+        <td>REF03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>05/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM CMD: a) Inquiry CX wants to know about part availability. please contact cx regarding this.please give a call back to cx. b) Steps taken SIM raised c) Outcome SIM created 6277146_komal_Premium_Tpmohali</td>
+        <td>cx issue has been resolved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">9</td>
+        <td>9</td>
+        <td class="num">4438473155</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>03/08/2026</td>
+        <td>SIELM0309.ID</td>
+        <td>03/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM a) Inquiry Customer still facing the issue. Kindly contact with customer as soon as possible. b) Steps taken SIM raised. c) Outcome Customer Request 6385007_Chellasiapant_EMS_TPMohali</td>
+        <td>SPOKE WITH CX , WE INFORMED HER AS OUR ASM VIVEK SIR TOLD DUE TO WEATHER SPOTTING ISSUE CAN&#039;T BE SOLVED , IF STILL REQUIRE , RAISE COMPLAIN</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">10</td>
+        <td>10</td>
+        <td class="num">4438473155</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>02/08/2026</td>
+        <td>SIELM0137.ID</td>
+        <td>03/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM a) Inquiry i am not satisfied so I was again complain registered and technician visit done he take some photos and videos and than he says weather issue so you use clean clothes and clean the water manually but I am not happy because every refrigerator is not sweating issue.And every day manually cleaning is one type of activity and is not possible because I bought new showroom refrigerator. So I want right decision. I am not satisfied with Samsung service team and Vijay sales support team. So I emailed to yours for right decision. Kindly update the status to the cx ASAP b) Steps taken SIM Created c) Outcome Customer Request AjitKumar_6261384_EMS_Mohali</td>
+        <td>SPOKE WITH CX , WE INFORMED HER AS OUR ASM VIVEK SIR TOLD DUE TO WEATHER SPOTTING ISSUE CAN&#039;T BE SOLVED , IF STILL REQUIRE , RAISE COMPLAIN</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">11</td>
+        <td>11</td>
+        <td class="num">4438529588</td>
+        <td>REF03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>08/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>8486271084</td>
+        <td>SIM CMD:9930533199 a) Inquiry CX wants to know about repair status. as tech has visited many times but the issue is not resolved. please contact cx regarding this. b) Steps taken contacted svc @9227047898, did conference with cx, they said they will assign eng today only. SIM raised Case highlighted to SVC. c) Outcome SIM created 6277146_komal_Premium_Tpmohali</td>
+        <td>visit done but cx not agree to pay charge</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">12</td>
+        <td>12</td>
+        <td class="num">4438529588</td>
+        <td>REF03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>10/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>10/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Sim Raised Case #47730020 ACW Time Remaining 0 seconds.00:00 (IN) +91 99305 33199 Image Samsung AI Generated Call Details Customer Sentiment Image Negative Risk Level Image Intermediate Purchase Intention None Samsung AI Generated Call Summary Customer Inquiry Customer&#039;s fridge is not working properly and they have been advised to pay for parts and advance payment for repair. Agent Answer The agent explained that the customer needs to pay for parts and advance payment for repair. The agent also mentioned that the customer can check the call records and raise a concern with the unit team. Summary The customer is experiencing issues with their fridge and has been advised to pay for parts and advance payment for repair. The customer is concerned about the payment and the agent explained that the customer needs to pay for parts and advance payment for repair. The agent also mentioned that the customer can check the call records and raise a concern with the unit team. GenAI detected Keywords repair 100000000739245_Sukhdevdogra_PREMIUM SUPPORT_Mohali</td>
+        <td>Communication Donw With customer nd inform that Q&amp;amp;A already done Q&amp;amp;A 15010955</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">13</td>
+        <td>13</td>
+        <td class="num">4438529588</td>
+        <td>REF03</td>
+        <td>Part pending case</td>
+        <td>Confirmed by ASC</td>
+        <td>03/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>04/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>cmd:#45651169 sim 2 a) Inquiry cx wants to KNOW ABT THE STATUS THE REQ and cx told that if the issue is of pcb then why they do not fix this as in priority &#039;bec they directly told me in the ist inspection is of ref that the issue is of pcb cx told that they want to escalate this concern to provide the parts asap...........pls update the concern b) Steps taken guide cx i am sharing reminder., you have wait t for the technician c) Outcome sim 2 raised 100000000743876_ANU_HA_TP_MOHALI</td>
+        <td>as discussed with voc team , engineer will re-visit and connect with technical team from customer place due to technical issue.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">14</td>
+        <td>14</td>
+        <td class="num">4438529588</td>
+        <td>REF03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>18/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>18/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM CMD: 9930533199 a) Inquiry CX wants to know about repair status. She was facing same issue with her product. SVC changed multiple times but still there is no resolution. Now they have raised QNA for the same. CX is asking for resolution ASAP. Please arrange call for her. b) Steps taken SIM raised Called SVC multiple times, not picked. Called ASM not picked. Mail shared to ASM and BSM. Case highlighted to SVC, informed cx to wait. c) Outcome SIM created 6277181_Nisha_Premium_TPMohali</td>
+        <td>Communication Donw With customer nd inform that Q&amp;amp;A already done Q&amp;amp;A 15010955 need to compressor and pcb needs to change so it will b done today by eod.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">15</td>
+        <td>15</td>
+        <td class="num">4438722500</td>
+        <td>REF02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>02/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>03/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>sim inquiry cx wants to know about technician visit. cx said technician does not visit in cx place. please visit technician asap cx said please resolve issue asap CX WAITING FOR SERVICE CX WANT CALL BACK FROM SERVICE CENTRE cx want to repair service very urgent basis asap cx waititng for service very urgent basis asap cx want to senior technician very urgent basis asap step taken sim raised outcome customer request 100000000743791_SOMBIR_HA_TP Mohali</td>
+        <td>CUSTOMER CALL NOT RECEIVED - PH NO ; 79904 55121</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">16</td>
+        <td>16</td>
+        <td class="num">4438844974</td>
+        <td>W/M03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>04/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM: Caller Name: YADAV SHAILESH Calling Number: 8758180760 Escalation Probability: 14.15% Interaction code : Repair status Issue- Customer want to know the status Informed to Customer- Reminder share to service Center team, they will call you ASAP. For MSC- Customer still facing issue, kindly contact to customer and visit. Created By: EMP ID-T289128 Name - AYUSH Queue - TA Pending Center - NOIDA CCC</td>
+        <td>cx issue has been resolved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">17</td>
+        <td>17</td>
+        <td class="num">4438865506</td>
+        <td>W/M03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>05/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM CASE : #46643494 INQUIRY: CX WANT TECH VISIT ASAP. KINDLY CONTACT TO CX. STEPS TAKEN: SIM RAISED OUTCOME : SIM CREATED 6370018_MEENA_HA_TPMOHALI</td>
+        <td>cx issue has been resolved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">18</td>
+        <td>18</td>
+        <td class="num">4438866295</td>
+        <td>MON08</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>04/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>05/08/2026</td>
+        <td>8486231576</td>
+        <td>Sim Inquiry cx told he has ordered new monitor and he reieved damaged product on he raised request regarding replacement and he is waiting cx told they will pickup his product but not provide him new product and cx told last time i talk to fridays or saturday they will told me new product will be provided on 3 of august but he has not recieve any product and any callback in team end so kindly contact to cx he is waiting. Steps Taken sim raised Outcomes sim created 6225633_Tanu_AVIT_TPMohali</td>
+        <td>D2C CASE approved , Defective will be picked up by Samsung from customer address</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">19</td>
+        <td>19</td>
+        <td class="num">4438866295</td>
+        <td>MON08</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>05/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>05/08/2026</td>
+        <td>8486231576</td>
+        <td>SIM CX wants update of his request and wants replacement of his monitor not wants refund please contact as soon as possible Step taken Kindly provide update to the cx SIM Raised Outcome SIM Raised 100000000759225_Jagriti_AVIT_TPMohali</td>
+        <td>Refund done by samsung team</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">20</td>
+        <td>20</td>
+        <td class="num">4438866295</td>
+        <td>MON08</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>05/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>05/08/2026</td>
+        <td>8486231576</td>
+        <td>Case #46643361 ACW Time Remaining 0 seconds.00:00 919033069162 (IN) +91 90330 69162 Image Samsung AI Generated Call Details Customer Sentiment Image Negative Risk Level Image Intermediate Purchase Intention Intermediate Samsung AI Generated Call Summary Customer Inquiry Customer is requesting a replacement for a defective monitor and is seeking compensation for the inconvenience. Agent Answer The agent apologizes for the inconvenience and informs the customer that the same model is not available. The agent offers a refund for the amount paid and suggests waiting for a replacement if available within a month. Summary The customer is requesting a replacement for a defective monitor and is seeking compensation for the inconvenience. The agent apologizes for the inconvenience and informs the customer that the same model is not available. The agent offers a refund for the amount paid and suggests waiting for a replacement if available within a month. Additional Remarks:- Inform the customer already company will give best possible resolution. Exchange is not possible that is why company will give you refund. But he is dissatisfied with Samsung services. 3)Outcome – i) End status of call: - Customer dissatisfied with service a. Employee name: Harjot b. Centre name: Mohali CCC c. Queue: - Escalation Desk d. Signature: - 100000000719829_Harjot_ED_MohaliTP</td>
+        <td>Refund done by samsung team</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">21</td>
+        <td>21</td>
+        <td class="num">4438914138</td>
+        <td>W/M02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>05/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM Had a conversation with the User who has performed Ecotub clean around 30 times as per her words which seems to be a malfunction &amp;amp; after cleaning tub too, she gets kind of black stains on white clothes so, let it be checked if tub clean is effective or kind of internal dirt is coming out @ spin mode after completing wash/risne mode &amp;amp; let some senior Technician approach to analyze the concern regarding! Tagged by:- Escalation_Helpdesk_Joy_M._(T207575)_Noida_CCC</td>
+        <td>cx issue has been resolved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">22</td>
+        <td>22</td>
+        <td class="num">4438924650</td>
+        <td>CTV14</td>
+        <td>[Urgent action] Exchange SAW Correction</td>
+        <td>Confirmed by ASC</td>
+        <td>12/08/2026</td>
+        <td>GURANSH.S</td>
+        <td>12/08/2026</td>
+        <td>8486231576</td>
+        <td>Dear MSC, Please attach proper DNA screenshot header should be create purchase order.</td>
+        <td>Create purchase order s.s attahced</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">23</td>
+        <td>23</td>
+        <td class="num">4438924650</td>
+        <td>CTV14</td>
+        <td>[Urgent action] Exchange SAW Correction</td>
+        <td>Confirmed by ASC</td>
+        <td>06/08/2026</td>
+        <td>KAPIL.DEV</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Pls provide create purchase order screen shot of prime part only &quot;BN95-11938H”. Multiple documents are attached in call pls attach only required documents TR copy is missing Function code is ndf in saw pls mention correct function code as per defect</td>
+        <td>4438924650_0006 saw already raised</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">24</td>
+        <td>24</td>
+        <td class="num">4438924650</td>
+        <td>CTV14</td>
+        <td>[Urgent action] Exchange SAW Correction</td>
+        <td>Confirmed by ASC</td>
+        <td>10/08/2026</td>
+        <td>GURANSH.S</td>
+        <td>10/08/2026</td>
+        <td>8486231576</td>
+        <td>Dear MSC, Please attach DNA screenshot for both prime and compatible parts (BN95-11938H &amp;amp; BN95-11938D).</td>
+        <td>ATTAHCED DONE</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">25</td>
+        <td>25</td>
+        <td class="num">4438930793</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>04/08/2026</td>
+        <td>SIELM0461.ID</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Sim a) Inquiry Cx did not get any resolution. cx is very irate b) Steps taken kindly provide service to the cx and update him accor. SIM CREATED c) Outcome SIM Raised Deepali761149_EMS_Mohali</td>
+        <td>cx issue has been resolved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">26</td>
+        <td>26</td>
+        <td class="num">4438951093</td>
+        <td>W/M03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>08/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>08/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM 1 &quot;Caller Name: BHUPENDRA RAMESHCHANDRA Calling Number: 9879197391 Interaction Count Post SO Creation: SIM - 1 Issue: Service Delay Remarks: As per customer ISSUE NOT RESOLVE YET PLZ SEND ENG ASAP . Kindly contact to the customer &amp;amp; arrange for engineer visit by day end today. Tagged by ARJUN SINGH_T-235237_TA PENDING QUEUE_NOIDA CCC</td>
+        <td>COMMUNOCATION DONE WITH CUSTOMER , TECHNICIAN WILL RE-VISIT AFTER 3 O&#039;CLOCK BY TODAY EOD.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">27</td>
+        <td>27</td>
+        <td class="num">4438951093</td>
+        <td>W/M03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>07/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>08/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM: CALLER NAME: BHUPENDRA RAMESHCHANDRA CALLING NUMBER: 9879197391 INTERACTION CODE: Customer request ESCALATION PROBABILITY: 23.55 % ISSUE: CX said that he faced the same issue after changing parts CX said that he tried to contact engineer but engineer didn&#039;t pick the call Kindly contact CX ASAP CREATED BY: T307496_HA QUEUE _NOIDA CCC</td>
+        <td>COMMUNOCATION DONE WITH CUSTOMER , TECHNICIAN WILL RE-VISIT AFTER 3 O&#039;CLOCK BY TODAY EOD.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">28</td>
+        <td>28</td>
+        <td class="num">4439081532</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>03/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>03/08/2026</td>
+        <td>8486271084</td>
+        <td>SIM #46245035 Caller Name: VIJAYSHREE JI Calling Number :9376693728 Interaction Count Post SO Creation: Escalation Probability: 9.72% issue: additional remarks: cx is waiting for your resopnse kindly connect to the cx as soon as possible. Tagged by: Naina_ t321175__HA_NOIDA_CCC</td>
+        <td>SAW Raised 03/08, Informed Cust Mr VIJAYSHREE</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">29</td>
+        <td>29</td>
+        <td class="num">4439165111</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>18/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>18/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM : Eng hasn&#039;t visited for the Service Kindly Update the Customer about Appointment date</td>
+        <td>Communcaiton Done With Customer will arrange visit tomorrow by first half.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">30</td>
+        <td>30</td>
+        <td class="num">4439165111</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>19/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>19/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM Case #49483491 CMD: 9537940651 a) inquiry; cx called for when will be the technician will visit, CX ALSO EED CALL BACK please contact with cx asap b) steps taken ; SIM RAISED c) outcome; SIM RAISED 6323528_Jasmeet_HA_TP_MOHALI</td>
+        <td>communiation done with customer our technician will visit tomorrow by 11 am</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">31</td>
+        <td>31</td>
+        <td class="num">4439235661</td>
+        <td>W/M02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>20/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM CMD-9913727516 a) Inquiry Cx wants the tech visit so please contact to cx. b) Steps taken SIM RAISED c) Outcome SIM CREATED 6216772_komal_TPMohali</td>
+        <td>CX ISSUE HAS BEEN RESOLVED</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">32</td>
+        <td>32</td>
+        <td class="num">4439271048</td>
+        <td>W/M02</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>01/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>04/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM 1 CALLER NAME : DIPESH Rana CALLING NUMBER : 9638482466 INTERACTION CODE : CUSTOMER REQUEST ESCALATION PROBABILITY : CHECK IN TSC ISSUE: KINDLY REACH THE CUSTOMER AS SOON AS POSSIBLE Created By PriyankaT324714 TA PENDING NOIDA CCC</td>
+        <td>spoke with cx mr. dipesh , informed him parts arrived , tech will visit within 1-2 days for parts replacement</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">33</td>
+        <td>33</td>
+        <td class="num">4439314576</td>
+        <td>W/M01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>04/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Case #46468402 CMD:9978002321 SIM 2 INQUIRY:CUSTOMER WANTS TO KNOW ABOUT THE TECHNICIAN VISIT DETAILS CONTACT THE CUSTOMER AS SOON AS POSSIBLE STEPTAKEN: SIM 2 RAISED AND HIGHLIGHTED TO SERVICE CENTER OUTCOME: SIM 2 CREATED 6368524_Ishu_HA_TPMohali</td>
+        <td>4439314576 Edit</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">34</td>
+        <td>34</td>
+        <td class="num">4439325875</td>
+        <td>REF03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>06/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>08/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM CMD- 9978802121 a) Inquiry WHAT- Customer contacted regarding Refund process for Refrigerator as same is not repairable now. WHEN- NA HOW- NA CUSTOMER EMOTION- NORMAL NUMBER OF TIMES CALLED- FRESH b) Steps taken Checked with Service Centre @9558710571 they have updated that confirmation is pending from Customer so now they will proceed after contacting with Customer again in 1 Hr, customer agreed to wait. SIM Raised c) Outcome SIM Created 100000000773845_SANDEEP_PREMIUM_TPMOHALI</td>
+        <td>COMMUNICATION WITH CUST. AND INFORMED REPLACEMENT PROCESS DONE., SAME UPDATE TO CUST.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">35</td>
+        <td>35</td>
+        <td class="num">4439325875</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>04/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>08/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>CASE #46450965 CMD- 9099602121 sim a) Inquiry customer want to know the update of his ref repair request customer is very irated and saying he will go to the cosumer court PLEASE CALL THE CUSTOMER ASAP b) Steps taken Kindly call the customer asap and gude him c) Outcome sim1 raised 6393562AnuragHAtpMohali</td>
+        <td>COMMUNICATION WITH CUST. AND INFORMED REPLACEMENT PROCESS DONE., SAME UPDATE TO CUST.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">36</td>
+        <td>36</td>
+        <td class="num">4439325875</td>
+        <td>REF03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>07/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>08/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM Inquiry CX IS VERY IRATE AND WANTS TO KNOW ABOUT THE RESOLUTION FOR HIS REF BECAUSE THE SVC SAID THAT IT IS NON REPAIRABLE AND CX WILL GET THE REFUND BUT NOW IT&#039;S BEEN MORE THAN 7 DAYS BUT STILL NO REFUND HAS BEEN RECEIVED AND CX WANTS THE REFUND ASAP Steps Taken CALLED SVC @ 9227047898 THEY SAID THE RSM APPROVAL IS PENDING AND TILL MONDAY IT WILL COME BUT I WILL HIGHLIGHT THIS TO ASM AND TRY TO GET IT DONE ASAP AND WILL UPDATE CX SOON GUIDED CX TO WAIT FOR THE RESOLUTION kindly give a call back for the resolution asap Outcome SIM raised Premium - Customer Request 100000000775856_Lovish_Premium_ TPMohali</td>
+        <td>COMMUNICATION WITH CUST. AND INFORMED REPLACEMENT PROCESS DONE., SAME UPDATE TO CUST.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">37</td>
+        <td>37</td>
+        <td class="num">4439419727</td>
+        <td>W/M03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>04/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>04/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Sprinklr ID - #46416099 CMD: - 7567917721 SIM a) Inquiry Customer inquired about request Status. b) Steps taken Customer said there is no tech. visited as guided for tech. visit with part for part replacement as mentioned remarks by svc : &quot;I spoke with the customer . The technician will replace the part today&quot;. Guided customer about remarks : &quot;Visit 04/08 16~18&quot; but customer said she wants the tech. visit before 03PM as she has to go somewhere after 03PM. Contact with svc @9558710571...svc didn&#039;t pick up the call. Customer wants the tech. visit for early morning asap on priority basis. SIM RAISED c) Outcome Premium - Customer Request 100000000787084_Akib_Premium</td>
+        <td>cx issue has been resolved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">38</td>
+        <td>38</td>
+        <td class="num">4439419727</td>
+        <td>W/M03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>01/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>03/08/2026</td>
+        <td>8486271084</td>
+        <td>SIM 1 Case #45849690 cmd : 9825462632 a)Inquiry; The customer is experiencing a delay in the repair of their washing machine due to delayed parts delivery. The agent apologizes for the inconvenience and assures the customer that they will try to resolve the issue as soon as possible. The agent also informs the customer that they will escalate the issue to ensure a technician visit.. remarks mentioned &quot;&quot;AS PER PARTS ETA 30/07/2026 ENG WILL VISIT 31/07/2026&quot;&quot;&quot; but still there is no any visit. cx is very irritated now. she thread to go consumer court. b)Steps taken; SIM raised c)Outcome; SIM created 6369740_RIYA_HA_TPMohali</td>
+        <td>I spoke with the customer . The technician will replace the part today.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">39</td>
+        <td>39</td>
+        <td class="num">4439419727</td>
+        <td>W/M03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>03/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>03/08/2026</td>
+        <td>8486271084</td>
+        <td>SIM CMD- 7567917721 a) Inquiry WHAT- Customer contacted regarding Technician visit update and part status. WHEN- NA HOW- NA CUSTOMER EMOTION- NORMAL NUMBER OF TIMES CALLED- FRESH b) Steps taken Checked with Service Centre @9558710571 they have updated that part already received but due to rain visit was not done, today Technician is on the way along with the parts and it will be repaired by today only, customer agreed. SIM Raised c) Outcome SIM Created 100000000773845_SANDEEP_PREMIUM_TPMOHALI</td>
+        <td>I spoke with the customer . The technician will replace the part today.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">40</td>
+        <td>40</td>
+        <td class="num">4439422546</td>
+        <td>CTV12</td>
+        <td>Customer escalation</td>
+        <td>Confirmed by ASC</td>
+        <td>03/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>05/08/2026</td>
+        <td>8486231576</td>
+        <td>46334042 SIM: 1 CALLER NAME:RAJESH KUMAR . CALLING NUMBER:9500967238 INTERACTION CODE: Customer Request STATUS REMARKS:Visit By Eng Himasnhu 9925199773 03/08 16~18 Customer calling for tv remote issue cus is telling already tech also visited they said remote issue they will replaced the remote cus want some clarity and proper resolution for this Kindly call and update the status to the customer CREATED BY: Meghana_AV_T318732_IE_ccc</td>
+        <td>remote replaced set ok</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">41</td>
+        <td>41</td>
+        <td class="num">4439422546</td>
+        <td>CTV12</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>02/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>05/08/2026</td>
+        <td>8486231576</td>
+        <td>Dear Team, cx regarding tv display issue kindly check and update ASAP Tagged by Ashma_AV_T318124_CCC</td>
+        <td>remote replaced set ok</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">42</td>
+        <td>42</td>
+        <td class="num">4439432786</td>
+        <td>W/M03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>01/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>06/08/2026</td>
+        <td>8486271084</td>
+        <td>SIM Inquiry CX IS VERY IRATE AND WANTS TO KNOW ABOUT THE TECH VISIT BECAUSE STILL THERE IS NO RESPONSE OF TECH VISIT YET FOR THE PARTS REPLACEMENT AND CX WANTS THE TECH TO VISIT ASAP TO REPLACE THE PARTS Steps Taken CALLED SVC @ 9227047898 CALL NOT ANSWERED THEN CALLED ON @ 9558471229 CALL NOT CONNECTED THEN CALLED ON @ 9558710571 THEY SAID THE ENG IS ALIGNED FOR TODAY&#039;S VISIT AND WILL COLLECT THE PARTS FROM STORE AND WILL SEND IT TO THE ENG AND WILL CALL CX SOON FOR THE UPDATE GUIDED CX TO WAIT FOR THE VISIT kindly give a call back for the resolution asap Outcome SIM raised Premium - Customer Request 100000000775856_Lovish_Premium_ TPMohali</td>
+        <td>PANEL CONTROL DISPLAY PBA PART REPLACE SET WORKING OK</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">43</td>
+        <td>43</td>
+        <td class="num">4439490856</td>
+        <td>REF03</td>
+        <td>Customer escalation</td>
+        <td>Confirmed by ASC</td>
+        <td>04/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Case #46436273 SIM 1 CMD:-8758883737 a) Inquiry:- cx called regarding the engineer visit status. cx facing same issue again and again cx said the issue is not resolved the technician change the part multiple time but issue is still persist and wrong remarks mention in the so in last visit technician guided that the product need to replace part cx is very irate cx said that they want proper resolution this time so kindly provide senior technician and give best resolution to cx cx want the replacement of the product cx want visit asap contact the cx on priority bases today b) Steps taken:- SIM 1 Raised guided cx will receive a call back from svc kindly coordinate with cx and call cx back c) Outcome SIM 1 Created 6285033_Sanjana__HA_TPMohali</td>
+        <td>cx issue has been resolved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">44</td>
+        <td>44</td>
+        <td class="num">4439525500</td>
+        <td>W/M02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>03/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>case id: #46281590 SIM Caller Name: VARSHA BEN Calling Number: 9925568647 Issue- customer want to know when he receive his part so kindly make a call to customer for confirmation because engineer said that for today visit it&#039;s has been 9 days. Note: AS PER PARTS ETA 11/08/2026 ENG WILL VISIT 12/08/2026 Created By: EMP ID- T291582 Name - Prabhat Queue - HA Center - NOIDA CCC</td>
+        <td>cx issue has been resolved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">45</td>
+        <td>45</td>
+        <td class="num">4439584725</td>
+        <td>W/M03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>06/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>8486271084</td>
+        <td>Case #46904383 sim1 cx said tech visited and they inspected the product then tech said part will replace but regarding part there is no update is mention and also tech had created a video but there is no attachments regarding this cx is irate now and also wants to talk with senior call back arranged b) Steps taken INFORMATION GIVEN AND SIM 1 RAISED c) Outcome SIM 1 RAISED 6226260_Goldi_AVIT_TPMohali</td>
+        <td>We spoke with the customer. A senior technician will visit on Tuesday.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">46</td>
+        <td>46</td>
+        <td class="num">4439603730</td>
+        <td>MWO01</td>
+        <td>No Update from MSC</td>
+        <td>Confirmed by ASC</td>
+        <td>04/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>04/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>sim 3 Case #46566072 9998011547 inquiry: customer called for technician visit customer wants visit today CX IS VERY IRATE REQUEST IS ALREADY OPENED but service center told that there is no request registered and have to raise the request again there is no feedback from the service center as well contact customer highlight to supervisor step taken sim raised outcome sim raised 6321872_Akanksha_HA_TP_mohali</td>
+        <td>Communication Done With customer , will Arrange Technician tomorrow by 3pm</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">47</td>
+        <td>47</td>
+        <td class="num">4439603730</td>
+        <td>MWO01</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>04/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>04/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM 2 a) inquiry; cx complained for Eng. Re-visit delay. SVC agent called and she said that you will raised new SO for teach visit again but old one SO is already opened . cx is frustrated and he is very irate and want talk with senior please talk with cx and give solution Escalation Probability :- b)steps taken; sim raised c) outcome; sim created 100000000731742_shubham_HA_TP_mohali</td>
+        <td>Communication Done With customer , will Arrange Technician tomorrow by 3pm</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">48</td>
+        <td>48</td>
+        <td class="num">4439603730</td>
+        <td>MWO01</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>03/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>04/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>CASE 9998011547 CMD- 9998011547 sim 1 a) Inquiry CUSTOMER IS FACING SAME ISSUE AGAIN AND NO TECHNICIAN IS VISITING CUSTOMER HOUSE HE IS IRATED PLEASE CALL THE CUSTOMER ASAP b) Steps taken kindly call back to cx on urgent basis asap c) Outcome sim1 raised 6393562AnuragHAtpMohali</td>
+        <td>Communication Done With customer , will Arrange Technician tomorrow by 3pm</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">49</td>
+        <td>49</td>
+        <td class="num">4439603730</td>
+        <td>MWO01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>02/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>04/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>CASE-#46048088 CMD-9998011547 SIM A) INQUIRY- CX CALLED TO TELL THE STATUS OF HIS MICROWAVE REPAIR REQ AS THE CX FACING THE SANE SSSUE AGAIN AND ITS NOT WORKING PROPLY . AS CX IS IRRITATED SO KINDLY TAKE ACTION REGARDING THIS. SO KINDLY CALL TO CX AND UPDATE HIM AND ARRANGE ENG VISIT ASAP. B) STEPS TAKEN- SIM CREATED C) OUTCOME- SIM RAISED 6369575_Kanika_HA_TPMohali</td>
+        <td>Communication Done With customer , will Arrange Technician tomorrow by 3pm</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">50</td>
+        <td>50</td>
+        <td class="num">4439603948</td>
+        <td>W/M01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>10/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>11/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM CMD- 6351907121 A. Inquiry- 1. What:- customer called for engineer visit 2. When:-from Few dayS 3. How:- During Normal Usage 4. Number of calls:- 5. Customer’s Emotion:- Normal b) Steps taken plz provide the engineer visit asap kindly update the customer accordingly Reminder sent to service center against the delay in repair where as customer is vey disappointed so we need to repair the product asap. c) Outcome Transfer to other responsible personnel 100000000706761_pallavi_HA+HHP_TPmohali</td>
+        <td>6351907121 CUSTOMER CALL NOT CONNCTE SO CALL CANCEL</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">51</td>
+        <td>51</td>
+        <td class="num">4439616557</td>
+        <td>REF03</td>
+        <td>Part pending case</td>
+        <td>Confirmed by ASC</td>
+        <td>01/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Case #45839911 cmd: Inquiry-Cx waiting for technician for a long time. kindly inform to Cx ASAP. steps taken - CASE HIGHLITED TO SERVICE CENTER outcome -SIM raised 6371264_Afnan_HA_TP MOHALI</td>
+        <td>Spoke WIth Customer , Ms. Jyoti Our technician mr aakib will visit Tomorrow by 4 pm 10/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">52</td>
+        <td>52</td>
+        <td class="num">4439628514</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>05/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>05/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM CMD- 7878935522 a) Inquiry customer called regarding refrigerator issue. customer complaining about service delay. customer is very irate. she is not getting response from service center. customer want tech visit as soon as possible. kindly contact customer as soon as possible. customer is not ready to agree this &quot;Communication Done With Customer Ms.Priya on 7878935522, Will Arrange Technician Tomorrow By Second Half On 15:30:00&quot;. customer want tech visit right now. customer want to talk with senior only. call transfer. b) Steps taken SIM RAISED c) Outcome SIM CREATED in Customer Request 6216802_Kunjan_HA_TPMohali</td>
+        <td>Communication Done With Customer Ms.Priya on 7878935522, Will Arrange Technician Today By 13:00:00</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">53</td>
+        <td>53</td>
+        <td class="num">4439628514</td>
+        <td>REF03</td>
+        <td>Repeat SIMS (3-4 SIMs)</td>
+        <td>Confirmed by ASC</td>
+        <td>04/08/2026</td>
+        <td>SIELM0144.ID</td>
+        <td>04/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM 3 CMD-7878935522 a) Inquiry Customer want to know about Technician visit status. TO @MSC ARRANGE A CALLBACK TO CUSTOMER &amp;amp; INFORM HIM ABOUT THE VISIT. NO REMARKS UPDATED IN REQUEST.NO ETA MENTINOED IN REQUEST. KINDLY ARRANGE A CALLBACK &amp;amp; UPDATE THE CUSTOMER. b) Steps taken sim 3 raised c) Outcome Escalation Probability:0.00% 100000000751406_Kailash_Sup_MOHALI</td>
+        <td>Communication Done With Customer Ms.Priya on 7878935522, Will Arrange Technician Tomorrow By Second Half On 15:30:00</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">54</td>
+        <td>54</td>
+        <td class="num">4439628514</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>01/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>04/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>sim 1 CMD-7878935522 a) Inquiry cx called for the part status.cx is waiting for the part update.cx is very irate cx want callback from the svc within 1 hour b) Steps taken kindly arrange the visit asap sim raised c) Outcome sim 1 100000000777954_Anjali_TP_mohali</td>
+        <td>Communication Done With Customer Ms.Priya on 7878935522, Will Arrange Technician Tomorrow By Second Half On 15:30:00</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">55</td>
+        <td>55</td>
+        <td class="num">4439628514</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>03/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>04/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM 2 Case #46333031 CMD : 7878935522 Inquiry - Customer is ASKING ABOUT THE STATUS OF TECHNICIAN VIST AND WANT TECH VISIT AS SOON AS POSSIBLE, SHE IS NOT GETTING ANY RESPONSE FROM THE TECHNICIAN, CUSTOMER IS SO FRUSTRATED. STEPS TAKEN: HIGHLIGHT CASE TO SERVICE CENTER AND SENIORS, outcome - SIM raised 6371343_Sonia_HA_TPMohali</td>
+        <td>Communication Done With Customer Ms.Priya on 7878935522, Will Arrange Technician Tomorrow By Second Half On 15:30:00</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">56</td>
+        <td>56</td>
+        <td class="num">4439641015</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>03/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Sprinklr Case Id: #46205952 Customer Inquiry:-Over cooling issue Customer Sentiment -Neutral Risk Level-Intermediate Purchase Intention-Low Step Taken (AI):-Customer reported about over cooling in REF Additional remarks:- Engineer visited but problem not solved &amp;amp; SO running from last 7 days Outcome- 2k ticket closed Created By: Abhishek Pal_T328575_TA _Pending_Noida_CCC</td>
+        <td>cx issue has been resolved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">57</td>
+        <td>57</td>
+        <td class="num">4439674510</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>08/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>8486271084</td>
+        <td>CASE ID - #47364056 SIM - SIM CALLER NAME - Mukesh B Naik CALLING NUMBER - 9825831809 CONCERN - Customer informed that REF is not working again. CX wants to know about engineer visit. Please connect with CX ASAP. NOTE - INFORMED CUSTOMER THAT ENGINEER VISIT ASAP. CREATED BY - KISHANKUMAR T329556 TA PENDING NOIDA CCC</td>
+        <td>The technician will visit the customer on 10/08/2026.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">58</td>
+        <td>58</td>
+        <td class="num">4439674510</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>07/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>08/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM CMD - 9825831809 a) Inquiry - Customer called to inform that her issue not resolved even after replacing parts cx was irate. cx want call back and visit and proper repair asap today guide cx that their concern will be forwarded to dedicated team kindly coordinate with cx asap b) Steps taken SIM RAISED c) Outcome SIM CREATED 100000000787103_Harmankaur/HA/AVIT</td>
+        <td>CX CALLED FROM 98258 96231 , SHE INFORMED TECH HAVE RE-VISITED AND INFORMED NITRGN REFIL REQ.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">59</td>
+        <td>59</td>
+        <td class="num">4439674510</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>10/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>12/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>cmd:#47668432 sim 1 a) Inquiry cx wants to KNOW ABT THE STATUS THE REQ and cx told that last Friday TECH VISITED AND ALSO CHANGED /CX WANT A SENIOR TECH TO VISIT AND WAMNT A RESOLUTION /CX IS WAITING FROM THE 15 DAYS CX WANT THIS VISIT TODAY ..............................CX WANT A UPDATE ASAP b) Steps taken guide cx i am sharing reminder., you have wait t for the technician c) Outcome sim 1raised 100000000743876_ANU_HA_TP_MOHALI</td>
+        <td>CX CALLED FROM 98258 96231 , SHE INFORMED TECH HAVE VISITED DONE NITROGEN PROSSURE HOLD DONE NOW TODAY TECHNICIAN WILL VISIT TODAY FOR RECHECK</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">60</td>
+        <td>60</td>
+        <td class="num">4439674510</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>07/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>08/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>cmd:#47139178 cmd:9825896231 sim 1 a) Inquiry cx wants to KNOW ABT THE STATUS THE REQ and cx told that ref is in same condition /cx is irate that they want a senior tech visit as in priority /they already replaced the parts also pcb and gas ./. cx want this visit asap cx want a proper resolution ...................otherwise thy want replacement cx also threating for a consumer court /bec ref is in warranty b) Steps taken guide cx i am sharing reminder., you have wait t for the technician c) Outcome sim 1raised 100000000743876_ANU_HA_TP_MOHALI</td>
+        <td>CX CALLED FROM 98258 96231 , SHE INFORMED TECH HAVE RE-VISITED AND INFORMED NITRGN REFIL REQ.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">61</td>
+        <td>61</td>
+        <td class="num">4439674510</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>07/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>08/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM a) Inquiry cx is very irated and cx said i have been facing issues with my brand new refrigerator its strats troubling since i bought and they came and repaiered two times but still there is no improvement first they changed the circuit then compressor but still theres a problem so cx said iwant the replacement or i want the proper resolution of my refrigerator kindly arrange the senior or experinced technician for the cx so that they can identify the cactual prblm like why is it hapeening again and again cx want technician visit asap.kindly provide the service and contact customer as soon as possible b) Steps taken SIM RAISED c) Outcome SIM RAISED 6211026_tikshan_TPMohali</td>
+        <td>CX CALLED FROM 98258 96231 , SHE INFORMED TECH HAVE RE-VISITED AND INFORMED NITRGN REFIL REQ.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">62</td>
+        <td>62</td>
+        <td class="num">4439674510</td>
+        <td>REF03</td>
+        <td>Customer escalation</td>
+        <td>Confirmed by ASC</td>
+        <td>07/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>08/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM a) inquiry: SHE IS VERY ANGRY AND FRUSTATED AND SHE IS VERY DISAPPOINTED CX WANT TO GET PROPER RESOLTION OF REF AS SHE Customer wants to know the technician visit date and time. Kindly connect with the customer regarding the same. b)steps taken: PLS CONTACT AND VSIT HER ASAP AS SHE IS CALLING FROM 10 DAYS AND TILL NOW SHE DID NOT GET THE RESOLUTION SIM Raised c)outcome; SIM Raised 6323530_Shilpi_HA_TPMohali</td>
+        <td>CX CALLED FROM 98258 96231 , SHE INFORMED TECH HAVE RE-VISITED AND INFORMED NITRGN REFIL REQ.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">63</td>
+        <td>63</td>
+        <td class="num">4439674876</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>14/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>16/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM a) Inquiry cx want to know the status of the SO, Please visit and call cx asap. Visit Today. b) Steps taken SIM Raised c) Outcome Customer Request 100000000769526_AshishPansheriya_HA/AVIT_TPMohali</td>
+        <td>cx issue has been resolved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">64</td>
+        <td>64</td>
+        <td class="num">4439680889</td>
+        <td>REF02</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>01/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>sim 1 CMD-9714112820 a) Inquiry cx called for the TECHNICIAN VISIT KINDLY ARRANGE THE VISIT ASAP.cx face the same issue again b) Steps taken kindly arrange the visit asap sim raised c) Outcome sim 1 100000000777954_Anjali_TP_mohali</td>
+        <td>cx issue has been resolved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">65</td>
+        <td>65</td>
+        <td class="num">4439704897</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>06/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>08/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM2 CMD-7228847009 a) Inquiry Cx wants the tech visit as the cx is facing the issue from last 8 days and there is need to be replace the parts but after that no one have visited yet so cx is very irate and cx family member is daibeties patient there is alot of medicines in the ref which are spoiling so please contact to cx asap. b) Steps taken SIM2 RAISED c) Outcome SIM2 CREATED 6216772_komal_TPMohali</td>
+        <td>SPOKE WITH CX MS. RANJEETA 7228847009 , NOW SET WORKING OK</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">66</td>
+        <td>66</td>
+        <td class="num">4439704897</td>
+        <td>REF03</td>
+        <td>Part pending case</td>
+        <td>Confirmed by ASC</td>
+        <td>05/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>08/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>CMD_7228847009 Case #46743582 SIM 1 a) Inquiry cx want to know the timing of technician. cx ref. part is pending for long time . kindly update the cx asap. cx is very irate. b) Steps taken sim 1 created c) Outcome sim 1 created 100000000739253_Ankita_HA_TPmohali</td>
+        <td>SPOKE WITH CX MS. RANJEETA 7228847009 , NOW SET WORKING OK</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">67</td>
+        <td>67</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>11/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>12/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM 1 CX INQUIRY- CX SAID TECH STLL NOT VISITED YET CX WANT TECH VISIT ASAP SIM 1 STEP TAKEN SIM 1 CREATED cx wants call back from supervisor SIM 1 OUTCOME SIM RAISED</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician RAHIM compressor replace done set working ok</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">68</td>
+        <td>68</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>06/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM Samsung AI Generated Call Summary Customer Inquiry Fridge not working properly for the past 8 days Agent Answer The agent is trying to escalate the issue and arrange for a technician to visit the customer&#039;s home. Summary The customer is experiencing issues with their fridge for the past 8 days. They have made multiple complaints, but no resolution has been provided. The agent is trying to escalate the issue and arrange for a technician to visit the customer&#039;s home. GenAI detected Keywords fridge b) STEPS TAKEN KINDLY PROVIDE RESOLUTION TO CX ASAP SIM RAISED c) OUTCOME SIM CREATED 6323748_PANKUSH_HA</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician mr.ramprakash will visit today by 16:00:00PM 09/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">69</td>
+        <td>69</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>11/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>12/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>a) Inquiry CUSTOMER called for delay service provided by customer Customer had raised a request 14 days back but still issue not resolved PLEASE VISIT ASAP b) Steps taken called ASM • Name: Vivek Patel • Contact: 9981659915 He confirmed that engineer will visit today and they will call customer to confirm timing SIM RAISED c) Outcome SIM CREATED 100000000718108_MANISH_HA_TPMOHALI</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician RAHIM compressor replace done set working ok</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">70</td>
+        <td>70</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>06/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>CASE-#46845036 CMD-9978602616 SIM A) INQUIRY- CX CALLED TO KNOW THE STATUS OF HIS REFRIGERATOR REPAIR REQUEST AND CX SAID THE VISIT SHOULD BE DONE BY TODAY WITHOUT ANY DELAY . SO KINDLY CALL TO CX AND UPDATE HIM AND ARRANGE ENG VISIT ASAP. B) STEPS TAKEN- SIM CREATED C) OUTCOME- SIM RAISED 6369575_Kanika_HA_TPMohali</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician mr.ramprakash will visit today by 16:00:00PM 09/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">71</td>
+        <td>71</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>07/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM Case #47180497 CMD: 9978602616 Inquiry - cx is ASKING ABOUT THE STATUS OF ENGINEER VISIT, AND SHE IS SO FRUSTRATED. steps taken - HIGHLIGHTED TO SERVICE CENTER, KINDLY UPDATE THE CUSTOMER AND CALLBACK THE CUSTOMER. outcome - SIM raised 6371343_Sonia_HA_TPMohali</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician mr.ramprakash will visit today by 16:00:00PM 09/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">72</td>
+        <td>72</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Repeat SIMS (&amp;gt;=7 SIMs)</td>
+        <td>Confirmed by ASC</td>
+        <td>07/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM 7 HIGH PRIORITY ISSUE a) inquiry: CX WANT TECH VISIT TODAY IN 2 HOURS FOR PART REPLACEMENT ISSUE Customer wants to know the technician visit date and time. Kindly connect with the customer regarding the same. SHE IS CALLING AGAIN AND AGAIN IN CUSTOMER CARE b)steps taken: PLS PLS CONTACT NOW WITHIN 2 HOURS TO CUSTOMER AS SHE IS VERY CONCERNED SIM Raised c)outcome; SIM Raised 6323530_Shilpi_HA_TPMohali</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician mr.ramprakash will visit today by 16:00:00PM 09/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">73</td>
+        <td>73</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>07/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM Inquiry customer id very irate and want service visit asap. STEP TAKEN informed about visit SIM Raised OUTCOME SIM Raised 6444276_SWATI_HA_TPMOHALI</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician mr.ramprakash will visit today by 16:00:00PM 09/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">74</td>
+        <td>74</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>07/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Case #47119902 sim raised cmd 9978602616 Inquiry CX WANT VISIT TODAY FOR COMPERRESOR REPLACEMENT PLZ VISIT AND RESOLVE THE CASE steps taken outcome SIM raised 6369577_palak_HA_TPMohali</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician mr.ramprakash will visit today by 16:00:00PM 09/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">75</td>
+        <td>75</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>10/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>10/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Case #47754105 ACW Time Remaining 4 seconds.00:04 919978602616 (IN) +91 99786 02616 Image Samsung AI Generated Call Details Customer Sentiment Image Negative Risk Level Image Intermediate Purchase Intention None Samsung AI Generated Call Summary Customer Inquiry Customer is experiencing issues with their fridge and has been trying to resolve the problem for 10 days. Agent Answer The agent is escalating the case to the technical department and will arrange a call with the customer to provide an update on the resolution. Summary The customer is experiencing issues with their fridge and has been trying to resolve the problem for 10 days. The agent is escalating the case to the technical department and will arrange a call with the customer to provide an update on the resolution. Additional Remarks:- I told the customer that that I will escalate your case to ASM and arrange a call back to customer via SVC.----------- Then Details share to ASM in proactive group and mentioned &quot; Customer is escalating this case due to service delays and is now very upset and is even taking the matter to higher authorities. Please address this matter and provide service to the customer as soon as possible. Also, please arrange for SVC to call the customer back with final confirmation. &quot;---------- she agree with this. 3)Outcome – i) End status of call: - Customer dissatisfied with service a. Employee name: Harjot b. Centre name: Mohali CCC c. Queue: - Escalation Desk d. Signature: - 100000000719829_Harjot_ED_MohaliTP</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician mr.ramprakash will visit Tomorrow by 14:00:00PM 11/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">76</td>
+        <td>76</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>08/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Sim1 cmd-9978602616 a) Inquiry cx is waiting for technician and want visit today only b) Steps taken Sim1 guided visit day cx want visit asap kindly contact with cx asap guided cx to wait for technician c) Outcome Repair status 100000000777960_Lakhvir kaur_HA_TP_Mohali</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician mr.ramprakash will visit today by 16:00:00PM 09/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">77</td>
+        <td>77</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>10/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>10/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM 1 a) Inquiry :- CX called for technician visit inquiry b) Steps taken :- SIM Raised CX want early visit of the technician. Please call cx ASAP c) Outcome :- SIM Raised 6283867_Sandeep_HA_TPMohali</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician mr.ramprakash will visit Tomorrow by 14:00:00PM 11/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">78</td>
+        <td>78</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>10/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>10/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM 2 Case #47643074 CMD: 9978602616 Inquiry - CX IS ASKING ABOUT THE STATUS OF TECHNICIAN VISIT AND SHE WANT TECHNICIAN VISIT BY TODAY, SHE IS FACING A LOT OF DIFFICULTY IN REF, SHE IS NOT GETTING ANY RESPONSE FROM SERVICE CENTER. SHE IS VERY FRUSTRATED WITH THE SERVICES. steps taken - HIGHLIGHTED TO SERVICE CENTER, KINDLY UPDATE THE CUSTOMER. outcome - SIM raised 6371343_Sonia_HA_TPMohali</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician mr.ramprakash will visit Tomorrow by 14:00:00PM 11/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">79</td>
+        <td>79</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>10/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>10/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM1 Case #47750626 CMD 9978602616 a) Inquiry cx called for us to know the status of HIS REF and its parts . cx wants tech visit as soon on a priority basis on today . cx wants resolution . kindly arrange a call form tech or svc side. b) Steps taken SIM RAISED c) Outcome SIM CREATED 6352869_jaya_HA</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician mr.ramprakash will visit Tomorrow by 14:00:00PM 11/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">80</td>
+        <td>80</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>08/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>sim 1 a) Inquiry cx facing isseu in ref need repair need call back from svc and tech cx need visit asap b) Steps taken guided all info to cx accoridgly called to svc @9227047898 they said texh wwill visit on monday c) Outcome sim 1 rasied 100000000764768_AnkitRamaiya_HHP/HA/AVIT_TPMohali</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician mr.ramprakash will visit today by 16:00:00PM 09/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">81</td>
+        <td>81</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>08/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Case #47266927 CMD: 9978602616 SIM a)inquiry: cx called for asking about the technician visit. kindly contact with the cx and arrange a technician visit asap. b) step taken: Raised Sim c) outcome: Sim Created. 6324025_Prerna_HA_TPMOHALI</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician mr.ramprakash will visit today by 16:00:00PM 09/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">82</td>
+        <td>82</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>06/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM1 CX WANT TECHNICIAN VISIT AS IT WAS SCHEDULED FOR TODAY KINDLY PROVIDE THE RESOLUTION TODAT SIM RAISED 6325306_ROHIT_HA_TPMOHALI</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician mr.ramprakash will visit today by 16:00:00PM 09/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">83</td>
+        <td>83</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Part pending case</td>
+        <td>Confirmed by ASC</td>
+        <td>04/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Case #46527971 SIM : 1 The customer inquired about the status of their refrigerator compressor issue and the delay in the technician&#039;s return with the compressor. The agent apologized for the inconvenience and assured the customer that they would try to resolve the issue as soon as possible. The agent also provided the customer with a service center visit request number and a pin for the visit. PART IS NT RECIVED YET CX IS IRRITTED 6277665_SIMRAN_HA_TPMohali</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician mr.ramprakash will visit today by 16:00:00PM 09/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">84</td>
+        <td>84</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Part pending case</td>
+        <td>Confirmed by ASC</td>
+        <td>01/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>cmd=9374512616 sim1 inqury cx said technician visit only for inspection and told there is compressor issue in ref . but no one visit in cx place for compressor replace . cx wants to know about the part status . and cx told after inspection there is no call from svc side and technician side . kindly contact to cx asap and replace the compressor quickly . step taken sim1 raised outcome sim1 raised 100000000743628_deekshabedi_HA_TP_MOHALI</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician mr.ramprakash will visit today by 16:00:00PM 09/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">85</td>
+        <td>85</td>
+        <td class="num">4439710265</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>03/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>09/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>case#46215340 cmd9978602616 SIM a) Inquiry:- cx called regarding the engineer visit status. b) Steps taken:- SIM Raised c) Outcome SIM Raised 6393616_gurdeep_HA_TPMohali -----------------------------</td>
+        <td>Communication Done With Customer , ms.harshita medam our technician mr.ramprakash will visit today by 16:00:00PM 09/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">86</td>
+        <td>86</td>
+        <td class="num">4439714230</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>05/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>08/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM 4 Case #46652985 INQUIRY : DELAY IN TECH VISIT Customer is experiencing issues with their Samsung product and has requested a callback. Customer called for technician visit delay for repair .Customer has not received any update from svc side and customer was very irate. STEPS TAKEN : Kindly arrange tech visit on urgent basic plz as soon as possible to resolve the concern OUTCOME : SIM 4 RAISED 6299005_charu_HA_TP_Mohali</td>
+        <td>CALLED ON 9825704743 , CUSTOMER CALL NOT RECEIVE</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">87</td>
+        <td>87</td>
+        <td class="num">4439714230</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>01/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>02/08/2026</td>
+        <td>8486271084</td>
+        <td>SIM 1 CMD :- 9825704743 a) Inquiry CX wants to know about the technician visit or repair staus b) Steps taken SIM RAISED Kindly provide resolution to CX and contact CX ASAP c) Outcome SIM CREATED 6351597_Navjot_HA_TPMohali</td>
+        <td>I spoke with the customer, and the technician will visit the site tomorrow, 03/08/2026.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">88</td>
+        <td>88</td>
+        <td class="num">4439714230</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>03/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>08/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>Case #46206682 CMD:9825704743 SIM 2 a) Inquiry CX wants to know about the technician visit or repair staus b) Steps taken SIM 2 RAISED Kindly provide resolution to CX and contact CX ASAP c) Outcome SIM 2 CREATED 6368524_Ishu_HA_TPMohali</td>
+        <td>CALLED ON 9825704743 , CUSTOMER CALL NOT RECEIVE</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">89</td>
+        <td>89</td>
+        <td class="num">4439714230</td>
+        <td>REF03</td>
+        <td>Repeat SIMS (3-4 SIMs)</td>
+        <td>Confirmed by ASC</td>
+        <td>05/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>08/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>Case #46629985 SIM 3 CMD-9825704743 a) Inquiry Customer called for technician visit delay for repair .Customer has not received any update from svc side and customer was very irate. kindly coordinate as soon as possible b) Steps taken SIM RAISED c) Outcome SIM CREATED 100000000787087_pallavi/HA/AVIT</td>
+        <td>CALLED ON 9825704743 , CUSTOMER CALL NOT RECEIVE</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">90</td>
+        <td>90</td>
+        <td class="num">4439729413</td>
+        <td>W/M02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>01/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>03/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM Case #45881185 CMD: 9687607158 Inquiry - Customer is ASKING ABOUT THE STATUS OF TECH VISIT, AND THE PARTS ORDERED. steps taken - Highlighted case to service center, KINDLY UPDATE THE CUSTOMER . outcome - SIM raised 6371343_Sonia_HA_TPMohali</td>
+        <td>SPOKE WITH MS. JIGISHA ON 9687607158 , INFORMED HER THAT PARTS RECEIVED AND TECH WILL VISIT WITHIN 1-2 DAYS .</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">91</td>
+        <td>91</td>
+        <td class="num">4439739183</td>
+        <td>MWO01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>02/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>03/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>Case #46104637 SIM CMD:-9898249917 a) Inquiry:- cx called regarding the engineer visit status. cx said that the technician call him but after that their is no response from their end for the visit no one come cx is very irate cx want visit asap contact the cx on priority bases today b) Steps taken:- SIM Raised guided cx will receive a call back from svc kindly coordinate with cx and call cx back c) Outcome SIM Created 6285033_Sanjana__HA_TPMohali</td>
+        <td>SPOKE WITH MR. KAIZAD 9898249917 , ESTIMATE NOT PASS BY CX</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">92</td>
+        <td>92</td>
+        <td class="num">4439741276</td>
+        <td>CTV12</td>
+        <td>Repeat SIMS (3-4 SIMs)</td>
+        <td>Confirmed by ASC</td>
+        <td>17/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>19/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM3 Case #48974048 CX SAID DISPLAY REPLACED BUT ISSUE ISN&#039;T RESOLVED THEN TECH SAID PCB WILL REPLACE BUT REGARDING THIS CX HAD NOT RECEIVED ANY CALL OR INFORMATION FROM SVC SO HE WANTS TO TALK WITH SENIOR CALL TRANSFERRED b) Steps taken INFORMATION GIVEN AND SIM 3 RAISED c) Outcome SIM3 RAISED 6226260_Goldi_AVIT_TPMohali</td>
+        <td>CX ISSUE HAS BEEN RESOLVED</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">93</td>
+        <td>93</td>
+        <td class="num">4439741276</td>
+        <td>CTV12</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>11/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>11/08/2026</td>
+        <td>8486231576</td>
+        <td>SIM 1 a) Inquiry customer called regarding his service request cx said technician visited and he changed the part after changing the part still there is a issue in tv cx is very irate cx wants resolution asap cx wants technician visit on urgent basis b) Steps taken SIM raised alternate no ;8780149740 kindly arrange a technician visit asap kindly arrange a call back to cx c) Outcome SIM Created 100000000777289_Shivani_HA/AVIT_TPMohali</td>
+        <td>Panel Reorder</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">94</td>
+        <td>94</td>
+        <td class="num">4439741276</td>
+        <td>CTV12</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>14/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>15/08/2026</td>
+        <td>8486231576</td>
+        <td>Sim2 Inquiry cx concern regarding the tv cx said techniicn has visited change the part after changing the part still there is a issue in his tv after that cx is waiting they will not provide him any resolution cx is waiting and is very irate because he is waiting for 16 days kindly contact him asap.And yesterday cx also contact in service center cx told they are irresponsible they did not aware about what the issue so kindly connect this call to senior . Steps Taken sim raised Outcomes sim created 6225633_Tanu_AVIT_TPMohali</td>
+        <td>Talk with cx</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">95</td>
+        <td>95</td>
+        <td class="num">4439741276</td>
+        <td>CTV12</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>17/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>19/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Case #48974048 ACW Time Remaining 11 seconds.00:11 (IN) +91 87801 49740 Image Samsung AI Generated Call Details Customer Sentiment Image Negative Risk Level Image Intermediate Purchase Intention None Samsung AI Generated Call Summary Customer Inquiry Customer is experiencing issues with their TV and is requesting a replacement. Agent Answer The agent is attempting to connect the customer to the service center for further assistance. Summary The customer is experiencing issues with their TV and is requesting a replacement. The agent is attempting to connect the customer to the service center for further assistance. Additional Remarks:- I told the customer that replacement is not possible company will provide only repairable services. But he is dissatisfied with service 3)Outcome – i) End status of call: - Customer dissatisfied with service a. Employee name: Harjot b. Centre name: Mohali CCC c. Queue: - Escalation Desk d. Signature: - 100000000719829_Harjot_ED_MohaliTP</td>
+        <td>CX ISSUE HAS BEEN RESOLVED</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">96</td>
+        <td>96</td>
+        <td class="num">4439754265</td>
+        <td>W/M02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>01/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>03/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>sim CMD-9167973266 a)Inquiry cx called for the TECHNICIAN VISIT KINDLY ARRANGE THE VISIT ASAP. b) Steps taken kindly arrange the visit asap sim raised c) Outcome sim 100000000777954_Anjali_TP_mohali</td>
+        <td>SPOKE WITH MR. VITRAG ON 9167973266 , INFORMED HIM THAT TECH WILL VISIT BY EOD.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">97</td>
+        <td>97</td>
+        <td class="num">4439764548</td>
+        <td>REF03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>05/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>08/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>Sprinklr ID - #46790285 CMD: - 9624742900 SIM a) Inquiry Customer inquired about request Status. b) Steps taken Customer said tech. visited and guided for some parts replacement and gas charging but after that he will didn&#039;t showed up till now and customer kept calling to tech. btu he didn&#039;t respond well. Contact with svc @9227047898...told svc about customer&#039;s concern then svc said there will be need of compressor and nitrogen holding for which Tech. will visit for tomorrow. hence same as guided to customer. SIM RAISED c) Outcome Premium - Customer Request 100000000787084_Akib_Premium</td>
+        <td>CUST ISSUE HAS BEEN RESOLVED .</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">98</td>
+        <td>98</td>
+        <td class="num">4439764548</td>
+        <td>REF03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>05/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>08/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM CMD 9624762900 Inquiry CX wants to know about repair status which he has raised 10 days before. He is asking for visit ASAP. Technician was supposed to visit for nitrogen pressure but no one has visited yet. He is not ready to wait anymore. Please arrange call for cx ASAP. Steps taken DRYER ,PLUG, VALVE STEP; change gas charge done Case highlighted to SVC, inform cx to wait Outcome SIM raised 6277181_Nisha_Premium_TpMohali</td>
+        <td>CUST ISSUE HAS BEEN RESOLVED .</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">99</td>
+        <td>99</td>
+        <td class="num">4439764548</td>
+        <td>REF03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>06/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>08/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>Sprinklr ID - #46988403 CMD: - 9624742900 SIM a) Inquiry Customer inquired about request Status. b) Steps taken Customer said tech. visited and guided for some parts replacement and gas charging but after that he will didn&#039;t showed up till now and customer kept calling to tech. but he didn&#039;t respond well. Contact with svc @9227047898...told svc about customer&#039;s concern then merged the call with the customer and they discussed the case then svc told customer that they coordinated with tech. and Tech. said to svc that customer denied for repairing but customer denied for that she didn&#039;t say this. So service center told customer that they will call back to customer after connecting with tech. and will resolve the issue asap on priority basis. SIM RAISED c) Outcome Premium - Customer Request 100000000787084_Akib_Premium</td>
+        <td>CUST ISSUE HAS BEEN RESOLVED .</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">100</td>
+        <td>100</td>
+        <td class="num">4439794411</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>03/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>03/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>CASE-#46210091 SIM a) Inquiry Customer wants to technician visit a soon as possible. b) Steps taken Sim raised c) Outcome Customer Request Sukhpreetkaur_6405853_HHP-HA_digital_TPMohali</td>
+        <td>APOKE WITH MS. SONAM ON 8690423442, SHE INFORMED FOR TOMORROW VISIT.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">101</td>
+        <td>501</td>
+        <td class="num">4440919628</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM1 a) Inquiry:- cx called regarding the engineer visit status. cx wants urgent visit today. plz contact with cx . CX IS VERY IRATE. CX WANTS SENIOR TECH. b) Steps taken:- SIM Raised c) Outcome SIM Raised 6286744_Priya_HA_TPMohali</td>
+        <td>SPOKE WITH CX,INFORMED HIM TECH WILL VISIT TOMORROW 15:00:00 pm</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">102</td>
+        <td>502</td>
+        <td class="num">4440919628</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>19/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>19/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>CASE-#49368508 CMD-9898874548 SIM A) INQUIRY- CX CALLED TO KNOW THE STATUS OF HIS REFRIGERATOR REPAIR REQUEST AND CX SAID ARRANGE SENIOR TECHNICIAN VISIT. SO KINDLY CALL TO CX AND UPDATE HIM AND ARRANGE ENG VISIT ASAP. B) STEPS TAKEN- SIM CREATED C) OUTCOME- SIM RAISED 6369575_Kanika_HA_TPMohali</td>
+        <td>SPOKE WITH CX,INFORMED HIM TECH WILL VISIT TOMORROW</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">103</td>
+        <td>503</td>
+        <td class="num">4440919628</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM Sprinkler Case ::-#49859647 CMD:-9898874548 Customer Inquiry :-Customer is experiencing issues with their Samsung device and has requested a technician visit. Customer Sentiment:-Neutral Risk Level :-intermediate Purchase Intention:-None Samsung AI Generated Call Summary Agent Answer The agent is attempting to resolve the issue by highlighting the customer&#039;s request to the service center team and ensuring that the customer is informed of any updates regarding the technician visit. Summary The customer is experiencing issues with their Samsung device and has requested a technician visit. The agent is attempting to resolve the issue by highlighting the customer&#039;s request to the service center team and ensuring that the customer is informed of any updates regarding the technician visit. Additional Remarks :- SIM raised Tagged By :-Vishal_100000000548175_Av/it_Mohali</td>
+        <td>SPOKE WITH CX,INFORMED HIM TECH WILL VISIT TOMORROW 15:00:00 pm</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">104</td>
+        <td>504</td>
+        <td class="num">4440919628</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM a) Inquiry cx is waiting for tech. to replace some part in refrigerator and want technician visit asap . b) Steps taken SIM Raised Kindly provide service to the cx and contact asap. c) Outcome Customer Request 100000000775922_Abhishek_HA_TPMohali</td>
+        <td>SPOKE WITH CX,INFORMED HIM TECH WILL VISIT TOMORROW 15:00:00 pm</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">105</td>
+        <td>505</td>
+        <td class="num">4440920952</td>
+        <td>CTV14</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>21/08/2026</td>
+        <td>BHUMICHAUHAN</td>
+        <td>SIM Inquiry cx want service visit asap for today and cx want the call back from the service center step taken informed about visit SIM Raised Outcome SIM Raised 6443047 Nilaksh Rana HA tp Mohali</td>
+        <td>today visit</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">106</td>
+        <td>506</td>
+        <td class="num">4440920952</td>
+        <td>CTV14</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Case #49981923 Calling Name: RavinderSingh Calling Number: 8918212451 CIM - Visit By Eng ujjwal 8238291090 23/08 12~14 /vesu SIM -Customer Request Concern: Customer has issue with the Engineer not visited yet , kindly contact to the customer for the Engineer Visit Tagged by - Rahul_T325450_PremiumDesk_Noida_CCC</td>
+        <td>cx issue ahs been resolved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">107</td>
+        <td>507</td>
+        <td class="num">4440924648</td>
+        <td>CTV14</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>CASE - #50037381 SIM a) Inquiry Cx want technician visit before 5 pm , send technician as soon as possible. b) Steps taken SIM raised #50037381 c) Outcome Customer reminder 6405468_Komal_HHP/HA_Digital_TPMohali</td>
+        <td>cx issue has been resolved , installatin done</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">108</td>
+        <td>508</td>
+        <td class="num">4440924648</td>
+        <td>CTV14</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM cx is very irrate because cx still wait for technician visit CX wants update of his request and wants technician visit today please contact as soon as possible Step taken Kindly provide update to the cx SIM Raised Outcome SIM Raised 100000000759225_Jagriti_AVIT_TPMohali</td>
+        <td>cx issue has been resolved , installatin done</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">109</td>
+        <td>509</td>
+        <td class="num">4440924648</td>
+        <td>CTV14</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM a) Inquiry CX wants technician visit asap. kindly contact to cx on an urgent basis and give an update to cx. b) Steps taken SIM created c) Outcome SIM raised 100000000752493_Kulwinder Kaur_HHP/HA_digital_TPMohali</td>
+        <td>cx issue has been resolved , installatin done</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">110</td>
+        <td>510</td>
+        <td class="num">4440928470</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM CX facing service delay , #49747528 Customer Request 6261335_TRILOK_HHP/HA_digital_TPMohali</td>
+        <td>spoek with csuetomer will arrange tomorrwo for visit by 11:30AM 24/08</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">111</td>
+        <td>511</td>
+        <td class="num">4440947413</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM CMD: 7600812311 Case #49720897 a) inquiry: Customer wants to know the technician visit date and time. Customer wants the issue to be resolve as early as possible. Kindly connect with the customer regarding the same. b)steps taken: SIM Raised c)outcome; SIM Raised 6323526_ParveshKumar_HA_TPMohali</td>
+        <td>cx issue has been resolved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">112</td>
+        <td>512</td>
+        <td class="num">4440947413</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM 1 A) Inquiry customer is very irate and want tech. visit asap. Customer is frustrated due to delay in service. kindly provide service to the customer and contact him accordingly. B) Step taken SIM 1 Raised C) Outcome SIM 1 Raised 100000000767036_MadhuriPatil_HA/AVIT/HHP_TPMohali</td>
+        <td>cx issue has been resolved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">113</td>
+        <td>513</td>
+        <td class="num">4440954651</td>
+        <td>REF01</td>
+        <td>No Update from MSC</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM a) Inquiry cx inquiry about when technician call cx asap and give update today only b) Steps taken SIM raised c) Outcome No Update from MSC 100000000780607_ShwetaSarone_HA/AVIT_TPMohali</td>
+        <td>to eb cancel</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">114</td>
+        <td>514</td>
+        <td class="num">4440954651</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>CMD-7016109871 a) Inquiry Customer called for technician visit delay for ref repair. Customer has not received any update from svc side. guided remarks *Visit By Eng chetan 9825937480 20/08 12~14* , cx want asap visit . kindly contact to cx regarding the concern. b) Steps taken SIM RAISED c) Outcome SIM CREATED 100000000787085_deepak/HA/AV_IT</td>
+        <td>TO BE CANCEL</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">115</td>
+        <td>515</td>
+        <td class="num">4440954651</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>cmd:#49608023 sim a) Inquiry cx wants to KNOW ABT THE STATUS THE REQ and told that they want a visit asap cx is waiting for the tech visiting so pls arrange a call back from sc end b) Steps taken guide cx i am sharing reminder., you have wait t for the technician c) Outcome sim raised 100000000743876_ANU_HA_TP_MOHALI</td>
+        <td>to eb cCNEL</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">116</td>
+        <td>516</td>
+        <td class="num">4440954651</td>
+        <td>REF01</td>
+        <td>Customer escalation</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Case #49790303 sim raised cmd 9374987297 Inquiry CX WANT TO KNOW THE VISIT TIMMING YESTERDAY VISIT MENSTIONED BUT NOT VISITED SO PLZ VISIT ASAP ITS URGENT........ AS HE SAID HE WANT VISIT BUT NOBODY VISITED TO THE PLACE HE IS VERY IRRATE SO HE CANCLE THE REQ steps taken HIGHLIGHT THE CASE TO SERVICE CENTER outcome SIM raised 6369577_palak_HA_TPMohali</td>
+        <td>to be cancek</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">117</td>
+        <td>517</td>
+        <td class="num">4440964668</td>
+        <td>CTV14</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>21/08/2026</td>
+        <td>BHUMICHAUHAN</td>
+        <td>SIM Raised Enquiry: CX want visit today instead of tomorrow. Steps taken: Informed about service center. SIM Raised Outcome: 6438620_Harsh_HA/AV-IT_TPMohali SIM Raised</td>
+        <td>engineer visit today</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">118</td>
+        <td>518</td>
+        <td class="num">4440964738</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM a) Inquiry cx want to know gas refill charges and want tech. to visit for repair today ASAP . b) Steps taken SIM Raised Kindly provide info to the cx and contact asap. c) Outcome Customer Request 100000000775922_Abhishek_HA_TPMohali</td>
+        <td>spoke with csutoemr and enginner visit done but customer not ready for repair gas charge issue</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">119</td>
+        <td>519</td>
+        <td class="num">4440964738</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>19/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>19/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>CMD-8487019657 SIM a) Inquiry:- cx called regarding the technician visit.Guided the mentioned remarks. b) Steps taken:- SIM Raised please call and visit cx as soon as possible c) Outcome Customer Request 100000000777276_Vaishali_HA/AVIT_TPMohali</td>
+        <td>SPOKE WITH CX, TECH. WILL VISIT BY TOMORROW EOD</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">120</td>
+        <td>520</td>
+        <td class="num">4440964738</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM A) Inquiry: CX WANT TO CANCEL THE VISIT FOR REFILLING THE GAS B) Steps Taken: PLS CANCEL THE VISIT AS SHE WILL CALLBACK IN 1 MONTH FOR GAS REFILL AND SHE WILL NOT PAY VISIT CHARGES AGAIN SIM CREATED C) Outcome; SIM RAISED 6323530_Shilpi_HA_TPMohali</td>
+        <td>spoke with csutoemr and enginner visit done but customer not ready for repair gas charge issue</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">121</td>
+        <td>521</td>
+        <td class="num">4440965190</td>
+        <td>W/M02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM Samsung AI Generated Call Summary Customer Inquiry Customer inquired about the status of their washing machine repair request. Agent Answer The agent informed the customer that the technician would visit the customer&#039;s home to repair the washing machine. The agent also informed the customer about the charges for the visit and any additional charges for repairs. Summary The customer inquired about the status of their washing machine repair request. The agent informed the customer that the technician would visit the customer&#039;s home to repair the washing machine. The agent also informed the customer about the charges for the visit and any additional charges for repairs. GenAI detected Keywords washing machine b) STEPS TAKEN KINDLY PROVIDE RESOLUTION TO CX ASAP SIM RAISED c) OUTCOME SIM CREATED 6323748_PANKUSH_HA</td>
+        <td>Spoke with customer , nd inform will araange techncain by tomorrow 24/08 on 10 to 10:30AM</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">122</td>
+        <td>522</td>
+        <td class="num">4440972236</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>21/08/2026</td>
+        <td>BHUMICHAUHAN</td>
+        <td>a) Inquiry Customer Request Customer wants technician visit. b) Steps taken Customer Request Customer wants technician visit. c) Outcome 725557</td>
+        <td>already installation done</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">123</td>
+        <td>523</td>
+        <td class="num">4440972260</td>
+        <td>AUD03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>DEAR TEAM SIM: 1 CHAT NAME: Rahul Keshwani CHAT NUMBER: 9409198999 INTERACTION CODE: 4440972260 STATUS REMARKS: NA ESCALATION PROBABILITY: 5.99% ISSUE: Customer waiting for Microwave oven service request kindly contact the customer number inform the status soon. and now chat with the customer and provide the information. please take the necessary action to resolve the issue within the committed turnaround time. Also kindly contact the customer resolve the issue ASAP CREATED BY: Mukesh G, T316633, Chat QUEUE _Chennai CCC.</td>
+        <td>cx issue has been resolved installatio done</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">124</td>
+        <td>524</td>
+        <td class="num">4440972555</td>
+        <td>CTV12</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>21/08/2026</td>
+        <td>BHUMICHAUHAN</td>
+        <td>SIM cx is very irrate because cx still wait for technician visit CX wants update of his request and wants technician visit today please contact as soon as possible Step taken Kindly provide update to the cx SIM Raised Outcome SIM Raised 100000000759225_Jagriti_AVIT_TPMohali</td>
+        <td>today engineer visit</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">125</td>
+        <td>525</td>
+        <td class="num">4440972555</td>
+        <td>CTV12</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>21/08/2026</td>
+        <td>BHUMICHAUHAN</td>
+        <td>Sim1 Inquiry cx wants tv installation he is waiting for yesterday but he said he has not recieve any callback in technician end so kindly contact him asap and install his tv asap. Steps Taken sim raised Outcomes sim created 6225633_Tanu_AVIT_TPMohali</td>
+        <td>today engineer visit</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">126</td>
+        <td>526</td>
+        <td class="num">4440972555</td>
+        <td>CTV12</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>21/08/2026</td>
+        <td>BHUMICHAUHAN</td>
+        <td>SIM a) Inquiry:- cx called regarding the technician visit. Guided the mentioned remarks. CX IS WAITING FOR VISIT. KINDLY ARRANGE A CALLBACK FOR CX AND ARRANGE A VISIT ASAP. CX WANTS VISIT BY TODAY. ARRANGE A VISIT FOR CX. b) Steps taken:- SIM Raised c) Outcome Customer Request 100000000777280_SahilKumar_HA/AVIT_TPMohali</td>
+        <td>today engineer visit</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">127</td>
+        <td>527</td>
+        <td class="num">4440972555</td>
+        <td>CTV12</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>21/08/2026</td>
+        <td>BHUMICHAUHAN</td>
+        <td>Sprinklr case : #49643988 CMD : 8799389522 Customer Inquiry Customer inquired about the status of their service request. Agent Answer The agent provided information about the service request status and informed the customer that they would receive a call from a technician within 24 hours. Summary The customer inquired about the status of their service request. The agent provided information about the service request status and informed the customer that they would receive a call from a technician within 24 hours. GenAI detected Keywords Tagged By : 1000000000783452_ManveerKaur_HA/AV_TPMohali</td>
+        <td>today engineer visit</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">128</td>
+        <td>528</td>
+        <td class="num">4440972555</td>
+        <td>CTV12</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>21/08/2026</td>
+        <td>BHUMICHAUHAN</td>
+        <td>Sim Inquiry cx want tv installation and tat is also mentioned here 21/08/2026 between 6 to 8 pm asap so kindly contact him and install his tv today. Steps Taken sim raised Outcomes sim created 6225633_Tanu_AVIT_TPMohali</td>
+        <td>today engineer visit</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">129</td>
+        <td>529</td>
+        <td class="num">4440973161</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>CASE #49635492 CMD- 919925029900 sim a) Inquiry cx calling for delay issue they are saying still visit not happen by the svc Customer want tech visit asap b) Steps taken kindly call back to cx on urgent basis asap c) Outcome sim raised 6393562AnuragHAtpMohali</td>
+        <td>Communication Done With Customer, and Inform Part Order Done Drain Tray So It will B Done On Wednesday 26/08 15:00:00pm</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">130</td>
+        <td>530</td>
+        <td class="num">4440973161</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM Case:#49587931 CMD:9925029900 a) Inquiry:- customer called regarding status of his request CX WANT VISIT ASAP guided cx will receive a callback from TEAM b) Steps taken:- kindly provide service to the customer SIM RAISED c) Outcome:- SIM RAISED 6216892_Rajvinderkour_HA_TPMohali</td>
+        <td>Communication Done With Customer, and Inform Part Order Done Drain Tray So It will B Done On Wednesday 26/08 15:00:00pm</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">131</td>
+        <td>531</td>
+        <td class="num">4440975303</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>CASE - #50109249 SIM1 a) Inquiry Engineer not visited to the customer&#039;s location. Kindly arrange a engineer visit and esnure a engineer to reach customer&#039;s location and provide resolution. b) Steps taken #50109249 c) Outcome SIM1 raised 6405467_Shivam Anand_HHP-HA_Digital_TPMohali</td>
+        <td>Communicaiton done with customer , technician visited done there is part pending ehich is evap cover technician will visit after part received by 26/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">132</td>
+        <td>532</td>
+        <td class="num">4440987580</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Case #50007627 sim INQUIRY :cx facing issue after replacing the compressor still there is no cooling cx is very irrtaed so plz visit today and provide service to the cx as soon as possible . STEPS TAKEN :provide the service to the cx as soon as possible. OUTCOME : sim raised 6302892_SHILPA_HA_MOHALI</td>
+        <td>Communciaiton done with customer visitdone today by 3 pm and inform our technicain will visit tomorrow foer software update</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">133</td>
+        <td>533</td>
+        <td class="num">4440995137</td>
+        <td>CTV13</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>21/08/2026</td>
+        <td>BHUMICHAUHAN</td>
+        <td>SIM a) Inquiry Cx want technician visit b) Steps taken SIM raised c) Outcome Customer request 6405852_Nischay_HHP/HA_digital_TPMohali</td>
+        <td>engineer visit tomorrow</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">134</td>
+        <td>534</td>
+        <td class="num">4440995137</td>
+        <td>CTV13</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>21/08/2026</td>
+        <td>BHUMICHAUHAN</td>
+        <td>SIM CX facing service delay , #49738272 Customer Request 6261335_TRILOK_HHP/HA_digital_TPMohali</td>
+        <td>engineer visit tomorrow</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">135</td>
+        <td>535</td>
+        <td class="num">4440997116</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>20/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM CMD:- a) Inquiry:- cx called regarding the engineer visit status. and wants visit in between 11.30-12pm today b) Steps taken:- SIM Raised Case #49595120 ACW Time Remaining 2 seconds.00:02 (IN) +91 91065 25230 Image Samsung AI Generated Call Details Customer Sentiment Image Neutral Risk Level Image Intermediate Purchase Intention Low Samsung AI Generated Call Summary Customer Inquiry Fridge not cooling properly Agent Answer The agent offered to reschedule the technical engineer&#039;s visit and provided a reminder for the customer. Summary The customer inquired about the status of their fridge and requested a reschedule for the technical engineer&#039;s visit. The agent offered to reschedule the visit and provided a reminder for the customer. GenAI detected Keywords reschedule Samsung AI detected Additional Details GenAI detected Product Refrigerator GenAI detected Model Enter value here GenAI detected Outcome Enter value here c) Outcome SIM Raised 6311337_RITIKDUBEY_HA_TPMohali</td>
+        <td>COMMUNICATION DONE WITH CUSTOMER , CUSTOMER SITE READY WILL UPDATE TO CUSTOMER REGISTER NEW SO FOR INSTALLATION</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">136</td>
+        <td>536</td>
+        <td class="num">4440997116</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>20/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>CMD=9106525230 sim inqury cx wants assemble the ref. because of gap issue . Kindy contact to cx asap . cx said technician denied for assemble the ref , cx wants technician visit today asap . step taken sim raised outcome sim raised 100000000743628_deekshabedi_HA_TP_MOHALI</td>
+        <td>COMMUNICATION DONE WITH CUSTOMER , CUSTOMER SITE READY WILL UPDATE TO CUSTOMER REGISTER NEW SO FOR INSTALLATION</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">137</td>
+        <td>537</td>
+        <td class="num">4440997116</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>20/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM A) INQUARY: ----cx wants assemble the ref. because of gap issue . Kindy contact to cx asap . cx said technician denied for assemble the ref , cx wants technician ----if the dismantle is not possible than cx said cx wants the replacement CX WANTS TO KNOW ABOUT THE TECH VISIT STATUS KINDLY CONNECT WITH CX ASAP B) STEPS TAKEN: SIM CREATED C) OUTCOME: SIM RAISED 6323770_Vivek_HA_TPMohali</td>
+        <td>COMMUNICATION DONE WITH CUSTOMER , CUSTOMER SITE READY WILL UPDATE TO CUSTOMER REGISTER NEW SO FOR INSTALLATION</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">138</td>
+        <td>538</td>
+        <td class="num">4440997764</td>
+        <td>W/M03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM Case #49657289 CMD-9898536691 a) Inquiry Customer called for technician visit delay for repair .Customer has not received any update from svc side and customer was very irate. kindly coordinate as soon as possible b) Steps taken SIM RAISED c) Outcome SIM CREATED 100000000787087_pallavi/HA/AVIT</td>
+        <td>Communication Done With Customer, and Inform Part Order Done WirePower cord So It will B Done After Part received 25/08 15:00:00pm</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">139</td>
+        <td>539</td>
+        <td class="num">4441004408</td>
+        <td>CTV14</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Sim 1 a) Inquiry Cx is facing a delay in service. As per the cx, cx did not receive any call from the engineer or the service center team. Kindly contact the cx and update the cx about the current status of the request. b) Steps taken Sim 1 raised Please look at the matter and inform to the CX as soon as possible. c) Outcome Repair status 100000000742587_TANNU_DIGITAL_TPMOHALI</td>
+        <td>cx issue has been resolved installation done</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">140</td>
+        <td>540</td>
+        <td class="num">4441010407</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM CMD-7984493867 a) Inquiry Cx wants the tech visit. b) Steps taken SIM RAISED c) Outcome SIM CREATED 6216772_komal_TPMohali</td>
+        <td>Communication Done With Customer, and Inform Our technicain mr.abdul aziz will visit by tomorrow on 1pm</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">141</td>
+        <td>541</td>
+        <td class="num">4441010407</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM Case #49690950 INQUIRY : DELAY IN TECH VISIT cx want tech visit on urgent basis and contact cx and resolve the cncern asap Customer&#039;s refrigerator is not working and there has been no technician visit or callback. STEPS TAKEN : Kindly arrange tech visit on urgent basic plz as soon as possible to resolve the concern OUTCOME : SIM RAISED 6299005_charu_HA_TP_Mohali</td>
+        <td>Communication Done With Customer, and Inform Our technicain mr.abdul aziz will visit by tomorrow on 1pm</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">142</td>
+        <td>542</td>
+        <td class="num">4441010907</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>SIM Case #50069351 CMD 9913815375 a) Inquiry cx called for us to KNOW THE STATUS OF HIS REF gas filling . cx wants tech visit as soon on a priority basis . cx wants resolution . kindly arrange a call from svc or tech side. . b) Steps taken SIM RAISED c) Outcome SIM CREATED 6352869_jaya_HA</td>
+        <td>CUSTOMER OUT SIDE REAPIR VISIT DONE 354/-</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">143</td>
+        <td>543</td>
+        <td class="num">4441010907</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>SIM CMD:- 9913815375 a) Inquiry:- cx called regarding the engineer visit status. CX IS WAITING FOR TECHNICIAN VISIT, SO CALL CX ASAP . AND MAKE SURE VISIT DONE TODAY IN CX ISSUE AND CX ISSUE RESOLVED TODAY AT ANY COST. TAKE IT URGENT BASES. CX WANT VISIT TODAY ASAP. b) Steps taken:- SIM Raised c) Outcome SIM Raised 6286756_Sejal_HA_TPMohali</td>
+        <td>CUSTOMER OUT SIDE REAPIR VISIT DONE 354/-</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">144</td>
+        <td>544</td>
+        <td class="num">4441013399</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>20/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Customer Mobile Details - 9112913466 Case Number - #49634265 a) INQUIRY - Customer facing issue of not reciving mail b) STEPS TAKEN The customer inquired about the warranty exchange of their Samsung washing machine and the lack of documents received. The agent confirmed the customer&#039;s details and requested a callback to resolve the issue. kindly give proper details to the customer c) OUTCOME sim raised 6443039_CHETNA_PREMIUM_TPMOHALI</td>
+        <td>communicaiton done with customer , our technician sakib will visit tomorrow by 1 pm</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">145</td>
+        <td>545</td>
+        <td class="num">4441013399</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>20/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Customer Mobile Details - 9099026809 Case Number -#49631678 a) INQUIRY - Customer wants to know about technician visit b) STEPS TAKEN Customer requested a service engineer visit for their fridge due to no cooling. The agent raised a request for a service engineer visit on high priority and sent it to the service center. The agent also confirmed that the technician&#039;s visit depends on the technician or service center availability. cx wants service asap probably within an hour kindly send technician c) OUTCOME SIM raised 6443039_CHETNA_PREMIUM_TPMOHALI</td>
+        <td>communicaiton done with customer , our technician sakib will visit tomorrow by 1 pm</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">146</td>
+        <td>546</td>
+        <td class="num">4441013573</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM CMD : 9537544350 CASE : #49897905 Customer Inquiry Customer is experiencing issues with their refrigerator and has raised a complaint. The resolution for the complaint is pending, and a technician has been assigned to visit the customer&#039;s home. Agent Answer The agent has checked the system and confirmed that the customer&#039;s refrigerator complaint is pending. A technician has been assigned to visit the customer&#039;s home on a specific date. Summary The customer is experiencing issues with their refrigerator and has raised a complaint. The resolution for the complaint is pending, and a technician has been assigned to visit the customer&#039;s home. The agent has checked the system and confirmed that the customer&#039;s refrigerator complaint is pending. A technician has been assigned to visit the customer&#039;s home on a specific date. Tagged By : 100000000706758_Ankita_HA+HHP_TPMohali</td>
+        <td>ucst will inform afrer three days when electriciy issue will be resolved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">147</td>
+        <td>547</td>
+        <td class="num">4441013573</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Case #50014140 ACW Time Remaining 0 seconds.00:00 (IN) +91 95375 44350 Image Samsung AI Generated Call Details Customer Sentiment Image Negative Risk Level Image Intermediate Purchase Intention None Samsung AI Generated Call Summary Customer Inquiry Customer has been experiencing issues with their Samsung product and has made multiple complaints over the past two months. The customer is frustrated with the lack of response and is requesting a callback from a senior advisor. Agent Answer The agent is attempting to schedule a visit and is checking the status of the customer&#039;s complaint. The agent is also offering to escalate the issue to a senior advisor for further assistance. Summary The customer has been experiencing issues with their Samsung product and has made multiple complaints over the past two months. The customer is frustrated with the lack of response and is requesting a callback from a senior advisor. The agent is attempting to schedule a visit and is checking the status of the customer&#039;s complaint. The agent is also offering to escalate the issue to a senior advisor for further assistance. Additional Remarks:- customer said that she has spoken to the service center technician and he is coming shortly for services. 3)Outcome – i) End status of call: - Customer dissatisfied with service a. Employee name: Harjot b. Centre name: Mohali CCC c. Queue: - Escalation Desk d. Signature: - 100000000719829_Harjot_ED_MohaliTP</td>
+        <td>eng visitr doine voltage issue ucst will inform afrer three days when electriciy issue will be resolved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">148</td>
+        <td>548</td>
+        <td class="num">4441013573</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Sim cmd-9537544350 a) Inquiry cx is waiting for technician and want visit today only cx threat of consumer court and wants to speak with senior, cx is irate as multiple time appointment rescheduled by asc, call scheduled as no agent on esc desk b) Steps taken Sim guided visit day cx want visit asap kindly contact with cx asap guided cx to wait for technician c) Outcome Customer Request 100000000777960_Lakhvir kaur_HA_TP_Mohali</td>
+        <td>ucst will inform afrer three days when electriciy issue will be resolved</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">149</td>
+        <td>549</td>
+        <td class="num">4441016848</td>
+        <td>REF03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>#50069224 cmd 7698446353 SIM A)INQURIY cx said there is no update from svc B)STEPS TAKEN- called svc@9227047898 voicemail then call to ASM@9227047898 discuss the case, guided that tch will visit by today ar 05:30or 6pm then call to cx@ C)OUTCOME- sim raised 6437265_ANUREET_PREMIUM_TPMOHALI</td>
+        <td>Communication done with customer , Ms.Vidya On 7698446353 visit done gas charge pending so wil arrange gas charge technician on tomorrow by 5pm</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">150</td>
+        <td>550</td>
+        <td class="num">4441016848</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Customer Mobile Details -7990091313 Case Number -#49616704 a) INQUIRY - Customer wants to know about technician visit b) STEPS TAKEN customer wants to raise his request again but his request is already made customer wants good technician visit as soon as possible c) OUTCOME SIM raised 6443039_CHETNA_PREMIUM_TPMOHALI</td>
+        <td>Communication done with customer , Ms.Vidya On 7698446353 timing 15:57pm will arange technician mr.talha will visit today at 17:30:00</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">151</td>
+        <td>551</td>
+        <td class="num">4441016848</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM #49691119 The customer inquired about the status of their fridge complaint and requested a technician visit. The agent confirmed the technician&#039;s visit and escalated the case to the service center for priority CUSTOMER IS IRATE AND WANTS TECHNCIIAN VISIT TODAY AS EARLY AS POSSSIBLE KINDLY ASSIGN TECHNICIAN TO THE CUSTOMER 6443039_CHETNA_PREMIUM_TPMOHALI</td>
+        <td>Communication done with customer , Ms.Vidya On 7698446353 timing 15:57pm will arange technician mr.talha will visit today at 17:30:00</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">152</td>
+        <td>552</td>
+        <td class="num">4441016848</td>
+        <td>REF03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Sim Raised Case #49862553 ACW Time Remaining 0 seconds.00:00 917698446353 (IN) +91 76984 46353 Image Samsung AI Generated Call Details Customer Sentiment Image Neutral Risk Level Image Intermediate Purchase Intention Low Samsung AI Generated Call Summary Customer Inquiry Refrigerator not cooling, executive not available for callback, cx need visit by 3pm today asap, because she will not be available after 4pm up to 3 to 4 days, kindly send tech asap and call her on urgent basis. Agent Answer The agent offered to escalate the concern to the manager and mentioned the special timing to the service center. Summary The customer called regarding a refrigerator complaint and requested a callback. The agent offered to escalate the concern to the manager and mentioned the special timing to the service center. The customer expressed dissatisfaction with the service and requested an agent basis for the repair. GenAI detected Keywords service center 100000000739245_Sukhdevdogra_PREMIUM SUPPORT_Mohali</td>
+        <td>Communication done with customer , Ms.Vidya On 7698446353 timing 15:57pm will arange technician mr.talha will visit today at 17:30:00</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">153</td>
+        <td>553</td>
+        <td class="num">4441016848</td>
+        <td>REF03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM A)INQURIY cx said there is no update from svc B)STEPS TAKEN- CALLED SVC@9558710571 guided that tch will visit by tomorrow by 11 AM and same guide to cx cx wants tech kindly provide service to the cx and contact to the cx and update and visit by today at his door step C)OUTCOME- SIM RASIED 100000000775853_Lavanya_Premium_ TPMOHALI</td>
+        <td>Communication done with customer , Ms.Vidya On 7698446353 timing 15:57pm will arange technician mr.talha will visit today at 17:30:00</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">154</td>
+        <td>554</td>
+        <td class="num">4441016986</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM a) Inquiry cx want to know the status of the SO, Please visit and call cx asap. Visit Today. b) Steps taken SIM Raised c) Outcome Customer Request 100000000769526_AshishPansheriya_HA/AVIT_TPMohali</td>
+        <td>spone with mr Divyesh Desai today visit engg Divyesh Visit By Eng Vasim 9898977715 22/08 12~14</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">155</td>
+        <td>555</td>
+        <td class="num">4441016986</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>Case id-#49903235 cmd- 9724400000 SIM 2 a) inquiry - customer wanted to know about the status of engineer&#039;s visit. Case #49903235 ACW Time Remaining 5 seconds.00:05 919724400000 (IN) +91 97244 00000 Image Samsung AI Generated Call Details Customer Sentiment Image Negative Risk Level Image Intermediate Purchase Intention None Samsung AI Generated Call Summary Customer Inquiry Customer has a complaint about their Samsung refrigerator and has not received a callback or technician visit. Agent Answer The agent is trying to escalate the issue and provide a solution. Summary The customer has a complaint about their Samsung refrigerator and has not received a callback or technician visit. The agent is trying to escalate the issue and provide a solution. GenAI detected Keywords Customer Care Samsung AI detected Additional Details GenAI detected Product Refrigerator GenAI detected Model Enter value here GenAI detected Outcome Enter value here b) steps taken- SIM 2 CREATED Highlighted Case to Service center team c) outcome- SIM 2 raised. 6311337_RitikDubey_HA_TPMohali</td>
+        <td>spone with mr Divyesh Desai today visit engg Divyesh Visit By Eng Vasim 9898977715 22/08 12~14</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">156</td>
+        <td>556</td>
+        <td class="num">4441016986</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM1 cx want to know TECH VISIT status as per remarks info given to the cx , cx is very irate , please contact cx asap 100000000769501_Shital Gond_HA/AV/IT_TP Mohali</td>
+        <td>spone with mr Divyesh Desai today visit engg Divyesh Visit By Eng Vasim 9898977715 22/08 12~14</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">157</td>
+        <td>557</td>
+        <td class="num">4441016986</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>Case #49984813 THE C XTECHNICIAN VICT NOT U[PDATED The customer is experiencing issues with their Samsung product and has made multiple complaints to Samsung customer care. The agent is trying to assist the customer by providing a ticket number and a mail ID for further communication. 6277665_SIMRAN_HA_TPMohali</td>
+        <td>spone with mr Divyesh Desai today visit engg Divyesh Visit By Eng Vasim 9898977715 22/08 12~14</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">158</td>
+        <td>558</td>
+        <td class="num">4441025736</td>
+        <td>CTV12</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>21/08/2026</td>
+        <td>BHUMICHAUHAN</td>
+        <td>SIM Inquiry CX asked about technical visit, cx facing an issue with his product installation and need visit today asap. b) Steps taken We discussed with asc they said there was much load at there end but they will do it by today asap, Kindly contact cx and send tech Asap Escalation Probability: -- Irate c) Outcome SIM Raised 100000000739245_Sukhdevdogra_PREMIUM SUPPORT_Mohali</td>
+        <td>tomoroow visit engineer</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">159</td>
+        <td>559</td>
+        <td class="num">4441025738</td>
+        <td>W/M02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>sim a) Inquiry customer technician visit asap customer is very irate need visit asap cx want the timing of visit customer want visit before 1.30 pm b) Steps taken SIM raised c) Outcome customer request 100000000780611_PriyaRathi_HA/AVIT_TPMohali</td>
+        <td>spone with mr RAKESH AGARWAL today visit engg</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">160</td>
+        <td>560</td>
+        <td class="num">4441025738</td>
+        <td>W/M02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>SIM Case #50077449 CMD: 9377001077 -a) INQUIRY: ***** CX WANTS TO KNOW ABOUT THE TECH VISIT STATUS INFO SHARED &quot;Visit By Eng sakib 7567124037 22/08 15~17&quot; KINDLY CONTACT WITH CX ASAP AND PROVIDE INFO ***** -b) STEPS TAKEN SIM CREATED -c) OUTCOME SIM RAISED 6323770_Vivek_HA_TPMohali</td>
+        <td>The technician visited the customer’s place and found a button issue. After adjusting the button, the issue was resolved and the set is now working properly.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">161</td>
+        <td>561</td>
+        <td class="num">4441025738</td>
+        <td>W/M02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM 1 A) Inquiry: cx want tech visit today asap CX WANTS TO KNOW ABOUT THE TECH VISIT STATUS KINDLY CONNECT WITH THE CX ASAP B) Steps Taken: the visit is schedulled for tomorrow but cx want tech visiit today asap as there is already 2 days delay PLS VISIT TODAY ASAP SIM CREATED C) Outcome; SIM RAISED 6323530_Shilpi_HA_TPMohali</td>
+        <td>spone with mr RAKESH AGARWAL today visit engg</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">162</td>
+        <td>562</td>
+        <td class="num">4441025738</td>
+        <td>W/M02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>SIM a)Inquiry; HIGH PRIORITY ISSUE AS THERE IS TOO DELAY IN TECH VISIT FROM TECH END FROM 2 DAYS Cx called for asking about technician visit..Kindly contact with cx and arrange technician visit asap. b)Steps taken; CALL ON CX NUMBER: B9377001077 SIM raised c)Outcome; SIM created 6323530_Shilpi_HA_TPMohali</td>
+        <td>The technician visited the customer’s place and found a button issue. After adjusting the button, the issue was resolved and the set is now working properly.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">163</td>
+        <td>563</td>
+        <td class="num">4441027349</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>23/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>SIM CMD- 8980403388 A. Inquiry- 1. What:- customer called for engineer visit 2. When:-from Few dayS 3. How:- During Normal Usage 4. Number of calls:- 5. Customer’s Emotion:- Normal b) Steps taken plz provide the engineer visit asap kindly update the customer accordingly Reminder sent to service center c) Outcome Transfer to other responsible personnel 100000000706761_pallavi_HA+HHP_TPmohali</td>
+        <td>I spoke with the customer, and the technician will visit tomorrow, 24/08.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">164</td>
+        <td>564</td>
+        <td class="num">4441027349</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>23/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>SIM a)Inquiry; Cx called for asking about technician visit.Cx said cx was told that technician will visit today between 3:30 to 4:30 but till now no one has contacted cx.Cx said visit was also scheduled for yesterday also .Cx said till now technician has not visited once.Cx want visit today only. Kindly contact with cx and arrange technician visit asap. b)Steps taken; SIM Raised c)Outcome; SIM Created 6323546_Saifali_HA_TPMohali</td>
+        <td>I spoke with the customer, and the technician will visit tomorrow, 24/08.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">165</td>
+        <td>565</td>
+        <td class="num">4441036197</td>
+        <td>CTV14</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>SIM a) Inquiry Cx is irate and wants resolution asap. Kindly contact the customer for the update b) Steps taken SIM raised c) Outcome Customer request 6289513_sanjana rana_HHP/HA_digital_TPMohali</td>
+        <td>One more SO (4441047311) with posting date 20/08 is pending in system please approve cancellation of this SO</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">166</td>
+        <td>566</td>
+        <td class="num">4441038457</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>23/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>CMD_8795795666 Case #50187900 SIM a) Inquiry cx want to know the timing of technician. Gas refill is pending in ref. cx said i am waiting for technician but no one call i want gas refill today and call from service center side. kindly update the cx asap. cx is very irate. b) Steps taken reminder share to Kailash sir sim created c) Outcome sim created 100000000739253_Ankita_HA_TPmohali</td>
+        <td>@8795795666 iform to csut pressor hold requoed will be on 24 /8</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">167</td>
+        <td>567</td>
+        <td class="num">4441038457</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM Case:#49871955 CMD:8795795666 a) Inquiry:- customer called regarding status of his request CX WANT VISIT ASAP GUIDED CX WILL RECIEVE A CALL FROM TEAM b) Steps taken:- kindly provide service to the customer SIM RAISED c) Outcome:- SIM RAISED 6216892_Rajvinderkour_HA_TPMohali</td>
+        <td>@8795795666 iform to csut pressor hold requoed will be on 24 /8</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">168</td>
+        <td>568</td>
+        <td class="num">4441038457</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>CASE #50001349 CMD- 8795795666 sim a) Inquiry cx calling for delay issue they are saying still visit not happen by the svc b) Steps taken kindly call back to cx on urgent basis asap c) Outcome sim raised 6393562AnuragHAtpMohali</td>
+        <td>@8795795666 iform to csut pressor hold requoed will be on 24 /8</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">169</td>
+        <td>569</td>
+        <td class="num">4441039341</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM Case:#49785869 CMD:9328353006 a) Inquiry:- customer called regarding status of his request CX FACING COOLING ISSUE IN REF CX IS READY TO PAY THE CHARGES FOR REPAIR CX ALREADY PAID THE CHARGES OF VISIT GUIDED CX THEY HAVE TO PAY THE STANDARD CHARGES OF REPAIR BUT CX NOT AGREE TO PAY THE CHARGES OF VISIT AGAIN ALSO CUSTOMER WANT TO HIGHLIGHT THE CONCERN THAT SVC CLOSE THE REQUEST WITHOUT ANY SOLUTION KINDLY CHECK THE CASE COORDINATE WITH THE CX KINDLY CALLBACK TO THE CX REGARDING THAT CX WANT SOLUTION ASAP GUIDED CX WILL RECIEVE A CALL FROM TEAM b) Steps taken:- kindly provide service to the customer SIM RAISED c) Outcome:- SIM RAISED 6216892_Rajvinderkour_HA_TPMohali</td>
+        <td>Visit By Eng sakib 7567124037 22/08 11.30~13.30</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">170</td>
+        <td>570</td>
+        <td class="num">4441039466</td>
+        <td>MON07</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>SIELM0576.ID</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>Case #49869936 sim1 CMD- 8879866982 a)inquiry; customer inquired about delay for engineer cx say no one visited and not receive any call regarding his concern customer waiting for service so kindly visit customer home today as soon as possible b)steps taken; sim raised c)outcome; Escalation Probability:0.00% sim1created 100000000725562_reenabi_TP_MOHALI</td>
+        <td>the technician will visit , 25/08. Customer did not answer the call.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">171</td>
+        <td>571</td>
+        <td class="num">4441047311</td>
+        <td>CTV14</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>Dear team, Dear team, Customer chats for technician visit, kindly contact to the customer and do the needful and resolve the issue as soon as possible. Tagged by: Nagababu_chat_IE</td>
+        <td>the technician will visit tomorrow, 24/08 Customer did not answer the call.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">172</td>
+        <td>572</td>
+        <td class="num">4441047311</td>
+        <td>CTV14</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>20/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>21/08/2026</td>
+        <td>BHUMICHAUHAN</td>
+        <td>Dear team, Customer asking for the technician visit, kindly contact to the customer and do needful and resolve the issue Tagged by: Nagababu_chat_IE</td>
+        <td>tommoroow visit</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">173</td>
+        <td>573</td>
+        <td class="num">4441051753</td>
+        <td>REF02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>23/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>SIM CMD-8460786211 a) Inquiry Cx wants the tech visit. b) Steps taken SIM RAISED c) Outcome SIM CREATED 6216772_komal_TPMohali</td>
+        <td>I spoke with the customer, and the technician will visit tomorrow, 24/08.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">174</td>
+        <td>574</td>
+        <td class="num">4441059244</td>
+        <td>W/M03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>21/08/2026</td>
+        <td>8486271084</td>
+        <td>Case id- cmd- SIM a) inquiry - customer wanted to know about the status of engineer&#039;s visit. b) steps taken- Case #49809847 ACW Time Remaining 0 seconds.00:00 (IN) +91 94261 57012 Image Samsung AI Generated Call Details Customer Sentiment Image Neutral Risk Level Image Intermediate Purchase Intention Low Samsung AI Generated Call Summary Customer Inquiry Washing machine not working Agent Answer The agent informed the customer that a technician would visit their address within 2-4 days and provided a reminder for the visit. Summary The customer inquired about a washing machine complaint and requested a callback. The agent informed the customer that a technician would visit their address within 2-4 days and provided a reminder for the visit. GenAI detected Keywords washing machine Samsung AI detected Additional Details GenAI detected Product Washing Machine GenAI detected Model Enter value here GenAI detected Outcome Enter value here SIM CREATED Highlighted Case to Service center team c) outcome- SIM raised. 6311337_RitikDubey_HA_TPMohali</td>
+        <td>Visit By Eng Sheetala 8004474002 21/08 14~16</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">175</td>
+        <td>575</td>
+        <td class="num">4441059244</td>
+        <td>W/M03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM 1 a) Inquiry cx is waiting for tech. cx is very irate and want technician visit today asap. b) Steps taken SIM 1 Raised Kindly provide service to the cx and contact asap. c) Outcome Repair status 100000000775922_Abhishek_HA_TPMohali</td>
+        <td>spoen with mr PARVEEN today visit engg 22/08/2026</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">176</td>
+        <td>576</td>
+        <td class="num">4441059523</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>Dear Team, Customer Need a Status About Complaint Service Request For their Product Repair, Kindly Contact a customer and inform the details of the case, Customer waiting for the Engineer Visit So Do the service as soon as Possible and rectify the issue. Tagged by: T320805_Manibharathi_Chennai_Ienergizer</td>
+        <td>The customer has got the issue repaired by a local technician.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">177</td>
+        <td>577</td>
+        <td class="num">4441070303</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>SIM INQUIRY- CX WANTS SERVICES CONTACT CX ASAP STEPS TAKEN- SIM CREATED OUTCOME- SIM CREATED 6369579_PRIDHI_HA_TPMOHALI</td>
+        <td>Visit By Eng Shahid 7623068103 23/08 13~15</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">178</td>
+        <td>578</td>
+        <td class="num">4441070485</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>#49970641 Caller Name:Paresh Naik Calling Number:9898520520 SIM -na Issue:inform to cx the engineer will visit asap Visit By Eng Shahid 7623068103 22/08 16~18 cx not agree cx wants to cancel the request Tagged by: Akash_T323486_HA_Queue_Noida_CCC</td>
+        <td>Visit By Eng Shahid 7623068103 23/08 16~18</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">179</td>
+        <td>579</td>
+        <td class="num">4441071293</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>CASE - #50060031 SIM a) Inquiry Customer want technician visit urgent basis. b) Steps taken SIM c) Outcome Customer Request 6405469_HHP-HA_Digital_TPMohali</td>
+        <td>ENG SHEETLA APPOINTMENT NO CCOILG ISSUE PLS CONTACT ON @ 9898903353</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">180</td>
+        <td>580</td>
+        <td class="num">4441071293</td>
+        <td>REF03</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>CASE#49993483 CX NAME:BHARGAV P CX NUMBER:9967364060 SIM:1 concern: cx is to irate there is no update by service centre cx is want enggg visit today Note : please connect with cx and solve cx problem asap visit today at 3pm TAGGED BY: RITU_T326326_HA_QUEUE_NOIDA_CCC</td>
+        <td>ENG 24 /08 10 amAPPOINTMENT NO CCOILG ISSUE PLS CONTACT ON @ 9898903353</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">181</td>
+        <td>581</td>
+        <td class="num">4441071293</td>
+        <td>REF03</td>
+        <td>Repeat SIMS (3-4 SIMs)</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM 3 a) Inquiry:- cx called regarding the technician visit. Guided the mentioned remarks. CX IS VERY IRATE WAITING FOR VISIT FROM YESTERDAY. CX COORDINATED MULTIPLE TIMES TO US BUT STILL THERE ARE NO RESPONSE FROM SVC. KINLDY ARRANGE A CALLBACK FOR CX AND ARRANGE A VISIT. b) Steps taken:- SIM 3 Raised c) Outcome Repeat SIMS (3-4 SIMs) 100000000777280_SahilKumar_HA/AVIT_TPMohali</td>
+        <td>NO CCOILG ISSUE PLS CONTACT ON 9898903353</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">182</td>
+        <td>582</td>
+        <td class="num">4441076326</td>
+        <td>REF01</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>CASE #50083830 CMD- 9429266532 sim 1 a) Inquiry customer is very irated and want tech visit update for his ref so please call the customer and guide him regarding the issur of the ref b) Steps taken kindly call back to cx on urgent basis asap c) Outcome sim 1 raised 6393562AnuragHAtpMohali</td>
+        <td>@f9429266532 APPT FO 24 2 PM MR BHOUMIK</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">183</td>
+        <td>583</td>
+        <td class="num">4441076326</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>23/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM a) Inquiry cx want to know the status of the SO, Please visit and call cx asap. Visit Today. b) Steps taken SIM Raised c) Outcome Customer Request 100000000769526_AshishPansheriya_HA/AVIT_TPMohali</td>
+        <td>@f9429266532 APPT FO 24 2 PM MR BHOUMIK</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">184</td>
+        <td>584</td>
+        <td class="num">4441076326</td>
+        <td>REF01</td>
+        <td>No Update from MSC</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM A) Inquiry customer want tech. visit asap. kindly provide service to the customer and contact him accordingly. B) Step taken SIM Raised C) Outcome SIM Raised 100000000767036_MadhuriPatil_HA/AVIT/HHP_TPMohali</td>
+        <td>@f9429266532 APPT FO 24 2 PM MR BHOUMIK</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">185</td>
+        <td>585</td>
+        <td class="num">4441076326</td>
+        <td>REF01</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>23/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>#50234268 SIM2 a Inquiry Customer want technician visit ASAP b Steps Taken SIM2 Raised c Outcome Repair status 6368231_Gursewak_HA_TPMohali</td>
+        <td>@f9429266532 APPT FO 24 2 PM MR BHOUMIK</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">186</td>
+        <td>586</td>
+        <td class="num">4441076685</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>21/08/2026</td>
+        <td>BHUMICHAUHAN</td>
+        <td>SIM SIM a) INQUIRY CX WANT TO CANCEL THE REQUEST FOR REPLACEMENT OF REF. SO CANCELL THE REQUEST AS PER CONFIRMATION ON CALL b) STEPS TAKEN KINDLY PROVIDE RESOLUTION TO CX ASAP SIM RAISED c) OUTCOME SIM CREATED 6323748_PANKUSH_HA</td>
+        <td>installation done already</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">187</td>
+        <td>587</td>
+        <td class="num">4441077426</td>
+        <td>W/M02</td>
+        <td>Customer escalation</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>Sprinklr Case ID#50067029 SIM 1 Caller Name PRAVEEN JI Calling Number 9825630209 Concern Service req Step taken cx is very irated cx did not receive any call from eng , fake remarks mentioned by eng team , kidly assign eng visit at cx place asap Prashansa Singh, T294505, HA QUEUE _NOIDA CCC</td>
+        <td>I spoke with the customer, and the technician will visit tomorrow, 24/08.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">188</td>
+        <td>588</td>
+        <td class="num">4441077426</td>
+        <td>W/M02</td>
+        <td>Customer escalation</td>
+        <td>Confirmed by ASC</td>
+        <td>23/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>CASE ID - #50187530 SIM - 2 NAME - PRAVEEN BHAI PHN. NUMBER -9825630209 ESC. PROBABILITY - 42.80% CX QUERRY - CX WANT TO KNOW ABOUT REPAIR STATUS REMARKS - CX REGISTERED A COMPLAINT SINCE 2 DAYS CX WANT TO KNOW ABOUT ENGG. VISIT ASC REMARKS 9825630209 CALLING THIS NUMERR CUSTOMER NOT RECEVING CALL SO CALL CA . CX DENIED THIS SAID HE HAVE NO PHONE CALL.KINDLY ARRANGE ENGG. VISIT ASAP AND RESOLVE THERE ISSUE AND CONTACT TO CX PROVIDE PROPER INFORMATION ABOUT ENGG. VISIT. TAGGED BY - AYUSH_T326339_HA_QUEUE_NOIDA_CCC</td>
+        <td>I spoke with the customer, and the technician will visit tomorrow, 24/08.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">189</td>
+        <td>589</td>
+        <td class="num">4441077426</td>
+        <td>W/M02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>22/08/2026</td>
+        <td>AVNIKA.12</td>
+        <td>Sprinklr Case ID : Case #49982642 sim caller name : PRAVEEN Ji Calling Number: 9825630209 Issue: Service Delay Remarks: As per customer no visit till now CX WANT ENGINNER VISIT AS SOON AS POSSIBLE we have shared last update Visit By Eng 22/08 12~14 with customer and customer was not agree ? Created By: RANJEET KUMAR T238045-_HA QUEUE_NOIDA CCC</td>
+        <td>Visit By Eng Chetankumar 9586225022 22/08 12~14 BHATHA</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">190</td>
+        <td>590</td>
+        <td class="num">4441079846</td>
+        <td>REF03</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>CMD- 8141978444 a) Inquiry Customer called for technician visit delay for ref repair. Customer has not received any update from svc side kindly contact to cx regarding the concern b) Steps taken SIM RAISED c) Outcome SIM CREATED 100000000787085_deepak/HA/AV_IT</td>
+        <td>I spoke with the customer. The technician will visit today at 5:00 PM.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">191</td>
+        <td>591</td>
+        <td class="num">4441083398</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>CMD- 9054016416 a) Inquiry Customer called for technician visit delay for ref repair. Customer has not received any update from svc side. kindly contact to cx regarding the concern guided that visit will be soon as possible b) Steps taken SIM RAISED c) Outcome SIM CREATED 100000000787085_deepak/HA/AV_IT</td>
+        <td>I have arranged the technician’s visit for tomorrow, but the customer is not answering the calls.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">192</td>
+        <td>592</td>
+        <td class="num">4441083398</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>Sim a) Inquiry cx wants the visit today anyhow, please contact to the cx and send the technician asap.cx is very irritated. b) Steps taken sim raised c) Outcome Customer Request 100000000778837_Mohi_HHP/HA_TPMohali</td>
+        <td>I have arranged the technician’s visit for tomorrow, but the customer is not answering the calls.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">193</td>
+        <td>593</td>
+        <td class="num">4441090666</td>
+        <td>W/M03</td>
+        <td>Premium - Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>SIM Inquiry Customer wants to know about the tech visit because still there is no response of tech visit yet and cx wants the tech visit asap Steps Taken Called SVC @ 9227047898 they said the eng will visit tomorrow because he on outer city route and I will call cx soon for the update Guided cx to wait for the visit kindly give a call back for the resolution asap Outcome SIM raised Premium - Customer Request 100000000775856_Lovish_Premium_ TPMohali</td>
+        <td>I spoke with the customer, and the technician will visit tomorrow.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">194</td>
+        <td>594</td>
+        <td class="num">4441093072</td>
+        <td>W/M02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>23/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>Dear team, Customer asking for the technician visit, kindly contact to the customer and do needful and resolve the issue Tagged by: Nagababu_chat_IE</td>
+        <td>I spoke with the customer, and the technician will visit tomorrow.</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">195</td>
+        <td>595</td>
+        <td class="num">4441093411</td>
+        <td>W/M02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>CASE #49984491 CMD- 9978033963 SIM A. INQUIRY Cx wants to know the status of his technician visit so please contact the customer as soon as possible on prior basis and wants a visit today B. STEPS TAKEN SIM CREATED C. OUTCOME SIM RAISED 6394464_NEHA_HA_TPMOHALI</td>
+        <td>I spoke with the customer, and the technician will visit tomorrow. 24/08</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">196</td>
+        <td>596</td>
+        <td class="num">4441105080</td>
+        <td>REF01</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>23/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>SIM a) Inquiry CX wants tech visit ASAP installtion not done properly door allignment not done by tech and gone away b) Steps taken SIM raised call drop so called back again to cx Visit By Eng zahir 9033806138 22/08 14~16/ adajan c) Outcome Customer Request 100000000764772_TejasR_HHP/HA/AVIT_TPMohali</td>
+        <td>I spoke with the customer, and the technician will visit tomorrow. 24/08</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">197</td>
+        <td>597</td>
+        <td class="num">4441105611</td>
+        <td>REF02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>SIM a) Inquiry cx inquiry about when technician call cx asap and give update b) Steps taken SIM raised c) Outcome Customer Request 100000000780607_ShwetaSarone_HA/AVIT_TPMohali</td>
+        <td>Installation demo done</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">198</td>
+        <td>598</td>
+        <td class="num">4441105611</td>
+        <td>REF02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>21/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>8486271084</td>
+        <td>sim raised a) Inquiry : customer inform about technician visit but technician not come so customer wants visit asap. b) Steps taken : sim raised kindly provide service to customer asap and contact customer regarding his concern. c) Outcome : sim raised customer request 6296534_KAJAL_HA_TP_Mohali</td>
+        <td>Installation demo done</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">199</td>
+        <td>599</td>
+        <td class="num">4441109593</td>
+        <td>W/M02</td>
+        <td>Customer Request</td>
+        <td>Confirmed by ASC</td>
+        <td>22/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>SIM Sprinkler Case : Case #49990957 CMD- :7984024056 A. Inquiry- customer called for inquired about engineer visit b) Steps taken plz provide the cx engineer visit asap kindly update the cx accordingly Reminder sent to service center against the delay in repair where as cx is vey disappointed so we need to repair the product asap. c) Outcome SIM RAISED 100000000706791-suraj-HA/HHP-TpMohali</td>
+        <td>visit ed done part pending case</td>
+      </tr>
+      <tr>
+        <td style="text-align:center;">200</td>
+        <td>600</td>
+        <td class="num">4441109729</td>
+        <td>W/M02</td>
+        <td>Repair status</td>
+        <td>Confirmed by ASC</td>
+        <td>23/08/2026</td>
+        <td>R_IPAAS_N2</td>
+        <td>23/08/2026</td>
+        <td>IRFAN9322</td>
+        <td>Case #50217553 CMD:9370892424 SIM 1 a) inquiry - customer wanted to know about the status of engineer&#039;s visit b) steps taken- Highlighted Case to Service center team, SIM 1 raised. c) outcome- REPAIR STATUS SIM 1 6368524_Ishu_HA_TPMohali</td>
+        <td>SET OK ENGINER VISTEDD EXPALIN TO CSUT</td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

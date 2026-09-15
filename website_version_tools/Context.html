@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context &amp; Column Dictionary — GSPN Helper Tools</title>
+  <meta name="description" content="Field specifications and data context for GSPN Helper Tools, including GGN Standard 28-column definitions, SVC service center rules, and formatting standards.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    .context-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .field-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 13px;
+    }
+    .field-table th {
+      background: #f8fafc;
+      color: var(--text);
+      font-weight: 700;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 2px solid #e2e8f0;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .field-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: top;
+    }
+    .field-table tr:hover td {
+      background: #f8fafc;
+    }
+    .col-idx {
+      font-weight: 700;
+      color: var(--primary);
+      width: 36px;
+      text-align: center;
+    }
+    .col-name-badge {
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-weight: 700;
+      background: #eff6ff;
+      color: #1d4ed8;
+      padding: 2px 8px;
+      border-radius: 6px;
+      display: inline-block;
+      border: 1px solid rgba(37,99,235,0.2);
+    }
+    .src-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .src-ml { background: #fdf2f8; color: #db2777; border: 1px solid rgba(219,39,119,0.25); }
+    .src-pc { background: #f0fdf4; color: #15803d; border: 1px solid rgba(22,163,74,0.25); }
+    .src-calc { background: #fef3c7; color: #b45309; border: 1px solid rgba(217,119,6,0.25); }
+    .src-blank { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
+  </style>
+</head>
+<body>
+
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <!-- TOP NAVBAR -->
+  <nav class="top-nav glass-nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <span class="brand-name">GSPN Tools</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="tools.html" class="nav-link">Tools</a>
+        <a href="custom-template.html" class="nav-link">Template Builder</a>
+        <a href="reports.html" class="nav-link">Reports</a>
+        <a href="formats.html" class="nav-link">Formats</a>
+        <a href="Context.html" class="nav-link active">Context</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-layout">
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div class="page-title-row" style="margin-bottom: 24px;">
+          <div class="page-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="page-title">GGN Standard Template Context &amp; Dictionary</h1>
+            <p class="page-subtitle">Detailed rules, data sources, and formatting specifications for all 28 GGN Standard columns.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-content" style="max-width: 960px; margin: 0 auto;">
+
+      <!-- Highlight Card for Key Updates -->
+      <div class="context-card" style="border-color: rgba(37,99,235,0.25); background: linear-gradient(135deg, #ffffff, #eff6ff);">
+        <h3 style="font-size: 16px; font-weight: 700; color: #1d4ed8; margin-bottom: 12px; display:flex; align-items:center; gap:8px;">
+          <span>📌</span> Key GGN Standard Rules &amp; Updates
+        </h3>
+        <ul style="font-size: 13px; color: var(--text); line-height: 1.8; padding-left: 20px; margin: 0;">
+          <li><strong>DATE:</strong> Always populated with today's execution date formatted strictly as <span class="col-name-badge">mm/DD/yyyy</span> (e.g. <code>09/10/2026</code>).</li>
+          <li><strong>SVC (Service Center Name):</strong> Represents the Service Center Name. If there is no service center name data present, it is kept strictly empty (<code>""</code>). Numeric 10-digit Call IDs / ASC Job Numbers are <em>never</em> placed into SVC.</li>
+          <li><strong>No. (Row Index):</strong> Sequential 1-based index (<code>1, 2, 3...</code>) functioning as the row sequence number (SR. NO.).</li>
+          <li><strong>Service Order No. (Call ID):</strong> Guaranteed 10-digit Call ID starting with <code>4*******</code> (e.g. <code>4441809308</code>), extracted from Management Lite or Print Command, with fallback to ASC Job No (<code>ASC_JOB_NO</code>). Never blank when Call ID data is present.</li>
+          <li><strong>Reason (GSPN):</strong> Strictly populated from Management Lite row 2. It will <em>never</em> be overwritten by Step 1 Print Command's remarks.</li>
+          <li><strong>REDO:</strong> 28th column located at the end of the template, populated from Management Lite row 1 (e.g. <code>Y</code> or <code>N</code>).</li>
+          <li><strong>Enforced Blank Fields:</strong> <span class="col-name-badge">Remarks</span>, <span class="col-name-badge">Sub Remarks</span>, <span class="col-name-badge">Pending At</span>, and <span class="col-name-badge">Pending Reason</span> are strictly blank (<code>""</code>).</li>
+        </ul>
+      </div>
+
+      <!-- 28-Column Dictionary Table -->
+      <div class="context-card">
+        <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 6px;">GGN Standard Column Dictionary (28 Columns)</h3>
+        <p style="font-size: 12px; color: var(--text-soft); margin-bottom: 16px;">Exact order and mapping specifications for preview and Excel export.</p>
+
+        <div style="overflow-x:auto;">
+          <table class="field-table">
+            <thead>
+              <tr>
+                <th style="width:36px; text-align:center;">#</th>
+                <th>Column Header</th>
+                <th>Data Source</th>
+                <th>Format / Behavior / Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-idx">1</td>
+                <td><span class="col-name-badge">Date</span></td>
+                <td><span class="src-badge src-calc">Today's Date</span></td>
+                <td>Formatted as <code>mm/DD/yyyy</code> (e.g. <code>09/10/2026</code>).</td>
+              </tr>
+              <tr>
+                <td class="col-idx">2</td>
+                <td><span class="col-name-badge">SVC</span></td>
+                <td><span class="src-badge src-ml">Service Center</span></td>
+                <td>Service center name. If no service center name data, left strictly empty <code>""</code>.</td>
+              </tr>
+              <tr>
+                <td class="col-idx">3</td>
+                <td><span class="col-name-badge">No.</span></td>
+                <td><span class="src-badge src-calc">Row Index</span></td>
+                <td>Row sequence number <code>1, 2, 3...</code> (acts as SR. NO.). Centered in Excel.</td>
+              </tr>
+              <tr>
+                <td class="col-idx">4</td>
+                <td><span class="col-name-badge">Service Order No.</span></td>
+                <td><span class="src-badge src-ml">Management Lite / PC</span></td>
+                <td>10-digit Call ID starting with <code>4*******</code> (e.g. <code>4441809308</code>), fallback to ASC Job No.</td>
+              </tr>
+              <tr>
+                <td class="col-idx">5</td>
+                <td><span class="col-name-badge">Assigned Date</span></td>
+                <td><span class="src-badge src-ml">Management Lite</span></td>
+                <td>ASC Assigned date (date part only, e.g. <code>04/09/2026</code>).</td>
+              </tr>
+              <tr>
+                <td class="col-idx">6</td>
+                <td><span class="col-name-badge">Aging</span></td>
+                <td><span class="src-badge src-calc">Calculated</span></td>
+                <td>Days since assignment: <code>=TODAY() - Assigned Date</code>. Includes Excel <code>x:f</code> formula.</td>
+              </tr>
+              <tr>
+                <td class="col-idx">7</td>
+                <td><span class="col-name-badge">TAT</span></td>
+                <td><span class="src-badge src-calc">Extension IFS</span></td>
+                <td>Color-coded range (<code>0–2 Days</code> green, <code>3–7 Days</code> yellow, etc.) with Excel <code>x:f</code> IFS formula.</td>
+              </tr>
+              <tr>
+                <td class="col-idx">8</td>
+                <td><span class="col-name-badge">Model Name</span></td>
+                <td><span class="src-badge src-pc">Print / ML</span></td>
+                <td>Device model code (e.g. <code>WA80F08S2CTL</code>, <code>RT28T3742S8</code>).</td>
+              </tr>
+              <tr>
+                <td class="col-idx">9</td>
+                <td><span class="col-name-badge">Product</span></td>
+                <td><span class="src-badge src-calc">15-Branch IF</span></td>
+                <td>Categorized product (<code>HHP</code>, <code>AC</code>, <code>AUD</code>, <code>AV</code>, <code>IT</code>, <code>MW</code>, <code>REF</code>, <code>WM</code>, <code>DW</code>, <code>Other</code>).</td>
+              </tr>
+              <tr>
+                <td class="col-idx">10</td>
+                <td><span class="col-name-badge">WIFI</span></td>
+                <td><span class="src-badge src-ml">ML / PC</span></td>
+                <td>WIFI feature indicator (or blank if not present).</td>
+              </tr>
+              <tr>
+                <td class="col-idx">11</td>
+                <td><span class="col-name-badge">Engineer</span></td>
+                <td><span class="src-badge src-pc">Print Command</span></td>
+                <td>Assigned service technician name (e.g. <code>Santosh Sah</code>).</td>
+              </tr>
+              <tr>
+                <td class="col-idx">12</td>
+                <td><span class="col-name-badge">TL Name</span></td>
+                <td><span class="src-badge src-pc">Print Command</span></td>
+                <td>Team Leader name (if available).</td>
+              </tr>
+              <tr>
+                <td class="col-idx">13</td>
+                <td><span class="col-name-badge">Telephone (Mobile)</span></td>
+                <td><span class="src-badge src-pc">Print Command</span></td>
+                <td>Customer mobile number formatted as text (mso-number-format: \@).</td>
+              </tr>
+              <tr>
+                <td class="col-idx">14</td>
+                <td><span class="col-name-badge">Remarks</span></td>
+                <td><span class="src-badge src-blank">Enforced Blank</span></td>
+                <td>Strictly empty string <code>""</code>.</td>
+              </tr>
+              <tr>
+                <td class="col-idx">15</td>
+                <td><span class="col-name-badge">Sub Remarks</span></td>
+                <td><span class="src-badge src-blank">Enforced Blank</span></td>
+                <td>Strictly empty string <code>""</code>.</td>
+              </tr>
+              <tr>
+                <td class="col-idx">16</td>
+                <td><span class="col-name-badge">Address</span></td>
+                <td><span class="src-badge src-pc">Print Command</span></td>
+                <td>Customer service address.</td>
+              </tr>
+              <tr>
+                <td class="col-idx">17</td>
+                <td><span class="col-name-badge">SR.</span></td>
+                <td><span class="src-badge src-ml">Management Lite</span></td>
+                <td>Product Serial Number / IMEI (e.g. <code>0000</code>, <code>M000</code>).</td>
+              </tr>
+              <tr>
+                <td class="col-idx">18</td>
+                <td><span class="col-name-badge">Wty Status</span></td>
+                <td><span class="src-badge src-ml">Management Lite</span></td>
+                <td>Warranty status (e.g. <code>In Warranty</code>, <code>Out of Warranty</code>).</td>
+              </tr>
+              <tr>
+                <td class="col-idx">19</td>
+                <td><span class="col-name-badge">Customer Name</span></td>
+                <td><span class="src-badge src-ml">Management Lite / PC</span></td>
+                <td>Customer's full name (e.g. <code>Pankaj Ahlawat</code>).</td>
+              </tr>
+              <tr>
+                <td class="col-idx">20</td>
+                <td><span class="col-name-badge">App Date</span></td>
+                <td><span class="src-badge src-ml">Management Lite / PC</span></td>
+                <td>Appointment date (e.g. <code>05.09.2026</code>).</td>
+              </tr>
+              <tr>
+                <td class="col-idx">21</td>
+                <td><span class="col-name-badge">App Time</span></td>
+                <td><span class="src-badge src-ml">Management Lite / PC</span></td>
+                <td>Appointment time (e.g. <code>12:00:00</code>).</td>
+              </tr>
+              <tr>
+                <td class="col-idx">22</td>
+                <td><span class="col-name-badge">Service Type (Status)</span></td>
+                <td><span class="src-badge src-ml">Management Lite / PC</span></td>
+                <td>Expanded service type (e.g. <code>IN-HOME</code>, <code>Initial Installation</code>, <code>Stock Repair</code>).</td>
+              </tr>
+              <tr>
+                <td class="col-idx">23</td>
+                <td><span class="col-name-badge">Status (GSPN)</span></td>
+                <td><span class="src-badge src-ml">Management Lite</span></td>
+                <td>GSPN status from Management Lite (e.g. <code>Engineer Assigned</code>).</td>
+              </tr>
+              <tr>
+                <td class="col-idx">24</td>
+                <td><span class="col-name-badge">Reason (GSPN)</span></td>
+                <td><span class="src-badge src-ml">Management Lite</span></td>
+                <td>GSPN reason strictly from Management Lite row 2. Protected against remark overwrites.</td>
+              </tr>
+              <tr>
+                <td class="col-idx">25</td>
+                <td><span class="col-name-badge">Pending At</span></td>
+                <td><span class="src-badge src-blank">Enforced Blank</span></td>
+                <td>Strictly empty string <code>""</code>.</td>
+              </tr>
+              <tr>
+                <td class="col-idx">26</td>
+                <td><span class="col-name-badge">Pending Reason</span></td>
+                <td><span class="src-badge src-blank">Enforced Blank</span></td>
+                <td>Strictly empty string <code>""</code>.</td>
+              </tr>
+              <tr>
+                <td class="col-idx">27</td>
+                <td><span class="col-name-badge">1st Service Comment</span></td>
+                <td><span class="src-badge src-pc">Print Command</span></td>
+                <td>First call confirmation / comment from Step 1 Print Command.</td>
+              </tr>
+              <tr>
+                <td class="col-idx">28</td>
+                <td><span class="col-name-badge">REDO</span></td>
+                <td><span class="src-badge src-ml">Management Lite</span></td>
+                <td>REDO flag from Management Lite row 1 (<code>Y</code> or <code>N</code>).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BOTTOM NAVBAR -->
+  <nav class="bottom-nav glass-nav">
+    <div class="bottom-nav-inner">
+      <a href="index.html" class="bottom-nav-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+      <a href="tools.html" class="bottom-nav-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span>Tools</span></a>
+      <a href="reports.html" class="bottom-nav-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Reports</span></a>
+      <a href="formats.html" class="bottom-nav-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Formats</span></a>
+      <a href="Context.html" class="bottom-nav-item active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Context</span></a>
+    </div>
+  </nav>
+
+  <script src="assets/js/core.js"></script>
+</body>
+</html>

@@ -292,19 +292,41 @@ function showNotification(message, type = 'info') {
 // INITIALIZE
 // ============================================
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    injectCopyButton();
-    injectPasteButton();
-  });
-} else {
+let isCustomerGhostActive = false;
+
+function checkAndInjectCustomerButtons() {
+  if (isCustomerGhostActive) {
+    const copyBtn = document.getElementById('samsung-copy-btn');
+    if (copyBtn) copyBtn.remove();
+    const pasteBtn = document.getElementById('samsung-paste-btn');
+    if (pasteBtn) pasteBtn.remove();
+    return;
+  }
   injectCopyButton();
   injectPasteButton();
 }
 
-const observer = new MutationObserver(() => {
-  injectCopyButton();
-  injectPasteButton();
+chrome.storage.local.get(['ghostModeEnabled'], (data) => {
+  isCustomerGhostActive = !!data.ghostModeEnabled;
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkAndInjectCustomerButtons);
+  } else {
+    checkAndInjectCustomerButtons();
+  }
 });
 
-observer.observe(document.body, { childList: true, subtree: true });
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && Object.prototype.hasOwnProperty.call(changes, 'ghostModeEnabled')) {
+    isCustomerGhostActive = !!changes.ghostModeEnabled.newValue;
+    checkAndInjectCustomerButtons();
+  }
+});
+
+const observer = new MutationObserver(() => {
+  checkAndInjectCustomerButtons();
+});
+
+if (document.body) {
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+

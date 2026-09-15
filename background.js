@@ -252,3 +252,49 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return true;
   }
 });
+
+// ==================== Ghost Mode Toolbar Icon Handler ====================
+function updateExtensionGhostIcon(isGhost) {
+  if (!chrome.action || typeof chrome.action.setIcon !== 'function') return;
+  const paths = isGhost ? {
+    16: 'icons/transparent16.png',
+    32: 'icons/transparent32.png',
+    48: 'icons/transparent48.png',
+    128: 'icons/transparent128.png'
+  } : {
+    16: 'icons/icon16.png',
+    32: 'icons/icon32.png',
+    48: 'icons/icon48.png',
+    128: 'icons/icon128.png'
+  };
+
+  chrome.action.setIcon({ path: paths }).catch((err) => {
+    console.warn('Failed to set extension icon:', err);
+  });
+}
+
+// Initial sync on service worker load
+chrome.storage.local.get(['ghostModeEnabled'], (data) => {
+  updateExtensionGhostIcon(!!data.ghostModeEnabled);
+});
+
+// Storage listener to update icon whenever ghostModeEnabled changes
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && Object.prototype.hasOwnProperty.call(changes, 'ghostModeEnabled')) {
+    updateExtensionGhostIcon(!!changes.ghostModeEnabled.newValue);
+  }
+});
+
+// Also on browser startup and extension install
+chrome.runtime.onStartup.addListener(() => {
+  chrome.storage.local.get(['ghostModeEnabled'], (data) => {
+    updateExtensionGhostIcon(!!data.ghostModeEnabled);
+  });
+});
+
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.storage.local.get(['ghostModeEnabled'], (data) => {
+    updateExtensionGhostIcon(!!data.ghostModeEnabled);
+  });
+});
+

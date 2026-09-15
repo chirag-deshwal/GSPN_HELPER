@@ -1,0 +1,25 @@
+/* protoload 0.1 beta by Andreas Kalsch
+ * last change: 09.07.2007
+ *
+ * This simple piece of code automates the creating of Ajax loading symbols.
+ * The loading symbol covers an HTML element with correct position and size - example:
+ * $('myElement').startWaiting() and $('myElement').stopWaiting()
+ */
+ 
+Protoload = {
+	// Start waiting status - show loading element
+	startWaiting: function() {
+		$('progressloading').style.display = "block";
+	},
+
+	// Stop waiting status - hide loading element
+	stopWaiting: function() {
+		$('progressloading').style.display = "none";
+	}
+};
+
+if (Prototype) {
+	Element.addMethods(Protoload);
+	Object.extend(Element, Protoload);
+}
+/* */

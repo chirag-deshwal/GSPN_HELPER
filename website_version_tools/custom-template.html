@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Template Builder (Puzzle Designer) — GSPN Tools</title>
+  <meta name="description" content="Map and combine extracted GSPN fields into any Excel or ODS format using a drag-and-drop puzzle piece builder.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+  <!-- Background Animated Orbs -->
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <!-- TOP NAVBAR -->
+  <nav class="top-nav glass-nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <span class="brand-name">GSPN Tools</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="tools.html" class="nav-link">Tools</a>
+        <a href="custom-template.html" class="nav-link active">Template Builder</a>
+        <a href="reports.html" class="nav-link">Reports</a>
+        <a href="formats.html" class="nav-link">Formats</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN PAGE CONTAINER -->
+  <div class="page-layout">
+
+    <!-- PAGE HERO HEADER -->
+    <div class="page-header" style="margin-bottom: 24px;">
+      <div class="page-header-inner">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <div class="page-icon" style="background:linear-gradient(135deg,#7c3aed,#2563eb);">
+              <span style="font-size:24px;">🧩</span>
+            </div>
+            <div>
+              <h1 class="page-title">Custom Template Builder</h1>
+              <p class="page-subtitle">Upload any Excel/ODS sheet to extract its columns, then drag &amp; drop GSPN fields like puzzle pieces to combine and map.</p>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <a href="tools.html" class="btn-ghost" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+              Back to Tools
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UNIFIED CONTROL & ACTION BAR -->
+    <div class="section-card" style="padding:16px 22px;margin-bottom:24px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;">
+        <!-- Template Name -->
+        <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:240px;">
+          <label style="font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;white-space:nowrap;">Template Name:</label>
+          <input type="text" id="templateNameInput" class="form-input" style="padding:7px 12px;font-weight:700;font-size:14px;" value="Custom Template" placeholder="e.g. Technician Dispatch Master" />
+        </div>
+
+        <!-- Buttons -->
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="window.customTpl.autoMatchAll()" style="display:inline-flex;align-items:center;gap:6px;background:#f0fdf4;border-color:#bbf7d0;color:#15803d;font-weight:700;">
+            <span>✨</span> Auto-Match Fields
+          </button>
+          <button class="btn-secondary" onclick="window.customTpl.addNewSlot()" style="display:inline-flex;align-items:center;gap:6px;">
+            <span>➕</span> Add Column
+          </button>
+          <button class="btn-primary" onclick="window.customTpl.saveCustomTemplate(false)" style="display:inline-flex;align-items:center;gap:6px;">
+            <span>💾</span> Save Template
+          </button>
+          <button class="btn-primary" onclick="window.customTpl.saveCustomTemplate(true)" style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#7c3aed,#6d28d9);">
+            <span>🚀</span> Use in Tools
+          </button>
+          <button class="btn-secondary" onclick="window.customTpl.exportTransformedExcel()" style="display:inline-flex;align-items:center;gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export Excel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN TWO-COLUMN PUZZLE LAYOUT -->
+    <div class="puzzle-layout-grid" style="margin-bottom: 28px;">
+
+      <!-- LEFT SIDEBAR: SOURCES & UPLOAD -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+
+        <!-- 1. UPLOAD TARGET FORMAT (.xlsx, .ods, .csv) -->
+        <div class="section-card" style="padding:18px;margin-bottom:0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <div style="font-weight:800;font-size:13px;color:var(--text);display:flex;align-items:center;gap:6px;">
+              <span>📁</span> 1. Target Format File
+            </div>
+            <span style="font-size:10px;color:var(--text-soft);font-weight:600;">Excel / ODS / CSV</span>
+          </div>
+
+          <!-- Drag and drop zone -->
+          <div id="fileDropZone" style="border:2px dashed #cbd5e1;border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;background:#fff;transition:all 0.18s ease;margin-bottom:12px;">
+            <input type="file" id="templateFileInput" accept=".xlsx,.xls,.ods,.csv,.tsv,.txt" style="display:none;" />
+            <div style="font-size:28px;margin-bottom:4px;">📊</div>
+            <div style="font-size:13px;font-weight:700;color:var(--text);">Drop Excel / ODS file here</div>
+            <div style="font-size:11px;color:var(--text-soft);margin-top:2px;">or click to browse from device</div>
+          </div>
+          <div id="uploadStatus" style="font-size:11px;font-weight:600;margin-bottom:12px;display:none;"></div>
+
+          <!-- Quick Presets -->
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--text-soft);text-transform:uppercase;margin-bottom:6px;letter-spacing:0.04em;">Or Pick Quick Preset:</div>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <button class="btn-ghost" onclick="window.customTpl.applyPreset('technician')" style="text-align:left;padding:6px 10px;font-size:11.5px;justify-content:flex-start;font-weight:600;">
+                🛠️ Technician Handover Sheet
+              </button>
+              <button class="btn-ghost" onclick="window.customTpl.applyPreset('dispatch')" style="text-align:left;padding:6px 10px;font-size:11.5px;justify-content:flex-start;font-weight:600;">
+                🚚 Daily In-Home Dispatch
+              </button>
+              <button class="btn-ghost" onclick="window.customTpl.applyPreset('summary')" style="text-align:left;padding:6px 10px;font-size:11.5px;justify-content:flex-start;font-weight:600;">
+                📑 Executive Summary
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. SOURCE GSPN FIELDS (DRAGGABLE PUZZLE PIECES) -->
+        <div class="section-card" style="padding:18px;margin-bottom:0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div style="font-weight:800;font-size:13px;color:var(--text);display:flex;align-items:center;gap:6px;">
+              <span>🧩</span> 2. GSPN Data Fields
+            </div>
+            <button class="btn-ghost" onclick="window.customTpl.addStaticPiecePrompt()" title="Add custom fixed text piece" style="padding:3px 8px;font-size:11px;color:var(--secondary);border-color:rgba(124,58,237,0.3);">
+              + Fixed Text
+            </button>
+          </div>
+
+          <!-- Session status banner -->
+          <div id="sessionDataBanner" style="font-size:11px;font-weight:600;margin-bottom:10px;padding:6px 10px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;">
+            Checking session data...
+          </div>
+
+          <!-- Search filter -->
+          <div style="position:relative;margin-bottom:12px;">
+            <input type="text" id="searchSourceChips" placeholder="Filter fields..." style="width:100%;box-sizing:border-box;padding:6px 10px 6px 28px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:12px;outline:none;" />
+            <span style="position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:12px;color:#94a3b8;pointer-events:none;">🔍</span>
+          </div>
+
+          <div style="font-size:11px;color:var(--text-soft);margin-bottom:8px;">
+            Drag any piece into a target slot, or click to auto-fill first empty slot:
+          </div>
+
+          <!-- Pool of draggable chips -->
+          <div class="puzzle-chips-container" id="sourceChipsPool">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT MAIN AREA: THE PUZZLE BOARD (TARGET SLOTS) -->
+      <div>
+        <div class="section-card" style="padding:22px;">
+          <!-- Board Header -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+            <div>
+              <div style="font-weight:800;font-size:16px;color:var(--text);display:flex;align-items:center;gap:8px;">
+                <span>🎯</span> The Puzzle Board
+                <span id="targetColsCount" style="font-size:11px;font-weight:700;color:#2563eb;background:#eff6ff;border:1px solid rgba(37,99,235,0.2);padding:2px 8px;border-radius:12px;">
+                  0 columns
+                </span>
+              </div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">
+                Drop one or more puzzle fields into each slot. Combine multiple fields with custom separators!
+              </div>
+            </div>
+
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <!-- Layout Switcher: Cards / Asymmetric / Compact Rows -->
+              <div class="layout-toggle-group">
+                <button type="button" id="btnLayoutGrid" class="layout-toggle-btn active" onclick="window.customTpl.setLayout('grid')" title="Card / Block Grid Layout">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                  Cards
+                </button>
+                <button type="button" id="btnLayoutAsym" class="layout-toggle-btn" onclick="window.customTpl.setLayout('asymmetric')" title="Asymmetrical Layout (Dynamic multi-field block spans)">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="12" height="7"/><rect x="17" y="3" width="4" height="7"/><rect x="3" y="14" width="5" height="7"/><rect x="10" y="14" width="11" height="7"/></svg>
+                  Asymmetric
+                </button>
+                <button type="button" id="btnLayoutCompact" class="layout-toggle-btn" onclick="window.customTpl.setLayout('compact')" title="Compact Short Row List">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                  Rows
+                </button>
+              </div>
+
+              <button class="btn-ghost" onclick="window.customTpl.autoMatchAll()" style="padding:5px 10px;font-size:11.5px;color:#059669;border-color:#a7f3d0;">
+                ✨ Auto Match
+              </button>
+              <button class="btn-ghost" onclick="window.customTpl.clearAllMappings()" style="padding:5px 10px;font-size:11.5px;color:#dc2626;border-color:#fca5a5;">
+                🧹 Clear Slots
+              </button>
+            </div>
+          </div>
+
+          <!-- Slots Container -->
+          <div class="puzzle-slots-list" id="puzzleBoardSlots">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- LIVE DATA PREVIEW SECTION -->
+    <div class="section-card" style="margin-bottom: 28px;">
+      <div class="section-header" style="margin-bottom: 14px;">
+        <div class="section-title-group">
+          <div class="section-icon icon-blue">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+          </div>
+          <div>
+            <div class="section-title">Live Transformed Preview</div>
+            <div class="section-subtitle" id="previewTableInfo">Real-time preview of rows mapped with your custom template</div>
+          </div>
+        </div>
+        <div>
+          <button class="btn-secondary" onclick="window.customTpl.exportTransformedExcel()" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:6px 12px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export This Excel
+          </button>
+        </div>
+      </div>
+
+      <div class="preview-table-container" style="max-height: 340px; overflow: auto; border: 1px solid var(--border); border-radius: var(--radius-sm);">
+        <table class="preview-table">
+          <thead id="previewTableHead">
+            <!-- Rendered by JS -->
+          </thead>
+          <tbody id="previewTableBody">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SAVED TEMPLATES LIBRARY -->
+    <div class="section-card" style="margin-bottom: 40px;">
+      <div class="section-header" style="margin-bottom: 12px;">
+        <div class="section-title-group">
+          <div class="section-icon icon-purple">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          </div>
+          <div>
+            <div class="section-title">Your Saved Custom Templates</div>
+            <div class="section-subtitle">Templates saved in browser storage — accessible directly in Tools page</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="savedTemplatesList">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+  </div><!-- /page-layout -->
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Scripts -->
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/excel.js"></script>
+  <script src="assets/js/custom-template.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

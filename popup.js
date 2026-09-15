@@ -1,5 +1,5 @@
 /**
- * GSPN Data Scraper - Popup Script
+ * GSPN Helper Tool - Popup Script
  * Handles user interaction, triggers content script scraping,
  * and exports scraped data to Excel (.xls) format.
  *
@@ -21,68 +21,46 @@ const STATUS_COLUMNS = [
   'Wty Status',
   'REDO',
   'Service Type (Status)',
-  'B2B'
+  'B2B',
+  'SR.'           // Serial Number from Service Order Management Light page
 ];
 
 // Product prefix mapping and helper
 const PRODUCT_PREFIX = {
-  RR: "REF",
-  RT: "REF",
-  RF: "REF",
-  RS: "REF",
-  RA: "REF",
-  RB: "REF",
-  WA: "WM",
-  WT: "WM",
-  WW: "WM",
-  WD: "WM",
-  WF: "WM",
-  AR: "RAC",
-  AC: "RAC",
-  AJ: "RAC",
-  AM: "RAC",
-  ACN: "RAC",
-  UA: "TV",
-  QA: "TV",
-  HG: "TV",
-  PS: "TV",
-  PN: "TV",
-  UN: "TV",
-  UE: "TV",
-  GU: "TV",
-  LH: "DISPLAY",
-  LS: "DISPLAY",
-  MC: "MWO",
-  MG: "MWO",
-  MS: "MWO",
-  CE: "MWO",
-  CM: "MWO",
-  DW: "DW",
-  DV: "DRYER",
-  VS: "VACUUM",
-  VR: "VACUUM",
+  RR: "REF", RT: "REF", RF: "REF", RS: "REF", RA: "REF", RB: "REF", REF: "REF",
+  WA: "WM", WT: "WM", WW: "WM", WD: "WM", WF: "WM", WM: "WM", "W/M": "WM",
+  AR: "RAC", AC: "RAC", AJ: "RAC", AM: "RAC", ACN: "RAC", RAC: "RAC",
+  CTV: "CTV", UA: "CTV", QA: "CTV", HG: "CTV", PS: "CTV", PN: "CTV", UN: "CTV", UE: "CTV", GU: "CTV", TV: "CTV",
+  LH: "DISPLAY", LS: "DISPLAY", DISPLAY: "DISPLAY",
+  MC: "MWO", MG: "MWO", MS: "MWO", CE: "MWO", CM: "MWO", MWO: "MWO",
+  DW: "DW", DV: "DRYER", DRYER: "DRYER",
+  VS: "VACUUM", VR: "VACUUM", VACUUM: "VACUUM",
   AX: "AIR PURIFIER",
-  HW: "AUDIO",
-  MX: "AUDIO",
-  HT: "AUDIO",
-  LC: "MONITOR",
-  LSM: "MONITOR",
-  NV: "OVEN",
-  NQ: "OVEN",
-  NA: "HOB",
-  NZ: "HOB"
+  HW: "AUDIO", MX: "AUDIO", HT: "AUDIO", AUDIO: "AUDIO",
+  LC: "MONITOR", LSM: "MONITOR", MONITOR: "MONITOR",
+  NV: "OVEN", NQ: "OVEN", OVEN: "OVEN",
+  NA: "HOB", NZ: "HOB", HOB: "HOB"
 };
 
 function getSamsungCategory(model) {
-  if (!model) return "UNKNOWN";
-  model = model.toUpperCase().trim();
-  const prefixes = Object.keys(PRODUCT_PREFIX).sort((a, b) => b.length - a.length);
-  for (const prefix of prefixes) {
-    if (model.startsWith(prefix)) {
-      return PRODUCT_PREFIX[prefix];
-    }
-  }
-  return "UNKNOWN";
+  if (!model) return "Other";
+  const m = String(model).toUpperCase().trim();
+  if (!m) return "Other";
+
+  const first1 = m.substring(0, 1);
+  const first2 = m.substring(0, 2);
+
+  if (first1 === 'S') return 'HHP';
+  if (first1 === 'A') return 'AC';
+  if (first2 === 'HT' || first2 === 'HW') return 'AUD';
+  if (first1 === 'Q' || first1 === 'U') return 'AV';
+  if (first1 === 'N' || first2 === 'LH' || first2 === 'LC' || first2 === 'LS') return 'IT';
+  if (first1 === 'M' || first2 === 'CE') return 'MW';
+  if (first1 === 'R') return 'REF';
+  if (first1 === 'W') return 'WM';
+  if (first1 === 'D') return 'DW';
+
+  return 'Other';
 }
 
 /**
@@ -98,29 +76,145 @@ function ensureProductField(dataArray, columnsArray) {
     if (modelIdx >= 0) {
       columnsArray.splice(modelIdx + 1, 0, 'Product');
     } else {
-      columnsArray.push('Product');
+      const soIdx = columnsArray.indexOf('Service Order No');
+      if (soIdx >= 0) {
+        columnsArray.splice(soIdx + 1, 0, 'Product');
+      } else {
+        columnsArray.push('Product');
+      }
     }
   }
 
   // Populate product values
   for (const rec of dataArray) {
-    const modelVal = (rec['Model Name'] || rec['Model'] || '').toString();
-    rec['Product'] = getSamsungCategory(modelVal);
+    const rawVal = rec['Product'] || rec['Model Name'] || rec['Model'] || '';
+    if (rawVal) {
+      rec['Product'] = getSamsungCategory(rawVal);
+    }
+  }
+}
+
+/**
+ * Converts short service type codes to full descriptive labels:
+ *   IH -> IN-HOME
+ *   II -> Initial Installation
+ *   SR -> Stock Repair
+ *   CC -> Customer Care
+ *   DM -> Demonstration
+ *   PS -> PICK-UP SERVICE
+ *   CI -> Carry In
+ *   RH -> Return Handling
+ */
+function convertServiceType(code) {
+  if (!code) return '';
+  const c = String(code).trim().toUpperCase();
+  const map = {
+    'IH': 'IN-HOME',
+    'II': 'Initial Installation',
+    'SR': 'Stock Repair',
+    'CC': 'Customer Care',
+    'DM': 'Demonstration',
+    'PS': 'PICK-UP SERVICE',
+    'CI': 'Carry In',
+    'RH': 'Return Handling'
+  };
+  return map[c] || String(code).trim();
+}
+
+/**
+ * Ensure each record has expanded Service Type & Service Type (Status),
+ * City extracted from Address, and Appointment Date split into App Date & App Time.
+ * Also ensures Customer Name is populated from CX Name if missing.
+ */
+function ensurePrintCommandFields(dataArray, columnsArray) {
+  if (!Array.isArray(dataArray)) return;
+
+  for (const rec of dataArray) {
+    // 1. Service Type & Service Type (Status) expansion (e.g. IH -> IN-HOME)
+    const rawSvc = rec['Service Type (Status)'] || rec['Service Type'] || '';
+    if (rawSvc) {
+      const convertedSvc = convertServiceType(rawSvc);
+      rec['Service Type'] = convertedSvc;
+      rec['Service Type (Status)'] = convertedSvc;
+    }
+
+    // 2. City extraction from Address
+    if (!rec['City'] && rec['Address']) {
+      const cityMatch = rec['Address'].match(/\b(GURGAON|GURUGRAM|DELHI|NEW DELHI|NOIDA|FARIDABAD|GHAZIABAD|MANESAR)\b/i);
+      if (cityMatch) {
+        rec['City'] = cityMatch[1].toUpperCase();
+      }
+    }
+
+    // 3. App Date & App Time from Appointment Date
+    const rawApp = rec['Appointment Date'] || rec['App Date'] || '';
+    if (rawApp) {
+      const sApp = splitDateTime(rawApp);
+      if (sApp.date && !rec['App Date']) rec['App Date'] = sApp.date;
+      if (sApp.time && !rec['App Time']) rec['App Time'] = sApp.time;
+    }
+
+    // 4. Customer Name fallback
+    if (!rec['Customer Name'] && rec['CX Name']) {
+      rec['Customer Name'] = rec['CX Name'];
+    }
+  }
+
+  // Ensure columns exist in columnsArray if provided
+  if (Array.isArray(columnsArray)) {
+    if (!columnsArray.includes('Service Type (Status)')) {
+      const svcIdx = columnsArray.indexOf('Service Type');
+      if (svcIdx >= 0) {
+        columnsArray.splice(svcIdx + 1, 0, 'Service Type (Status)');
+      } else {
+        columnsArray.push('Service Type (Status)');
+      }
+    }
+    if (!columnsArray.includes('City')) {
+      const addrIdx = columnsArray.indexOf('Address');
+      if (addrIdx >= 0) {
+        columnsArray.splice(addrIdx + 1, 0, 'City');
+      } else {
+        columnsArray.push('City');
+      }
+    }
+    if (!columnsArray.includes('App Date')) {
+      const appIdx = columnsArray.indexOf('Appointment Date');
+      if (appIdx >= 0) {
+        columnsArray.splice(appIdx + 1, 0, 'App Date', 'App Time');
+      } else {
+        columnsArray.push('App Date', 'App Time');
+      }
+    }
   }
 }
 
 function cleanColumnsAndData(data, columns) {
   if (!Array.isArray(data) || !Array.isArray(columns)) return;
+  const isInteraction = columns.includes('Interaction Code') || columns.includes('Comment');
+  const isManagementLite = columns.includes('Service Order No.') ||
+    columns.includes('Risk Sensing') ||
+    columns.includes('Risk Reason') ||
+    (typeof selScrapeTarget !== 'undefined' && selScrapeTarget?.value === 'management_lite') ||
+    (typeof selExcelTemplate !== 'undefined' && selExcelTemplate?.value === 'GGN_TRIM_DATA_ML');
+
+  if (isManagementLite) {
+    return;
+  }
+
   const keysToDelete = [
     'Remark',
     'ASC Job No',
-    'Created By',
     'Service Branch',
     'Date',
     'CP/Dealer Ref. No',
     'Data Origin',
     'Contact Permission'
   ];
+  if (!isInteraction) {
+    keysToDelete.push('Created By');
+  }
+
   // 1. Filter columns list
   for (let i = columns.length - 1; i >= 0; i--) {
     if (keysToDelete.includes(columns[i])) {
@@ -197,6 +291,37 @@ async function copyToClipboard(text, html) {
   }
 
   throw new Error('Clipboard copy not permitted in current browser context.');
+}
+
+/**
+ * Separate date and time from combined strings like:
+ * "06/08/2026 (13:10:55)", "12/08/2026 (14:00:00)", etc.
+ */
+function splitDateTime(val) {
+  if (!val) return { date: '', time: '' };
+  const str = String(val).trim();
+  if (!str) return { date: '', time: '' };
+
+  let dateStr = '';
+  let timeStr = '';
+
+  const parenTimeMatch = str.match(/\(\s*([0-9]{1,2}:[0-9]{2}(?::[0-9]{2})?(?:\s*[AaPp][Mm])?)\s*\)/);
+  if (parenTimeMatch) {
+    timeStr = parenTimeMatch[1].trim();
+    dateStr = str.replace(/\(\s*[0-9]{1,2}:[0-9]{2}(?::[0-9]{2})?(?:\s*[AaPp][Mm])?\s*\)/, '').trim();
+  } else {
+    const standaloneTimeMatch = str.match(/\b([0-9]{1,2}:[0-9]{2}(?::[0-9]{2})?(?:\s*[AaPp][Mm])?)\b/);
+    if (standaloneTimeMatch) {
+      timeStr = standaloneTimeMatch[1].trim();
+      dateStr = str.replace(/\b[0-9]{1,2}:[0-9]{2}(?::[0-9]{2})?(?:\s*[AaPp][Mm])?\b/, '').trim();
+    } else {
+      dateStr = str;
+    }
+  }
+
+  dateStr = dateStr.replace(/^[,\s\-\–\(\)]+|[,\s\-\–\(\)]+$/g, '').trim();
+
+  return { date: dateStr, time: timeStr };
 }
 
 // Parse short date and compute aging
@@ -288,8 +413,76 @@ function ensureAscAssignedShortAndAging(dataArray, columnsArray) {
   }
 }
 
+function parseDateForAging(value) {
+  return parseShortDateFromAscAssigned(value);
+}
+
+function ensureManagementLiteFields(dataArray, columnsArray) {
+  if (!Array.isArray(dataArray)) return;
+  const today = new Date();
+  const todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+  for (let idx = 0; idx < dataArray.length; idx++) {
+    const rec = dataArray[idx];
+    if (!rec['No']) {
+      rec['No'] = String(idx + 1);
+    }
+    const soNo = (rec['Service Order No.'] || rec['Service Order No'] || rec['SO'] || '').toString().trim();
+    if (!rec['ASC Job No']) {
+      rec['ASC Job No'] = soNo;
+    }
+    if (!rec['Date']) {
+      rec['Date'] = rec['Created'] || rec['Created Date'] || rec['Assigned'] || formatDateDDMMYYYY(today);
+    }
+    const modelVal = (rec['Model'] || rec['Model Name'] || '').toString().trim();
+    if (!rec['Product']) {
+      rec['Product'] = getSamsungCategory(modelVal);
+    }
+    if (rec['Age'] === undefined || rec['Age'] === '' || isNaN(rec['Age'])) {
+      const dateForAging = parseDateForAging(rec['Assigned'] || rec['Created'] || rec['Date']);
+      if (dateForAging && !isNaN(dateForAging.getTime())) {
+        const pMid = new Date(dateForAging.getFullYear(), dateForAging.getMonth(), dateForAging.getDate());
+        rec['Age'] = Math.max(0, Math.floor((todayMid - pMid) / (1000 * 60 * 60 * 24)));
+      } else {
+        rec['Age'] = '';
+      }
+    }
+    if (!rec['TAT'] && rec['Age'] !== '') {
+      rec['TAT'] = getTATLabel(rec['Age']);
+    }
+    if (rec['Eng Name'] === undefined) rec['Eng Name'] = rec['Engineer'] || '';
+    if (rec['TL Name'] === undefined) rec['TL Name'] = '';
+  }
+}
+
+function getTicketIdentity(ticket) {
+  const serviceOrderNo = (ticket?.['Service Order No'] || ticket?.['Service Order No.'] || ticket?.['SO'] || '').toString().trim();
+
+  // If this is an Interaction Message record (contains Interaction Code or Comment or Created Date)
+  if (ticket?.['Interaction Code'] !== undefined || ticket?.['Comment'] !== undefined) {
+    const code = (ticket['Interaction Code'] || '').toString().trim();
+    const created = (ticket['Created Date'] || '').toString().trim();
+    const commentSnippet = (ticket['Comment'] || '').toString().trim().substring(0, 30);
+    return `im:${serviceOrderNo}:${code}:${created}:${commentSnippet}`.toLowerCase();
+  }
+
+  const customerName = (ticket?.['Customer Name'] || ticket?.['CX Name'] || '').toString().trim();
+
+  if (serviceOrderNo) {
+    return `so:${serviceOrderNo.toLowerCase()}`;
+  }
+
+  if (customerName) {
+    return `name:${customerName.toLowerCase()}`;
+  }
+
+  return null;
+}
+
 // DOM Elements
 const btnScrape = document.getElementById('btnScrape');
+const selScrapeTarget = document.getElementById('selScrapeTarget');
+const selExcelTemplate = document.getElementById('selExcelTemplate');
 const btnViewModeScrape = document.getElementById('btnViewModeScrape');
 const btnAppendScrape = document.getElementById('btnAppendScrape');
 const btnExport = document.getElementById('btnExport');
@@ -528,9 +721,58 @@ function updateGhostUI(enabled) {
   if (chkGhostMode) chkGhostMode.checked = enabled;
   if (chkGhostStatus) {
     chkGhostStatus.textContent = enabled
-      ? 'On — ALL floating buttons & functions disabled'
-      : 'Off — floating buttons active';
-    chkGhostStatus.classList.toggle('active', enabled);
+      ? 'ON — ALL floating features, popups & toolbar icon hidden'
+      : 'Off — floating buttons & icon active';
+    chkGhostStatus.className = enabled
+      ? 'font-bold text-[10px] text-purple-700 block'
+      : 'font-normal text-[10px] text-slate-500 block';
+  }
+
+  const ghostModeCard = document.getElementById('ghostModeCard');
+  if (ghostModeCard) {
+    if (enabled) {
+      ghostModeCard.className = 'flex items-center justify-between py-2 px-3 bg-purple-50/70 rounded-lg border border-purple-200 hover:bg-purple-50 transition-colors';
+    } else {
+      ghostModeCard.className = 'flex items-center justify-between py-2 px-3 bg-slate-50 rounded-lg border border-slate-200 hover:bg-slate-100/80 transition-colors';
+    }
+  }
+
+  // Synchronize header Ghost Mode toggle button
+  const btnGhostToggleHeader = document.getElementById('btnGhostToggleHeader');
+  const btnGhostHeaderIcon = document.getElementById('btnGhostHeaderIcon');
+  const btnGhostHeaderLabel = document.getElementById('btnGhostHeaderLabel');
+
+  if (btnGhostToggleHeader) {
+    btnGhostToggleHeader.setAttribute('aria-checked', enabled ? 'true' : 'false');
+    if (enabled) {
+      // Checked state: Active theme with 👻
+      btnGhostToggleHeader.className = 'flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-purple-300 bg-purple-50 text-purple-700 hover:bg-purple-100 transition-all duration-200 cursor-pointer select-none text-xs font-bold shadow-xs ring-2 ring-purple-400/25';
+      btnGhostToggleHeader.title = 'Ghost Mode: ON (Floating features & toolbar icon hidden) — Click to turn OFF';
+      if (btnGhostHeaderIcon) btnGhostHeaderIcon.textContent = '👻';
+      if (btnGhostHeaderLabel) btnGhostHeaderLabel.textContent = 'Ghost On';
+    } else {
+      // Unchecked state: Disabled theme with 👻
+      btnGhostToggleHeader.className = 'flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-slate-200 bg-slate-100/80 text-slate-500 hover:bg-slate-200/80 transition-all duration-200 cursor-pointer select-none text-xs font-semibold opacity-75 hover:opacity-100';
+      btnGhostToggleHeader.title = 'Ghost Mode: Off (Floating buttons active) — Click to turn ON';
+      if (btnGhostHeaderIcon) btnGhostHeaderIcon.textContent = '👻';
+      if (btnGhostHeaderLabel) btnGhostHeaderLabel.textContent = 'Ghost Off';
+    }
+  }
+
+  // Immediately update extension icon in Chrome toolbar
+  if (chrome.action && typeof chrome.action.setIcon === 'function') {
+    const iconPaths = enabled ? {
+      16: 'icons/transparent16.png',
+      32: 'icons/transparent32.png',
+      48: 'icons/transparent48.png',
+      128: 'icons/transparent128.png'
+    } : {
+      16: 'icons/icon16.png',
+      32: 'icons/icon32.png',
+      48: 'icons/icon48.png',
+      128: 'icons/icon128.png'
+    };
+    chrome.action.setIcon({ path: iconPaths }).catch(() => {});
   }
 }
 
@@ -595,6 +837,58 @@ async function loadProfileSettings() {
     updateHideHealthUI(hideHealthEnabled);
     updateHide111UI(hide111Enabled);
   });
+
+  if (selScrapeTarget) {
+    chrome.storage.local.get(['gspn_scrapeTarget'], (data) => {
+      if (data.gspn_scrapeTarget) {
+        selScrapeTarget.value = data.gspn_scrapeTarget;
+      }
+    });
+  }
+
+  if (selExcelTemplate) {
+    chrome.storage.local.get(['gspn_excelTemplate'], (data) => {
+      if (data.gspn_excelTemplate) {
+        selExcelTemplate.value = data.gspn_excelTemplate;
+      }
+      // Default to GGN_OPEN_PENDING if nothing saved
+      if (!selExcelTemplate.value) {
+        selExcelTemplate.value = 'GGN_OPEN_PENDING';
+      }
+    });
+  }
+}
+
+if (selScrapeTarget) {
+  selScrapeTarget.addEventListener('change', () => {
+    chrome.storage.local.set({ gspn_scrapeTarget: selScrapeTarget.value });
+    if (selScrapeTarget.value === 'management_lite') {
+      if (selExcelTemplate) {
+        selExcelTemplate.value = 'GGN_TRIM_DATA_ML';
+        chrome.storage.local.set({ gspn_excelTemplate: 'GGN_TRIM_DATA_ML' });
+        if (scrapedData && scrapedData.length > 0) {
+          buildPreview(scrapedData, scrapedColumns);
+        }
+      }
+    } else if (selScrapeTarget.value === 'print_command') {
+      if (selExcelTemplate && selExcelTemplate.value === 'GGN_TRIM_DATA_ML') {
+        selExcelTemplate.value = 'GGN_OPEN_PENDING';
+        chrome.storage.local.set({ gspn_excelTemplate: 'GGN_OPEN_PENDING' });
+        if (scrapedData && scrapedData.length > 0) {
+          buildPreview(scrapedData, scrapedColumns);
+        }
+      }
+    }
+  });
+}
+
+if (selExcelTemplate) {
+  selExcelTemplate.addEventListener('change', () => {
+    chrome.storage.local.set({ gspn_excelTemplate: selExcelTemplate.value });
+    if (scrapedData && scrapedData.length > 0) {
+      buildPreview(scrapedData, scrapedColumns);
+    }
+  });
 }
 
 // Load profile settings on popup open
@@ -651,6 +945,18 @@ if (chkGhostMode) {
     const enabled = chkGhostMode.checked;
     chrome.storage.local.set({ ghostModeEnabled: enabled });
     updateGhostUI(enabled);
+  });
+}
+
+// Header Ghost Mode Toggle Button (synced with chkGhostMode)
+const btnGhostToggleHeader = document.getElementById('btnGhostToggleHeader');
+if (btnGhostToggleHeader) {
+  btnGhostToggleHeader.addEventListener('click', () => {
+    chrome.storage.local.get(['ghostModeEnabled'], (data) => {
+      const next = !data.ghostModeEnabled;
+      chrome.storage.local.set({ ghostModeEnabled: next });
+      updateGhostUI(next);
+    });
   });
 }
 
@@ -1092,10 +1398,20 @@ async function restoreSession() {
       scrapedData = stored.gspn_scrapedData;
       scrapedColumns = stored.gspn_scrapedColumns;
       cleanColumnsAndData(scrapedData, scrapedColumns);
-      // Ensure Product column/value exists for restored data
-      ensureProductField(scrapedData, scrapedColumns);
-      // Ensure Short ASC Assigned Date and Aging are present
-      ensureAscAssignedShortAndAging(scrapedData, scrapedColumns);
+
+      const isML = scrapedColumns.includes('Service Order No.') ||
+        scrapedColumns.includes('Risk Sensing') ||
+        (selScrapeTarget && selScrapeTarget.value === 'management_lite') ||
+        (selExcelTemplate && selExcelTemplate.value === 'GGN_TRIM_DATA_ML');
+
+      if (isML) {
+        ensureManagementLiteFields(scrapedData, scrapedColumns);
+      } else {
+        // Ensure Product column/value exists for restored data
+        ensureProductField(scrapedData, scrapedColumns);
+        // Ensure Short ASC Assigned Date and Aging are present
+        ensureAscAssignedShortAndAging(scrapedData, scrapedColumns);
+      }
       statusMerged = stored.gspn_statusMerged || false;
 
       // Restore UI state
@@ -1103,7 +1419,12 @@ async function restoreSession() {
       fieldCount.textContent = scrapedColumns.length;
       statsSection.classList.remove('hidden');
       updateActionButtonsState();
-      statusSection.classList.remove('hidden');
+
+      if (isML) {
+        if (statusSection) statusSection.classList.add('hidden');
+      } else {
+        if (statusSection) statusSection.classList.remove('hidden');
+      }
 
       // Build preview
       buildPreview(scrapedData, scrapedColumns);
@@ -1117,6 +1438,8 @@ async function restoreSession() {
         mergeResult.classList.add('merge-success');
         mergeResultIcon.textContent = '✓';
         mergeResultText.textContent = 'Status data merged — switch tabs freely';
+      } else if (isML) {
+        setStatus('success', `${scrapedData.length} Management Lite ticket(s) loaded — ready to export`);
       } else {
         setStatus('success', `${scrapedData.length} ticket(s) loaded — navigate to status page to add status`);
       }
@@ -1150,26 +1473,48 @@ restoreSession();
 function updateActionButtonsState() {
   const hasData = !!scrapedData && scrapedData.length > 0;
   if (btnExport) btnExport.disabled = !hasData;
-  if (btnCopy) btnCopy.disabled = !hasData;
-  if (btnAppendScrape) btnAppendScrape.disabled = !hasData;
+  if (btnCopy)   btnCopy.disabled   = !hasData;
+
+  // Smart Scrape ↔ Add More toggle
+  if (btnScrape) {
+    const scrapeIcon  = document.getElementById('btnScrapeIcon');
+    const scrapeLabel = document.getElementById('btnScrapeLabel');
+    if (hasData) {
+      // Switch to "Add More" (orange)
+      btnScrape.className = 'flex flex-col items-center justify-center p-2 bg-secondary-container text-on-primary rounded-lg hover:opacity-90 transition-all duration-200 active:scale-95 h-20 col-span-1';
+      btnScrape.title = 'Add more tickets from the current GSPN page';
+      if (scrapeIcon)  scrapeIcon.textContent  = 'add_circle';
+      if (scrapeLabel) scrapeLabel.textContent = 'Add More';
+    } else {
+      // Switch back to "Scrape" (blue)
+      btnScrape.className = 'flex flex-col items-center justify-center p-2 bg-primary text-on-primary rounded-lg hover:opacity-90 transition-all duration-200 active:scale-95 h-20 col-span-1';
+      btnScrape.title = 'Scrape data from current GSPN page';
+      if (scrapeIcon)  scrapeIcon.textContent  = 'search';
+      if (scrapeLabel) scrapeLabel.textContent = 'Scrape';
+    }
+  }
 
   if (btnCopyExcel111) btnCopyExcel111.disabled = !hasData;
   if (btnExcelDownload111) btnExcelDownload111.disabled = !hasData;
 }
 
-function getTicketIdentity(ticket) {
-  const serviceOrderNo = (ticket?.['Service Order No'] || ticket?.['SO'] || '').toString().trim();
-  const customerName = (ticket?.['Customer Name'] || ticket?.['CX Name'] || '').toString().trim();
 
-  if (serviceOrderNo) {
-    return `so:${serviceOrderNo.toLowerCase()}`;
+
+function deduplicateRecords(records) {
+  if (!Array.isArray(records)) return [];
+  const deduplicated = [];
+  const seen = new Set();
+
+  for (const item of records) {
+    const identity = getTicketIdentity(item);
+    if (identity) {
+      if (seen.has(identity)) continue;
+      seen.add(identity);
+    }
+    deduplicated.push(item);
   }
 
-  if (customerName) {
-    return `name:${customerName.toLowerCase()}`;
-  }
-
-  return null;
+  return deduplicated;
 }
 
 function mergeScrapedData(existingData, incomingData) {
@@ -1220,15 +1565,130 @@ function hideError() {
   errorSection.classList.add('hidden');
 }
 
-// ---- Scrape Handler ----
+// ---- Smart Scrape / Add-More Handler ----
 btnScrape.addEventListener('click', async () => {
+  const hasData = !!scrapedData && scrapedData.length > 0;
+
+  // --- ADD MORE mode: append data from current page ---
+  if (hasData) {
+    hideError();
+    btnScrape.classList.add('loading');
+
+    const targetOption = selScrapeTarget ? selScrapeTarget.value : 'print_command';
+    const isInteractionTarget = targetOption === 'interaction_message';
+    const isManagementLiteTarget = targetOption === 'management_lite';
+    const actionName = isInteractionTarget ? 'scrapeInteractionMessages' : (isManagementLiteTarget ? 'scrapeManagementLite' : 'scrapeData');
+
+    setStatus('loading', 'Appending new data...');
+
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (!tab) throw new Error('No active tab found.');
+
+      const isAllowedTabUrl = tab.url && (
+        tab.url.includes('biz2.samsungcsportal.com') ||
+        tab.url.includes('so_view_information_by_mangement_lite') ||
+        tab.url.includes('call_info_viewing_mode') ||
+        tab.url.includes('Interaction Messages') ||
+        tab.url.includes('manegement_lite') ||
+        tab.url.includes('management_lite') ||
+        tab.url.includes('ServiceOrderListLite') ||
+        tab.url.startsWith('file://')
+      );
+      if (!isAllowedTabUrl) throw new Error('Please navigate to the GSPN portal first.');
+
+      try {
+        await chrome.scripting.executeScript({ target: { tabId: tab.id, allFrames: true }, files: ['content.js'] });
+      } catch (e) { /* already injected */ }
+
+      let response = null;
+      if (isManagementLiteTarget) {
+        try {
+          const execResults = await chrome.scripting.executeScript({
+            target: { tabId: tab.id, allFrames: true },
+            func: () => (typeof scrapeManagementLite === 'function' ? scrapeManagementLite() : null)
+          });
+          if (Array.isArray(execResults)) {
+            for (const item of execResults) {
+              if (item && item.result && Array.isArray(item.result.tickets) && item.result.tickets.length > 0) {
+                response = {
+                  success: true,
+                  data: item.result.tickets,
+                  columns: item.result.columns,
+                  count: item.result.tickets.length
+                };
+                break;
+              }
+            }
+          }
+        } catch (e) {
+          console.warn('executeScript across frames for Management Lite:', e);
+        }
+      }
+
+      if (!response) {
+        response = await chrome.tabs.sendMessage(tab.id, { action: actionName });
+      }
+
+      if (!response) throw new Error('No response from page. Please reload and try again.');
+      if (!response.success) throw new Error(response.error || 'Failed to scrape data.');
+      if (response.count === 0) throw new Error('No tickets found on this page.');
+
+      const existingData = Array.isArray(scrapedData) ? scrapedData : [];
+      const mergedData    = mergeScrapedData(existingData, response.data);
+      const mergedColumns = mergeScrapedColumns(scrapedColumns, response.columns);
+
+      scrapedData    = mergedData;
+      scrapedColumns = mergedColumns;
+
+      if (isManagementLiteTarget) {
+        ensureManagementLiteFields(scrapedData, scrapedColumns);
+      } else {
+        ensureProductField(scrapedData, scrapedColumns);
+        if (!isInteractionTarget) ensureAscAssignedShortAndAging(scrapedData, scrapedColumns);
+      }
+
+      await saveSession();
+
+      const addedCount = mergedData.length - existingData.length;
+      setStatus('success', `Added ${addedCount} new record(s). Total: ${mergedData.length}`);
+      ticketCount.textContent = mergedData.length;
+      fieldCount.textContent  = scrapedColumns.length;
+      statsSection.classList.remove('hidden');
+      updateActionButtonsState();
+      if (!isManagementLiteTarget) {
+        statusSection.classList.remove('hidden');
+        statusMergeHint.textContent = 'Added more records — export or merge status again';
+      }
+      buildPreview(scrapedData, scrapedColumns);
+      previewSection.classList.remove('hidden');
+
+    } catch (error) {
+      setStatus('error', 'Append failed');
+      showError(error.message || 'An unknown error occurred.');
+    } finally {
+      btnScrape.classList.remove('loading');
+    }
+    return; // done with Add More
+  }
+
+  // --- SCRAPE mode: fresh scrape ---
   hideError();
   statsSection.classList.add('hidden');
   previewSection.classList.add('hidden');
   statusSection.classList.add('hidden');
   mergeResult.classList.add('hidden');
   btnScrape.classList.add('loading');
-  setStatus('loading', 'Scraping data...');
+
+  const targetOption = selScrapeTarget ? selScrapeTarget.value : 'print_command';
+  const isInteractionTarget = targetOption === 'interaction_message';
+  const isManagementLiteTarget = targetOption === 'management_lite';
+  const actionName = isInteractionTarget ? 'scrapeInteractionMessages' : (isManagementLiteTarget ? 'scrapeManagementLite' : 'scrapeData');
+
+  let loadingMsg = 'Scraping data...';
+  if (isInteractionTarget) loadingMsg = 'Scraping Interaction Messages...';
+  else if (isManagementLiteTarget) loadingMsg = 'Scraping Manegment Lite...';
+  setStatus('loading', loadingMsg);
 
   try {
     // Get the active tab
@@ -1243,6 +1703,10 @@ btnScrape.addEventListener('click', async () => {
       tab.url.includes('biz2.samsungcsportal.com') ||
       tab.url.includes('so_view_information_by_mangement_lite') ||
       tab.url.includes('call_info_viewing_mode') ||
+      tab.url.includes('Interaction Messages') ||
+      tab.url.includes('manegement_lite') ||
+      tab.url.includes('management_lite') ||
+      tab.url.includes('ServiceOrderListLite') ||
       tab.url.startsWith('file://')
     );
     if (!isAllowedTabUrl) {
@@ -1259,8 +1723,34 @@ btnScrape.addEventListener('click', async () => {
       // Script may already be injected, continue
     }
 
-    // Send message to content script
-    const response = await chrome.tabs.sendMessage(tab.id, { action: 'scrapeData' });
+    let response = null;
+    if (isManagementLiteTarget) {
+      try {
+        const execResults = await chrome.scripting.executeScript({
+          target: { tabId: tab.id, allFrames: true },
+          func: () => (typeof scrapeManagementLite === 'function' ? scrapeManagementLite() : null)
+        });
+        if (Array.isArray(execResults)) {
+          for (const item of execResults) {
+            if (item && item.result && Array.isArray(item.result.tickets) && item.result.tickets.length > 0) {
+              response = {
+                success: true,
+                data: item.result.tickets,
+                columns: item.result.columns,
+                count: item.result.tickets.length
+              };
+              break;
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('executeScript across frames for Management Lite:', e);
+      }
+    }
+
+    if (!response) {
+      response = await chrome.tabs.sendMessage(tab.id, { action: actionName });
+    }
 
     if (!response) {
       throw new Error('No response from page. Please reload the GSPN page and try again.');
@@ -1271,31 +1761,49 @@ btnScrape.addEventListener('click', async () => {
     }
 
     if (response.count === 0) {
-      throw new Error('No service tickets found on this page. Make sure you are on the multi-print page.');
+      let emptyErrorMsg = 'No service tickets found on this page. Make sure you are on the multi-print page.';
+      if (isInteractionTarget) {
+        emptyErrorMsg = 'No Interaction Messages found on this page. Make sure you are on the Interaction Messages page.';
+      } else if (isManagementLiteTarget) {
+        emptyErrorMsg = 'No Management Lite records found on this page. Make sure you are on the Service Order Management Light page.';
+      }
+      throw new Error(emptyErrorMsg);
     }
 
-    // Store data
-    scrapedData = response.data;
+    // Store data (deduplicated)
+    scrapedData = deduplicateRecords(response.data);
     scrapedColumns = response.columns;
     statusMerged = false;
-    // Populate Product column/value based on Model Name
-    ensureProductField(scrapedData, scrapedColumns);
-    // Populate Short ASC Assigned Date and Aging
-    ensureAscAssignedShortAndAging(scrapedData, scrapedColumns);
+
+    if (isManagementLiteTarget) {
+      ensureManagementLiteFields(scrapedData, scrapedColumns);
+    } else {
+      // Populate Product column/value if missing or based on model
+      ensureProductField(scrapedData, scrapedColumns);
+      if (!isInteractionTarget) {
+        // Populate Short ASC Assigned Date and Aging for print command data
+        ensureAscAssignedShortAndAging(scrapedData, scrapedColumns);
+      }
+    }
 
     // Save to session storage (persists across tab switches!)
     await saveSession();
 
     // Update UI
-    setStatus('success', `Successfully scraped ${response.count} ticket(s)`);
-    ticketCount.textContent = response.count;
+    const count = scrapedData.length;
+    setStatus('success', `Successfully scraped ${count} record(s)`);
+    ticketCount.textContent = count;
     fieldCount.textContent = scrapedColumns.length;
     statsSection.classList.remove('hidden');
     updateActionButtonsState();
 
-    // Show the status merge section
-    statusSection.classList.remove('hidden');
-    statusMergeHint.textContent = 'Navigate to Service Order Management Light page, then click below';
+    if (isManagementLiteTarget) {
+      statusSection.classList.add('hidden');
+    } else {
+      // Show the status merge section
+      statusSection.classList.remove('hidden');
+      statusMergeHint.textContent = 'Navigate to Service Order Management Light page, then click below';
+    }
 
     // Build preview (show first 5 tickets, limited columns)
     buildPreview(scrapedData, scrapedColumns);
@@ -1403,6 +1911,12 @@ if (btnAppendScrape) {
   btnAppendScrape.addEventListener('click', async () => {
     hideError();
     btnAppendScrape.classList.add('loading');
+
+    const targetOption = selScrapeTarget ? selScrapeTarget.value : 'print_command';
+    const isInteractionTarget = targetOption === 'interaction_message';
+    const isManagementLiteTarget = targetOption === 'management_lite';
+    const actionName = isInteractionTarget ? 'scrapeInteractionMessages' : (isManagementLiteTarget ? 'scrapeManagementLite' : 'scrapeData');
+
     setStatus('loading', 'Appending new data...');
 
     try {
@@ -1416,6 +1930,10 @@ if (btnAppendScrape) {
         tab.url.includes('biz2.samsungcsportal.com') ||
         tab.url.includes('so_view_information_by_mangement_lite') ||
         tab.url.includes('call_info_viewing_mode') ||
+        tab.url.includes('Interaction Messages') ||
+        tab.url.includes('manegement_lite') ||
+        tab.url.includes('management_lite') ||
+        tab.url.includes('ServiceOrderListLite') ||
         tab.url.startsWith('file://')
       );
       if (!isAllowedTabUrl) {
@@ -1431,7 +1949,34 @@ if (btnAppendScrape) {
         // Script may already be injected, continue
       }
 
-      const response = await chrome.tabs.sendMessage(tab.id, { action: 'scrapeData' });
+      let response = null;
+      if (isManagementLiteTarget) {
+        try {
+          const execResults = await chrome.scripting.executeScript({
+            target: { tabId: tab.id, allFrames: true },
+            func: () => (typeof scrapeManagementLite === 'function' ? scrapeManagementLite() : null)
+          });
+          if (Array.isArray(execResults)) {
+            for (const item of execResults) {
+              if (item && item.result && Array.isArray(item.result.tickets) && item.result.tickets.length > 0) {
+                response = {
+                  success: true,
+                  data: item.result.tickets,
+                  columns: item.result.columns,
+                  count: item.result.tickets.length
+                };
+                break;
+              }
+            }
+          }
+        } catch (e) {
+          console.warn('executeScript across frames for Management Lite:', e);
+        }
+      }
+
+      if (!response) {
+        response = await chrome.tabs.sendMessage(tab.id, { action: actionName });
+      }
 
       if (!response) {
         throw new Error('No response from page. Please reload the GSPN page and try again.');
@@ -1442,7 +1987,13 @@ if (btnAppendScrape) {
       }
 
       if (response.count === 0) {
-        throw new Error('No service tickets found on this page. Make sure you are on the multi-print page.');
+        let emptyErrorMsg = 'No service tickets found on this page. Make sure you are on the multi-print page.';
+        if (isInteractionTarget) {
+          emptyErrorMsg = 'No Interaction Messages found on this page. Make sure you are on the Interaction Messages page.';
+        } else if (isManagementLiteTarget) {
+          emptyErrorMsg = 'No Management Lite records found on this page. Make sure you are on the Service Order Management Light page.';
+        }
+        throw new Error(emptyErrorMsg);
       }
 
       const existingData = Array.isArray(scrapedData) ? scrapedData : [];
@@ -1452,21 +2003,32 @@ if (btnAppendScrape) {
       scrapedData = mergedData;
       scrapedColumns = mergedColumns;
       statusMerged = statusMerged;
-      // Ensure Product column/value after merging
-      ensureProductField(scrapedData, scrapedColumns);
-      // Ensure Short ASC Assigned Date and Aging after merging
-      ensureAscAssignedShortAndAging(scrapedData, scrapedColumns);
+
+      if (isManagementLiteTarget) {
+        ensureManagementLiteFields(scrapedData, scrapedColumns);
+      } else {
+        // Ensure Product column/value after merging
+        ensureProductField(scrapedData, scrapedColumns);
+        if (!isInteractionTarget) {
+          // Ensure Short ASC Assigned Date and Aging after merging
+          ensureAscAssignedShortAndAging(scrapedData, scrapedColumns);
+        }
+      }
 
       await saveSession();
 
       const addedCount = mergedData.length - existingData.length;
-      setStatus('success', `Added ${addedCount} new ticket(s). Total ${mergedData.length} ticket(s)`);
+      setStatus('success', `Added ${addedCount} new record(s). Total ${mergedData.length} record(s)`);
       ticketCount.textContent = mergedData.length;
       fieldCount.textContent = scrapedColumns.length;
       statsSection.classList.remove('hidden');
       updateActionButtonsState();
-      statusSection.classList.remove('hidden');
-      statusMergeHint.textContent = 'Added more records — export or merge status again';
+      if (!isManagementLiteTarget) {
+        statusSection.classList.remove('hidden');
+        statusMergeHint.textContent = 'Added more records — export or merge status again';
+      } else {
+        if (statusSection) statusSection.classList.add('hidden');
+      }
       buildPreview(scrapedData, scrapedColumns);
       previewSection.classList.remove('hidden');
     } catch (error) {
@@ -1683,21 +2245,40 @@ function showMergeError(msg) {
 // ---- Preview Table ----
 function buildPreview(data, columns) {
   // Show max 5 rows, and limited columns for preview
-  // Show different preview columns based on whether status has been merged
+  // Show different preview columns based on whether status has been merged or if it is interaction messages or Management Lite
+  const template = getSelectedTemplate();
+  const isManagementLite = template === 'GGN_TRIM_DATA_ML' ||
+    (typeof selScrapeTarget !== 'undefined' && selScrapeTarget?.value === 'management_lite') ||
+    columns.includes('Service Order No.') ||
+    columns.includes('Risk Sensing');
+
   const hasSO = columns.includes('SO');
   const soCol = hasSO ? 'SO' : 'Service Order No';
   const cxCol = columns.includes('CX Name') ? 'CX Name' : 'Customer Name';
 
   const baseCols = [soCol, cxCol, 'Model Name', 'Telephone (Mobile)', 'Engineer'];
   const statusPreviewCols = [soCol, cxCol, 'Status (GSPN)', 'Reason (GSPN)', 'City'];
-  const previewCols = statusMerged ? statusPreviewCols : baseCols;
+  const interactionCols = ['Service Order No', 'Product', 'Interaction Code', 'Status', 'Comment'];
+  const mlPreviewCols = ['ASC Job No', 'Model', 'Serial', 'Customer Name', 'City', 'Status', 'Age', 'TAT', 'Product'];
+
+  const isInteractionMessage = columns.includes('Interaction Code');
+  let previewCols;
+  if (isInteractionMessage) {
+    previewCols = interactionCols;
+  } else if (isManagementLite) {
+    previewCols = mlPreviewCols;
+  } else if (statusMerged) {
+    previewCols = statusPreviewCols;
+  } else {
+    previewCols = baseCols;
+  }
   const maxRows = 5;
 
   // Head
   let headHTML = '<tr>';
   headHTML += '<th>#</th>';
   for (const col of previewCols) {
-    headHTML += `<th>${col}</th>`;
+    headHTML += `<th>${escapeHtml(col)}</th>`;
   }
   headHTML += '</tr>';
   previewHead.innerHTML = headHTML;
@@ -1712,9 +2293,19 @@ function buildPreview(data, columns) {
       let val = data[i][col];
       if (val === undefined || val === null || val === '') {
         if (col === 'Service Order No') {
-          val = data[i]['SO'];
+          val = data[i]['SO'] || data[i]['Service Order No.'];
         } else if (col === 'Customer Name') {
           val = data[i]['CX Name'];
+        } else if (col === 'ASC Job No') {
+          val = data[i]['ASC Job No'] || data[i]['Service Order No.'] || data[i]['SO'];
+        } else if (col === 'Model') {
+          val = data[i]['Model'] || data[i]['Model Name'];
+        } else if (col === 'Serial') {
+          val = data[i]['Serial'] || data[i]['SR.'];
+        } else if (col === 'Status') {
+          val = data[i]['Status'] || data[i]['Status (GSPN)'];
+        } else if (col === 'Reason') {
+          val = data[i]['Reason'] || data[i]['Reason (GSPN)'];
         }
       }
       const valStr = (val !== undefined && val !== null && val !== '') ? String(val) : '';
@@ -1972,8 +2563,9 @@ if (btnCopyExcel111) {
       btnCopyExcel111.disabled = true;
       statusText111.textContent = 'Copying to clipboard...';
 
-      const excelContent = generateExcelHTML(scrapedData, scrapedColumns);
-      await copyToClipboard(excelContent, excelContent);
+      const excelContent = generateExcelHTMLWithTemplate(scrapedData, scrapedColumns);
+      const tsvContent = generateTSVWithTemplate(scrapedData, scrapedColumns);
+      await copyToClipboard(tsvContent, excelContent);
 
       statusText111.textContent = `Copied ${scrapedData.length} tickets to clipboard`;
 
@@ -1999,7 +2591,7 @@ if (btnExcelDownload111) {
       statusText111.textContent = 'Generating Excel file...';
 
       const filename = `GSPN_1-1-1_${getTimestamp()}.xls`;
-      const excelContent = generateExcelHTML(scrapedData, scrapedColumns);
+      const excelContent = generateExcelHTMLWithTemplate(scrapedData, scrapedColumns);
 
       const blob = new Blob([excelContent], {
         type: 'application/vnd.ms-excel;charset=utf-8'
@@ -2032,7 +2624,7 @@ function autoExportToExcel() {
   if (!scrapedData || scrapedData.length === 0) return;
   try {
     const filename = `GSPN_1-1-1_${getTimestamp()}.xls`;
-    const excelContent = generateExcelHTML(scrapedData, scrapedColumns);
+    const excelContent = generateExcelHTMLWithTemplate(scrapedData, scrapedColumns);
     const blob = new Blob([excelContent], {
       type: 'application/vnd.ms-excel;charset=utf-8'
     });
@@ -2061,8 +2653,10 @@ btnExport.addEventListener('click', () => {
   try {
     setStatus('loading', 'Generating Excel file...');
 
-    const filename = `GSPN_Data_${getTimestamp()}.xls`;
-    const excelContent = generateExcelHTML(scrapedData, scrapedColumns);
+    const template = getSelectedTemplate();
+    const prefix = template === 'GGN_TRIM_DATA_ML' ? 'GGN_TRIM_DATA_ML' : (template === 'GGN_OPEN_PENDING' ? 'GGN_OPEN_PENDING' : 'GSPN_Data');
+    const filename = `${prefix}_${getTimestamp()}.xls`;
+    const excelContent = generateExcelHTMLWithTemplate(scrapedData, scrapedColumns);
 
     // Create a Blob and download
     const blob = new Blob([excelContent], {
@@ -2099,8 +2693,9 @@ if (btnCopy) {
       btnCopy.classList.add('loading');
       setStatus('loading', 'Copying to clipboard...');
 
-      const excelContent = generateExcelHTML(scrapedData, scrapedColumns);
-      await copyToClipboard(excelContent, excelContent);
+      const excelContent = generateExcelHTMLWithTemplate(scrapedData, scrapedColumns);
+      const tsvContent = generateTSVWithTemplate(scrapedData, scrapedColumns);
+      await copyToClipboard(tsvContent, excelContent);
 
       setStatus('success', `Copied ${scrapedData.length} tickets to clipboard`);
 
@@ -2117,6 +2712,486 @@ if (btnCopy) {
       btnCopy.classList.remove('loading');
     }
   });
+}
+
+/**
+ * GGN_TRIM_DATA_ML template column order (18 exact columns).
+ * [No, ASC Job No, Date, Model, Serial, Wty Status, Customer Name, City, App Date, App Time, Service Type, Status, Reason, Age, TAT, Product, Eng Name, TL Name]
+ */
+const GGN_TRIM_DATA_ML_COLUMNS = [
+  'No',
+  'ASC Job No',
+  'Date',
+  'Model',
+  'Serial',
+  'Wty Status',
+  'Customer Name',
+  'City',
+  'App Date',
+  'App Time',
+  'Service Type',
+  'Status',
+  'Reason',
+  'Age',
+  'TAT',
+  'Product',
+  'Eng Name',
+  'TL Name'
+];
+
+/**
+ * Generate Excel HTML for the GGN_TRIM_DATA_ML template.
+ * Column order follows GGN_TRIM_DATA_ML_COLUMNS (18 columns).
+ * Sheet tab is named "GGN_TRIM_DATA_ML".
+ */
+function generateExcelHTMLTrimDataML(data) {
+  const cols = GGN_TRIM_DATA_ML_COLUMNS;
+  const today = new Date();
+  const todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+  let html = `
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:x="urn:schemas-microsoft-com:office:excel"
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!--[if gte mso 9]>
+  <xml>
+    <x:ExcelWorkbook>
+      <x:ExcelWorksheets>
+        <x:ExcelWorksheet>
+          <x:Name>GGN_TRIM_DATA_ML</x:Name>
+          <x:WorksheetOptions>
+            <x:DisplayGridlines/>
+          </x:WorksheetOptions>
+        </x:ExcelWorksheet>
+      </x:ExcelWorksheets>
+    </x:ExcelWorkbook>
+  </xml>
+  <![endif]-->
+  <style>
+    table { border-collapse: collapse; }
+    th {
+      background-color: #334155;
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 10pt;
+      padding: 8px 12px;
+      border: 1px solid #475569;
+      text-align: center;
+      white-space: nowrap;
+    }
+    td {
+      font-size: 10pt;
+      padding: 6px 10px;
+      border: 1px solid #cbd5e1;
+      vertical-align: middle;
+    }
+    tr:nth-child(even) td {
+      background-color: #f8fafc;
+    }
+    .num { mso-number-format:\\@; }
+    .center { text-align: center; }
+    .tat-0to2  { background-color: #c6efce; color: #276221; font-weight: bold; text-align: center; }
+    .tat-3to7  { background-color: #ffeb9c; color: #9c6500; font-weight: bold; text-align: center; }
+    .tat-8to10 { background-color: #ffc7ce; color: #9c0006; font-weight: bold; text-align: center; }
+    .tat-11to14{ background-color: #ff0000; color: #ffffff; font-weight: bold; text-align: center; }
+    .tat-15to30{ background-color: #c00000; color: #ffffff; font-weight: bold; text-align: center; }
+    .tat-gt30  { background-color: #7b0000; color: #ffffff; font-weight: bold; text-align: center; }
+  </style>
+</head>
+<body>
+  <table>
+    <thead>
+      <tr>`;
+
+  for (const col of cols) {
+    html += `\n        <th>${escapeHtml(col)}</th>`;
+  }
+  html += `
+      </tr>
+    </thead>
+    <tbody>`;
+
+  for (let i = 0; i < data.length; i++) {
+    const row = data[i];
+    html += `\n      <tr>`;
+
+    // 1. No
+    const noVal = String(i + 1);
+    html += `\n        <td class="center">${escapeHtml(noVal)}</td>`;
+
+    // 2. ASC Job No
+    const ascJobVal = (row['ASC Job No'] || row['Service Order No.'] || row['Service Order No'] || row['SO'] || '').toString().trim();
+    html += `\n        <td class="num">${escapeHtml(ascJobVal)}</td>`;
+
+    // 3. Date
+    const dateVal = (row['Date'] || row['Created'] || row['Created Date'] || row['Assigned'] || formatDateDDMMYYYY(today)).toString().trim();
+    html += `\n        <td class="center">${escapeHtml(dateVal)}</td>`;
+
+    // 4. Model
+    const modelVal = (row['Model'] || row['Model Name'] || '').toString().trim();
+    html += `\n        <td class="num">${escapeHtml(modelVal)}</td>`;
+
+    // 5. Serial
+    const serialVal = (row['Serial'] || row['SR.'] || '').toString().trim();
+    html += `\n        <td class="num">${escapeHtml(serialVal)}</td>`;
+
+    // 6. Wty Status
+    const wtyVal = (row['Wty Status'] || '').toString().trim();
+    html += `\n        <td class="center">${escapeHtml(wtyVal)}</td>`;
+
+    // 7. Customer Name
+    const custVal = (row['Customer Name'] || row['CX Name'] || '').toString().trim();
+    html += `\n        <td>${escapeHtml(custVal)}</td>`;
+
+    // 8. City
+    const cityVal = (row['City'] || '').toString().trim();
+    html += `\n        <td>${escapeHtml(cityVal)}</td>`;
+
+    // 9. App Date
+    const appDateVal = (row['App Date'] || '').toString().trim();
+    html += `\n        <td class="center">${escapeHtml(appDateVal)}</td>`;
+
+    // 10. App Time
+    const appTimeVal = (row['App Time'] || '').toString().trim();
+    html += `\n        <td class="center">${escapeHtml(appTimeVal)}</td>`;
+
+    // 11. Service Type
+    const svcTypeVal = (row['Service Type'] || row['Service Type (Status)'] || '').toString().trim();
+    html += `\n        <td>${escapeHtml(svcTypeVal)}</td>`;
+
+    // 12. Status
+    const statusVal = (row['Status'] || row['Status (GSPN)'] || '').toString().trim();
+    html += `\n        <td>${escapeHtml(statusVal)}</td>`;
+
+    // 13. Reason
+    const reasonVal = (row['Reason'] || row['Reason (GSPN)'] || '').toString().trim();
+    html += `\n        <td>${escapeHtml(reasonVal)}</td>`;
+
+    // 14. Age
+    let ageVal = row['Age'] !== undefined && row['Age'] !== '' ? row['Age'] : (row['Aging'] !== undefined ? row['Aging'] : '');
+    if (ageVal === '' || ageVal === undefined || isNaN(ageVal)) {
+      const dateForAging = parseDateForAging(row['Assigned'] || row['Created'] || row['Date']);
+      if (dateForAging && !isNaN(dateForAging.getTime())) {
+        const pMid = new Date(dateForAging.getFullYear(), dateForAging.getMonth(), dateForAging.getDate());
+        ageVal = Math.max(0, Math.floor((todayMid - pMid) / (1000 * 60 * 60 * 24)));
+      } else {
+        ageVal = '';
+      }
+    }
+    html += `\n        <td class="center">${escapeHtml(String(ageVal))}</td>`;
+
+    // 15. TAT
+    const tatLabel = row['TAT'] || getTATLabel(ageVal);
+    let tatClass = '';
+    const n = parseFloat(ageVal);
+    if (!isNaN(n)) {
+      if (n <= 2)  tatClass = 'tat-0to2';
+      else if (n <= 7)  tatClass = 'tat-3to7';
+      else if (n <= 10) tatClass = 'tat-8to10';
+      else if (n <= 14) tatClass = 'tat-11to14';
+      else if (n <= 30) tatClass = 'tat-15to30';
+      else              tatClass = 'tat-gt30';
+    }
+    html += `\n        <td class="${tatClass}">${escapeHtml(tatLabel)}</td>`;
+
+    // 16. Product
+    const prodVal = row['Product'] || getSamsungCategory(modelVal);
+    html += `\n        <td class="center">${escapeHtml(prodVal)}</td>`;
+
+    // 17. Eng Name
+    const engVal = (row['Eng Name'] || row['Engineer'] || '').toString().trim();
+    html += `\n        <td>${escapeHtml(engVal)}</td>`;
+
+    // 18. TL Name
+    const tlVal = (row['TL Name'] || '').toString().trim();
+    html += `\n        <td>${escapeHtml(tlVal)}</td>`;
+
+    html += `\n      </tr>`;
+  }
+
+  html += `
+    </tbody>
+  </table>
+</body>
+</html>`;
+
+  return html;
+}
+
+/**
+ * GGN_OPEN_PENDING template column order.
+ * Columns that don't exist in data are left blank.
+ */
+const GGN_OPEN_PENDING_COLUMNS = [
+  'Service Order No',
+  'Short ASC Assigned Date',
+  'Aging',
+  'TAT',
+  'Model Name',
+  'Product',
+  'WIFI',
+  'Engineer',
+  'TL Name',
+  'Telephone (Mobile)',
+  'Remarks',
+  'Sub Remarks',
+  'Address',
+  'SR.',
+  'Wty Status',
+  'City',
+  'App Date',
+  'App Time',
+  'Service Type (Status)',
+  'Status (GSPN)',
+  'Reason (GSPN)',
+  'Pending At',
+  '1st Service Comment'
+];
+
+/**
+ * Returns the TAT label string for a given aging number.
+ * Mirrors the Excel IFS formula:
+ *   =IFS(G<=2,"0–2 Days",G<=7,"3–7 Days",G<=10,"8–10 Days",
+ *         G<=14,"11–14 Days",G<=30,"15–30 Days",G>30,">30 Days")
+ */
+function getTATLabel(aging) {
+  const n = parseFloat(aging);
+  if (isNaN(n) || aging === '' || aging === undefined || aging === null) return '';
+  if (n <= 2)  return '0\u20132 Days';   // 0–2
+  if (n <= 7)  return '3\u20137 Days';   // 3–7
+  if (n <= 10) return '8\u201310 Days';  // 8–10
+  if (n <= 14) return '11\u201314 Days'; // 11–14
+  if (n <= 30) return '15\u201330 Days'; // 15–30
+  return '>30 Days';
+}
+
+/**
+ * Gets the currently selected Excel template ID.
+ */
+function getSelectedTemplate() {
+  return (selExcelTemplate && selExcelTemplate.value) ? selExcelTemplate.value : 'GGN_OPEN_PENDING';
+}
+
+/**
+ * Wrapper: generate Excel HTML using the currently-selected template.
+ * For GGN_TRIM_DATA_ML: uses exact 18 columns + computed TAT + sheet GGN_TRIM_DATA_ML.
+ * For GGN_OPEN_PENDING: uses fixed column order + computed TAT column.
+ * For RAW_DATA: uses the original generateExcelHTML().
+ */
+function generateExcelHTMLWithTemplate(data, columns) {
+  const template = getSelectedTemplate();
+  if (template === 'GGN_TRIM_DATA_ML') {
+    return generateExcelHTMLTrimDataML(data);
+  }
+  if (template === 'GGN_OPEN_PENDING') {
+    return generateExcelHTMLGGN(data);
+  }
+  return generateExcelHTML(data, columns);
+}
+
+/**
+ * Generate tab-separated values (TSV) matching the active Excel template.
+ * Enables clean plain-text paste into text editors or spreadsheets without raw HTML tags.
+ */
+function generateTSVWithTemplate(data, columns) {
+  if (!Array.isArray(data) || data.length === 0) return '';
+  const template = getSelectedTemplate();
+  const today = new Date();
+  const todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+  if (template === 'GGN_TRIM_DATA_ML') {
+    const cols = GGN_TRIM_DATA_ML_COLUMNS;
+    const lines = [cols.join('\t')];
+    for (let i = 0; i < data.length; i++) {
+      const row = data[i];
+      const modelVal = (row['Model'] || row['Model Name'] || '').toString().trim();
+      let ageVal = row['Age'] !== undefined && row['Age'] !== '' ? row['Age'] : (row['Aging'] !== undefined ? row['Aging'] : '');
+      if (ageVal === '' || ageVal === undefined || isNaN(ageVal)) {
+        const dateForAging = parseDateForAging(row['Assigned'] || row['Created'] || row['Date']);
+        if (dateForAging && !isNaN(dateForAging.getTime())) {
+          const pMid = new Date(dateForAging.getFullYear(), dateForAging.getMonth(), dateForAging.getDate());
+          ageVal = Math.max(0, Math.floor((todayMid - pMid) / (1000 * 60 * 60 * 24)));
+        } else {
+          ageVal = '';
+        }
+      }
+      const tatLabel = row['TAT'] || getTATLabel(ageVal);
+      const prodVal = row['Product'] || getSamsungCategory(modelVal);
+
+      const vals = [
+        String(i + 1),
+        (row['ASC Job No'] || row['Service Order No.'] || row['Service Order No'] || row['SO'] || '').toString().trim(),
+        (row['Date'] || row['Created'] || row['Created Date'] || row['Assigned'] || formatDateDDMMYYYY(today)).toString().trim(),
+        modelVal,
+        (row['Serial'] || row['SR.'] || '').toString().trim(),
+        (row['Wty Status'] || '').toString().trim(),
+        (row['Customer Name'] || row['CX Name'] || '').toString().trim(),
+        (row['City'] || '').toString().trim(),
+        (row['App Date'] || '').toString().trim(),
+        (row['App Time'] || '').toString().trim(),
+        (row['Service Type'] || row['Service Type (Status)'] || '').toString().trim(),
+        (row['Status'] || row['Status (GSPN)'] || '').toString().trim(),
+        (row['Reason'] || row['Reason (GSPN)'] || '').toString().trim(),
+        String(ageVal),
+        tatLabel,
+        prodVal,
+        (row['Eng Name'] || row['Engineer'] || '').toString().trim(),
+        (row['TL Name'] || '').toString().trim()
+      ];
+      lines.push(vals.map(v => (v !== undefined && v !== null ? String(v) : '').replace(/[\r\n\t]+/g, ' ').trim()).join('\t'));
+    }
+    return lines.join('\n');
+  }
+
+  if (template === 'GGN_OPEN_PENDING') {
+    const cols = ['No', ...GGN_OPEN_PENDING_COLUMNS];
+    const lines = [cols.join('\t')];
+    for (let i = 0; i < data.length; i++) {
+      const row = data[i];
+      const vals = [String(i + 1)];
+      for (const col of GGN_OPEN_PENDING_COLUMNS) {
+        if (col === 'TAT') {
+          vals.push(getTATLabel(row['Aging']));
+        } else {
+          const val = (row[col] !== undefined && row[col] !== null) ? String(row[col]) : '';
+          vals.push(val.replace(/[\r\n\t]+/g, ' ').trim());
+        }
+      }
+      lines.push(vals.join('\t'));
+    }
+    return lines.join('\n');
+  }
+
+  // RAW_DATA default
+  const cols = Array.isArray(columns) && columns.length > 0 ? columns : Object.keys(data[0] || {});
+  const lines = [cols.join('\t')];
+  for (let i = 0; i < data.length; i++) {
+    const row = data[i];
+    const vals = cols.map(c => {
+      const val = (row[c] !== undefined && row[c] !== null) ? String(row[c]) : '';
+      return val.replace(/[\r\n\t]+/g, ' ').trim();
+    });
+    lines.push(vals.join('\t'));
+  }
+  return lines.join('\n');
+}
+
+/**
+ * Generate Excel HTML for the GGN_OPEN_PENDING template.
+ * Column order follows GGN_OPEN_PENDING_COLUMNS.
+ * TAT column is computed via getTATLabel(aging).
+ * Sheet tab is named "GGN_OPEN_PENDING".
+ */
+function generateExcelHTMLGGN(data) {
+  const cols = GGN_OPEN_PENDING_COLUMNS;
+  let html = `
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:x="urn:schemas-microsoft-com:office:excel"
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!--[if gte mso 9]>
+  <xml>
+    <x:ExcelWorkbook>
+      <x:ExcelWorksheets>
+        <x:ExcelWorksheet>
+          <x:Name>GGN_OPEN_PENDING</x:Name>
+          <x:WorksheetOptions>
+            <x:DisplayGridlines/>
+          </x:WorksheetOptions>
+        </x:ExcelWorksheet>
+      </x:ExcelWorksheets>
+    </x:ExcelWorkbook>
+  </xml>
+  <![endif]-->
+  <style>
+    table { border-collapse: collapse; }
+    th {
+      background-color: #1a56db;
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 11pt;
+      padding: 8px 12px;
+      border: 1px solid #999999;
+      text-align: center;
+      white-space: nowrap;
+    }
+    td {
+      font-size: 10pt;
+      padding: 6px 10px;
+      border: 1px solid #cccccc;
+      vertical-align: top;
+    }
+    tr:nth-child(even) td {
+      background-color: #f0f4ff;
+    }
+    .num { mso-number-format:\\@; }
+    .tat-0to2  { background-color: #c6efce; color: #276221; font-weight: bold; }
+    .tat-3to7  { background-color: #ffeb9c; color: #9c6500; font-weight: bold; }
+    .tat-8to10 { background-color: #ffc7ce; color: #9c0006; font-weight: bold; }
+    .tat-11to14{ background-color: #ff0000; color: #ffffff; font-weight: bold; }
+    .tat-15to30{ background-color: #c00000; color: #ffffff; font-weight: bold; }
+    .tat-gt30  { background-color: #7b0000; color: #ffffff; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <table>
+    <thead>
+      <tr>
+        <th>S.No</th>`;
+
+  for (const col of cols) {
+    html += `\n        <th>${escapeHtml(col)}</th>`;
+  }
+  html += `
+      </tr>
+    </thead>
+    <tbody>`;
+
+  for (let i = 0; i < data.length; i++) {
+    const row = data[i];
+    html += `\n      <tr>`;
+    html += `\n        <td style="text-align:center;">${i + 1}</td>`;
+
+    for (const col of cols) {
+      if (col === 'TAT') {
+        // Compute TAT from Aging value
+        const aging = row['Aging'];
+        const tatLabel = getTATLabel(aging);
+        // Pick CSS class for colour-coding
+        let tatClass = '';
+        const n = parseFloat(aging);
+        if (!isNaN(n)) {
+          if (n <= 2)  tatClass = 'tat-0to2';
+          else if (n <= 7)  tatClass = 'tat-3to7';
+          else if (n <= 10) tatClass = 'tat-8to10';
+          else if (n <= 14) tatClass = 'tat-11to14';
+          else if (n <= 30) tatClass = 'tat-15to30';
+          else              tatClass = 'tat-gt30';
+        }
+        html += `\n        <td class="${tatClass}">${escapeHtml(tatLabel)}</td>`;
+      } else {
+        const value = (row[col] !== undefined && row[col] !== null && row[col] !== '') ? String(row[col]) : '';
+        const isNumericField = col.includes('Telephone') || col.includes('Customer No') || col.includes('Order No');
+        if (isNumericField && value !== '') {
+          html += `\n        <td class="num">${escapeHtml(value)}</td>`;
+        } else {
+          html += `\n        <td>${escapeHtml(value)}</td>`;
+        }
+      }
+    }
+    html += `\n      </tr>`;
+  }
+
+  html += `
+    </tbody>
+  </table>
+</body>
+</html>`;
+
+  return html;
 }
 
 /**

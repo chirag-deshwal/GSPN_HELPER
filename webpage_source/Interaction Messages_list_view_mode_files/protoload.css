@@ -1,0 +1,6 @@
+.waiting {
+	background-image:url(/img/etc/ajax-loader.gif);
+	background-repeat:no-repeat;
+	background-position:center center;
+	background-color:white;
+}

@@ -106,6 +106,8 @@ function scrapeStatusData(targetDoc = document) {
       'Assigned Time': cleanStatusText(cells1[5]?.textContent),
       'Model (Status)': cleanStatusText(cells1[6]?.textContent),
       'Serial (Status)': cleanStatusText(cells1[7]?.textContent),
+      // SR. = Serial Number from management lite page
+      'SR.': cleanStatusText(cells1[7]?.textContent),
       'Wty Status': cleanStatusText(cells1[8]?.textContent),
       'VOC': cleanStatusText(cells1[9]?.textContent),
       'REDO': cleanStatusText(cells1[10]?.textContent),
@@ -126,6 +128,7 @@ function scrapeStatusData(targetDoc = document) {
       // 7: B2B
       // 8: Risk Reason
 
+      record['Customer Name (Status)'] = cleanStatusText(cells2[0]?.textContent);
       record['City'] = cleanStatusText(cells2[1]?.textContent);
       record['App Date'] = cleanStatusText(cells2[2]?.textContent);
       record['App Time'] = cleanStatusText(cells2[3]?.textContent);

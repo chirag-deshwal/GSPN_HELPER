@@ -1,0 +1,139 @@
+/**
+ * 페이징 처리를 위한 HTML 작성 메소드
+ */
+function paging(nowPage, nowBlock, totalRecord, pagingCmd, pagingFlag, pagingElementId) {
+	var pagingStr = "";
+	var totalPage = 0; //전체 페이지 수
+	var totalBlock = 0; //전체 블럭 수
+
+    //한 블럭당 페이지의 수
+	//[이전10개]1,2,3,4,5,6,7,8,9,10[다음10개]
+	var pagePerBlock = 10; //블럭당 페이지 수 기본값은 10페이지
+	var beginPerPage = 0; //시작레코드번호 ★
+	var recNo = 0; //게시판 목록에 출력될 글 번호
+
+    /* 페이지의 시작레코드번호
+      1페이지  0 =       0 * 10
+      2페이지 10 =       1 * 10
+      3페이지 20 =       2 * 10    */
+	beginPerPage = nowPage * numPerPage; //현재페이지 * 페이지당 레코드수
+	//0          = 0       * 10;   첫번째 페이지
+	//10         = 1       * 10;   두번째 페이지 
+
+    /* 전체페이지수 산출 = 레코드 수/페이지당 레코드 수
+       ceil(451/10, 천정) = ceil(45.1) = 46*/
+	totalPage = Math.ceil(totalRecord / numPerPage);
+
+    // 전체 페이지 블럭(10개씩 묶어서)
+    // ceil(41/10) = ceil(4.1) = 5
+
+    // 1블럭: 1,2,3,4,5,6,7,8,9,10
+    // 2블럭: 11,12,13,14,15,16,17,18,19,20, 전체페이지수/블럭당 페이지수
+	totalBlock = Math.ceil(totalPage / pagePerBlock);
+
+	var startnum = beginPerPage + 1;
+	var endnum = beginPerPage + numPerPage;
+
+	if (pagingCmd == undefined || pagingCmd == null || pagingCmd == "") {
+		if (pagingFlag == 'DB') {
+			pagingCmd = 'displaySearch';
+		} else if (pagingFlag == 'SAP') {
+			pagingCmd = 'gridDraw';
+		}
+	} else {
+		if (pagingCmd == 'DB') {
+			pagingCmd = 'displaySearch';
+		} else if (pagingCmd == 'SAP') {
+			pagingCmd = 'gridDraw';
+		}
+	}
+
+	if (totalRecord > 0) {
+		
+		pagingStr += "<a href='javascript:"+pagingCmd +"(0,0);' class='btn_first_arrow' title='First Page'><span>&nbsp;</span></a>";
+		/**
+		 * 맨처음 출력
+		 */
+		if (nowBlock > 0) {
+			pagingStr += "<a href='javascript:"+pagingCmd +"("+((parseInt(nowBlock) - 1)*pagePerBlock)+","+(parseInt(nowBlock) - 1)+");' class='btn_prev_arrow'><span>&nbsp;</span></a>";
+		} else {
+			pagingStr += "<a href='javascript:"+pagingCmd +"(0,0);' class='btn_prev_arrow'><span>&nbsp;</span></a>";
+		}
+
+		/**
+		 * 이전 페이지 출력
+		 */
+		if (nowBlock > 0) {
+			if ((parseInt(nowPage) - 1) == ((nowBlock*pagePerBlock) -1)) {
+				pagingStr += "<a href='javascript:"+pagingCmd +"("+(parseInt(nowPage) - 1)+","+(parseInt(nowBlock) - 1)+");' class='prev'>" + prevPageChar + "</a>";
+			} else {
+				pagingStr += "<a href='javascript:"+pagingCmd +"("+(parseInt(nowPage) - 1)+","+nowBlock+");' class='prev'>" + prevPageChar + "</a>";
+			}
+		} else {
+			if (nowPage == 0) {
+				pagingStr += "<a href='javascript:"+pagingCmd +"(0,0);' class='prev'>" + prevPageChar + "</a>";
+			} else {
+				pagingStr += "<a href='javascript:"+pagingCmd +"("+(parseInt(nowPage) - 1)+","+nowBlock+");' class='prev'>" + prevPageChar + "</a>";
+			}
+		}
+
+		var i = 0;
+		for (i = 0; i < pagePerBlock; i++) {
+			/**
+			 * 현재 페이지 위치
+			 */
+			if (((nowBlock*pagePerBlock) + i) == nowPage) {
+				pagingStr += "<a href='javascript:"+pagingCmd +"("+((nowBlock*pagePerBlock) + i)+","+nowBlock+");' class='page_num cur'>"+((nowBlock * pagePerBlock) + i + 1)+"</a>";
+				/** 마지막 페이지 위치 */
+				if (parseInt((nowBlock * pagePerBlock) + i + 1) == totalPage) {
+					break;
+				}
+			} else {
+				/** 마지막 페이지 위치 */
+				if (parseInt((nowBlock * pagePerBlock) + i + 1) == totalPage) {
+					pagingStr += "<a href='javascript:"+pagingCmd +"("+((nowBlock*pagePerBlock) + i)+","+nowBlock+");' class='page_num last'>"+((nowBlock * pagePerBlock) + i + 1)+"</a>";
+					break;
+				} else {
+					pagingStr += "<a href='javascript:"+pagingCmd +"("+((nowBlock*pagePerBlock) + i)+","+nowBlock+");' class='page_num'>"+((nowBlock * pagePerBlock) + i + 1)+"</a>";
+				}
+			}
+		}
+
+		/**
+		 * 다음 페이지 출력
+		 */
+		if (i > 0) {
+			if (parseInt((nowBlock * pagePerBlock) + i + 1) == totalPage) {
+				if ((parseInt(nowPage) + 1) == totalPage) {
+					pagingStr += "<a href='javascript:"+pagingCmd +"("+nowPage+","+nowBlock+");' class='next'>" + nextPageChar + "</a>";
+				} else {
+					pagingStr += "<a href='javascript:"+pagingCmd +"("+(parseInt(nowPage) + 1)+","+nowBlock+");' class='next'>" + nextPageChar + "</a>";
+				}
+			} else {
+				if ((parseInt(nowPage) + 1) == ((parseInt(nowBlock) + 1)*pagePerBlock)) {
+					pagingStr += "<a href='javascript:"+pagingCmd +"("+(parseInt(nowPage) + 1)+","+(parseInt(nowBlock) + 1)+");' class='next'>" + nextPageChar + "</a>";
+				} else {
+					pagingStr += "<a href='javascript:"+pagingCmd +"("+(parseInt(nowPage) + 1)+","+nowBlock+");' class='next'>" + nextPageChar + "</a>";
+				}
+			}
+		} else {
+			pagingStr += "<a href='javascript:"+pagingCmd +"(0,0);' class='next'>" + nextPageChar + "</a>";
+		}
+
+		/**
+		 * 맨끝 출력
+		 */
+		if (totalBlock > (parseInt(nowBlock) + 1)) {
+			pagingStr += "<a href='javascript:"+pagingCmd +"("+((parseInt(nowBlock) + 1) * pagePerBlock)+","+(parseInt(nowBlock) + 1)+");' class='btn_next_arrow'><span>&nbsp;</span></a>";
+		} else {
+			pagingStr += "<a href='javascript:"+pagingCmd +"("+((nowBlock*pagePerBlock) + i)+","+nowBlock+");' class='btn_next_arrow'><span>&nbsp;</span></a>";
+		}
+		
+		pagingStr += "<a href='javascript:"+pagingCmd +"("+(totalPage-1)+","+(totalBlock-1)+");' class='btn_last_arrow' title='Last Page'><span></span></a>";
+
+		$(pagingElementId).show();
+		$(pagingElementId).innerHTML = pagingStr;
+	} else {
+		$(pagingElementId).hide();
+	}
+}

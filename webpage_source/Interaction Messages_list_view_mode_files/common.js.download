@@ -1,0 +1,1536 @@
+/**!
+ * G-SPN Project Common Library
+ *
+ * Date: Mon April 26 10:33:48 2010 +0900
+ */
+
+
+
+/**
+ * 그리드 객체 노드 삭제함수.
+ * 
+ * @param form
+ *            Form 객체 ID 값
+ */
+function clearGridJsonObject(form) {
+	var length = $(form).childNodes.length;
+	for ( var i = length - 1; i >= 0; i--) {
+		$(form).removeChild($(form).childNodes[i]);
+	}
+}
+
+/**
+ * 데이터가 없을 시 그리드에 표시할 함수.
+ * 
+ * @param form
+ *            Form 객체 ID 값
+ * @param colspan
+ *            Colspan 값
+ * @param displayMsg
+ *            화면에 표시할 데이터.
+ * @return
+ */
+function appendGridNoObjectDisplay(form, colspan, displayMsg, pagingElementId) {
+	/**
+	 * 변수 초기화
+	 */
+	initialDisplayRowVariable();
+
+	/**
+	 * 그리드 객체 변수 설정.
+	 */
+	var tbodyObj = $(form);
+
+	/**
+	 * 여러번 이 함수가 호출될경우 Data not found 행이 여러건 생기는거 방지
+	 */
+	clearGridJsonObject(tbodyObj);
+
+	var trTag = document.createElement("tr");
+
+	/** 데이터 없음 */
+	var tdTag = document.createElement("td");
+	tdTag.colSpan = colspan;
+	tdTag.align = "center";
+	tdTag.className = "td_al";
+	tdTag.appendChild(document.createTextNode(displayMsg));
+	trTag.appendChild(tdTag);
+	tbodyObj.appendChild(trTag);
+
+	/**
+	 * 페이징 엘리먼트 값이 오지 않을 경우.
+	 */
+	if (pagingElementId == undefined || pagingElementId == null
+			|| pagingElementId == "") {
+		/** 데이터 설정이 완료되면 프로그래스바를 보이지 않도록 한다. */
+		$('progressloading').stopWaiting();
+		/** 페이징 화면을 보이지 않도록 한다. */
+		if($('pagingProcess')){$('pagingProcess').hide()};
+	} else {
+		/** 데이터 설정이 완료되면 프로그래스바를 보이지 않도록 한다. */
+		$('progressloading').stopWaiting();
+		/** 페이징 화면을 보이지 않도록 한다. */
+		$(pagingElementId).hide();
+	}
+}
+
+/**
+ * 그리드 데이터 로딩완료 함수
+ * 
+ * @param searchPageNo
+ *            현재 페이지 번호
+ * @param searchBlckNo
+ *            현재 블럭 번호
+ * @param totRow
+ *            총 데이터 개수
+ * @param pagingCmd
+ *            페이징 명령어
+ * @param pagingType
+ *            'DB': DB 데이터 호출 페이지 함수, 'SAP' 데이터 호출 페이지 함수
+ * @param pagingElementId
+ *            페이징 화면이 보여지는 DOM Element ID
+ * @return
+ */
+function loadingComplete(searchPageNo, searchBlckNo, totRow, pagingCmd,
+		pagingType, pagingElementId) {
+	if (pagingElementId == undefined || pagingElementId == null
+			|| pagingElementId == "") {
+		pagingElementId = 'pagingProcess';
+	}
+
+	/** 페이지 처리 함수 호출 */
+	paging(searchPageNo, searchBlckNo, totRow, pagingCmd, pagingType,
+			pagingElementId);
+
+	/** 데이터 설정이 완료되면 프로그래스바를 보이지 않도록 한다. */
+	$('progressloading').stopWaiting();
+}
+
+/**
+ * Alternates the background color of rows of table or tbody.
+ * @param element
+ * 			(String) table or tbody element
+ * @param oddEven
+ * 			(String) odd or even
+ * @param color
+ * 			(String) color
+ */
+function alternateTableRowColors(element, oddEven, color) {
+	
+	$j(element + ' tr:' + oddEven + ' td').css('background-color', color);
+	
+}
+
+//오늘 날자 구하기
+function cfToday() {
+	date = new Date();
+	var year = date.getYear();
+	var month = date.getMonth()+1;
+ 	var day = date.getDate();
+
+	if (month < 10) month = "0" + month;
+	if (day < 10) day = "0" + day;
+
+	return year + "" + month + "" + day;
+}
+
+/**
+ * common function prefix : cf 전체선택/해제
+ * 
+ * @param src :
+ *            상단의 checkbox id
+ * @param dest :
+ *            목록에 있는 checkbox name
+ * @return src의 체크상태를 모든 dest객체에게 정의한다.
+ */
+function cfSelectDeselectAll(src, dest) {
+	var srcObj = $(src);
+	var destObj = cfArray(document.getElementsByName(dest));
+	var isChecked = srcObj.checked;
+
+	if (!destObj) {
+		return;
+	}
+	
+	for (i = 0, max = destObj.length; i < max; i++) {
+		var obj = destObj[i];
+		if(!obj.disabled){
+			obj.checked = isChecked;
+		}
+	}
+
+	
+	//if (destObj.length) {
+	//	for (i = 0, max = destObj.length; i < max; i++) {
+	//		destObj[i].checked = isChecked;
+	//	}
+	//} else {
+	//	destObj.checked = isChecked;
+	//}
+}
+
+/**
+ * common function prefix : cf 체크박스에서 선택된것들만 배열로 리턴
+ * 
+ * @param src :
+ *            목록에 있는 checkbox name
+ * @return src중에서 체크된것들을 배열로 리턴
+ */
+function cfCheckedArray(src) {
+	var cartPart = $A(document.getElementsByName(src));
+	var part = [];
+
+	for ( var i = 0, len = cartPart.length; i < len; i++) {
+		if (cartPart[i].checked) {
+			part.push(cartPart[i].value);
+		}
+	}
+	return part;
+}
+
+/**
+ * Ajax 비동기 호출 메소드
+ * 
+ * @param action :
+ *            URI
+ * @param form :
+ *            post할 값이 있는 HTML Form tag
+ * @param callback :
+ *            HTTP 200일경우 callback메소드 호출
+ * @return
+ */
+function AjaxRequest(action, form, callback) {
+	try {
+		var params = Form.serialize($(form));
+		new Ajax.Request(action, {
+			method : 'post',
+			parameters : params,
+			onComplete : callback
+		});
+	} catch (e) {
+	}
+}
+
+/**
+ * Ajax 동기 호출 메소드
+ * 
+ * @param action :
+ *            URI
+ * @param form :
+ *            post할 값이 있는 HTML Form tag
+ * @param callback :
+ *            HTTP 200일경우 callback메소드 호출
+ * @return
+ */
+function AjaxSyncRequest(action, form, callback) {
+	try {
+		var params = Form.serialize($(form));
+		new Ajax.Request(action, {
+			method : 'post',
+			parameters : params,
+			asynchronous : false,
+			onComplete : callback
+		});
+	} catch (e) {
+	}
+}
+
+/**
+ * Ajax 호출 메소드
+ * 
+ * @param parts :
+ *            cart에 담을 자재번호가 담긴 배열 예) ["BN07-001","BN07-002"]
+ * @return
+ */
+function cfAddCart(parts) {
+	try {
+		$('progressloading').startWaiting();
+		var params = "cmd=AddCartCmd";
+		parts.each(				
+				function(item){
+					params += "&part=" + item;
+				}
+		);
+
+		new Ajax.Request('/gspn/operate.do', {
+			method : 'post',
+			parameters : params,
+			onComplete : function(response){
+				var json = response.responseText.evalJSON();
+				if(json.success) {
+					alert(addToCartSuccessMsg);
+				}else{
+					alert(addToCartFailMsg);
+				}
+				$('progressloading').stopWaiting();
+			}
+		});
+	} catch (e) {
+	}
+}
+
+/**
+ * Ajax 호출 메소드 
+ * cfCreatePo("MR",[{"part":"BN07-0001", "qty":"1", "refNo":"4000123", "shipMethod":"A", "reqNo":"120001", "reqItemNo":"0001"},{}]);
+ * 
+ * @param referer : MR:Material Request에서 create po낼경우
+ * @param arrPart :
+ *            po로 넘길 파라미터들 표현하는 object의 배열c
+ * @return
+ */
+
+function cfCreatePo(referer, arrPart){
+	var url = "/order/po/POVerify.jsp?referer=" + referer;
+	arrPart.each(
+			function(obj){
+				url += "&poPart=" + cfV(obj.part);
+				url += "&poQty=" + cfV(obj.qty);
+				url += "&poRefNo=" + cfV(obj.refNo);
+				url += "&poShipMethod=" + cfV(obj.shipMethod);
+				url += "&poReqNo=" + cfV(obj.reqNo);
+				url += "&poReqItemNo=" + cfV(obj.reqItemNo);				
+			}
+	);
+	
+	document.location.href = url;	
+}
+
+function cfCreatePoToDisty(referer, arrPart){
+	var url = "/disty/purchase/purchaseOrderCreate.jsp?referer=" + referer;
+	arrPart.each(
+			function(obj){
+				url += "&poPart=" + cfV(obj.part);
+				url += "&poQty=" + cfV(obj.qty);
+				url += "&poRefNo=" + cfV(obj.refNo);
+				url += "&poShipMethod=" + cfV(obj.shipMethod);
+				url += "&poReqNo=" + cfV(obj.reqNo);
+				url += "&poReqItemNo=" + cfV(obj.reqItemNo);				
+			}
+	);
+	
+	document.location.href = url;	
+}
+
+function cfV(val){
+	if(val) return val;
+	else return "";
+}
+
+/**
+ * 자재검색 팝업 : 이관우 과장 추가(for Inventory)
+ * 
+ * @param part :
+ *            검색할 자재명의 ID <input type="text" id="part" value="BN07-000*"><SAPN
+ *            id="partCode"></SPAN>
+ * @param desc :
+ *            선택된 자재명이 박힐곳의 id 예) onclick="cfSearchPopPart('part','partCode')"
+ */
+
+function cfSearchPopParts(part, dest, idx) {
+	
+	if (!idx)
+		idx = 0;
+	
+	var src = $A(document.getElementsByName(part));
+	var url = '/invmgnt/mr/PartsSearchPop.jsp?returnId=' + dest + '&partNo='
+			+ src[idx].value + '&idx=' + idx;
+	url = url + "&t=" + (new Date()).getTime();
+	w = window.open(
+					url,
+					"part_popup",
+					'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=no,top=150,left=200,width=800,height=670');
+	w.focus();
+}
+
+
+function cfSearchPopPartsQty(part, dest, idx, asc_code,isChinaRegion) {
+	
+	if(isChinaRegion){
+		cfSearchPopPartsQtyCH(part, dest, idx, asc_code);
+	}else{
+		cfSearchPopPartsQty(part, dest, idx, asc_code);
+	}
+	
+}
+
+
+/*
+ *  grobal Version 
+ */
+function cfSearchPopPartsQty(part, dest, idx, asc_code) {
+	
+	var stockCnt = 0;
+	if (!idx)
+		idx = 0;
+	
+	var src = $A(document.getElementsByName(part));
+	var url = '/invmgnt/mr/PartsSearchPop.jsp?returnId=' + dest + '&partNo='
+			+ src[idx].value + '&idx=' + idx + '&asc_code=' + asc_code;
+	url = url + "&t=" + (new Date()).getTime();
+	w = window.open(
+					url,
+					"part_popup",
+					'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=no,top=150,left=200,width=800,height=670');
+	w.focus();
+}
+
+/*
+ *  china Version 
+ */
+function cfSearchPopPartsQtyCH(part, dest, idx, asc_code) {
+	
+	var stockCnt = 0;
+	if (!idx)
+		idx = 0;
+	
+	var src = $A(document.getElementsByName(part));
+	var url = '/invmgnt/mr/PartsSearchPopCH.jsp?returnId=' + dest + '&partNo='
+			+ src[idx].value + '&idx=' + idx + '&asc_code=' + asc_code;
+	url = url + "&t=" + (new Date()).getTime();
+	w = window.open(
+					url,
+					"part_popup",
+					'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=no,top=150,left=200,width=800,height=670');
+	w.focus();
+}
+
+function cfSearchPopPartsAndStock(part, dest, stock, idx, tr_type, engineer, asc_code) {
+	if (!idx)
+		idx = 0;
+	var src = $A(document.getElementsByName(part));
+	var url = '/invmgnt/mr/PartsSearchPop.jsp?stockId='+stock+'&returnId=' + dest + '&partNo='
+			+ src[idx].value + '&idx=' + idx + '&tr_type=' + tr_type + '&engineer=' + engineer + '&asc_code=' + asc_code;
+	url = url + "&t=" + (new Date()).getTime();
+	w = window.open(
+					url,
+					"part_popup",
+					'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=no,top=150,left=200,width=800,height=670');
+	w.focus();
+}
+
+function cfSearchPopPartsAndDesc(part, dest, desc, price, idx) {
+	if (!idx)
+		idx = 0;
+	
+	var src = $A(document.getElementsByName(part));
+	var url = '/invmgnt/mr/PartsSearchPop.jsp?priceId='+price+'&descId='+desc+'&returnId=' + dest + '&partNo='
+			+ src[idx].value + '&idx=' + idx;
+	url = url + "&t=" + (new Date()).getTime();
+	w = window.open(
+					url,
+					"part_popup",
+					'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=no,top=150,left=200,width=800,height=670');
+	w.focus();
+}
+
+function cfSearchPopPartsAndDescAscCode(part, dest, desc, price, idx, asc_code) {
+	if (!idx)
+		idx = 0;
+	
+	var src = $A(document.getElementsByName(part));
+	var url = '/invmgnt/mr/PartsSearchPop.jsp?priceId='+price+'&descId='+desc+'&returnId=' + dest + '&partNo='
+			+ src[idx].value + '&idx=' + idx + '&asc_code=' + asc_code;
+	url = url + "&t=" + (new Date()).getTime();
+	w = window.open(
+					url,
+					"part_popup",
+					'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=no,top=150,left=200,width=800,height=670');
+	w.focus();
+}
+
+/**
+ * 자재검색 팝업
+ * 
+ * @param part :
+ *            검색할 자재명의 ID <input type="text" id="part" value="BN07-000*"><SAPN
+ *            id="partCode"></SPAN>
+ * @param desc :
+ *            선택된 자재명이 박힐곳의 id 예) onclick="cfSearchPopPart('part','partCode')"
+ */
+function cfSearchPopPart(part, dest, idx) {
+	if (!idx)
+		idx = 0;
+	
+	var src = $A(document.getElementsByName(part));
+	var url = '/master/part/PartSearchPop.jsp?returnId=' + dest + '&partNo='
+			+ src[idx].value + '&idx=' + idx;
+	url = url + "&t=" + (new Date()).getTime();
+	w = window.open(
+					url,
+					"part_popup",
+					'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=no,top=150,left=200,width=800,height=670');
+	w.focus();
+}
+
+function cfSearchPopPart(part, dest, idx, gubun) {
+	if (!idx)
+		idx = 0;
+	
+	var src = $A(document.getElementsByName(part));
+	var url = '/master/part/PartSearchPop.jsp?returnId=' + dest + '&partNo='
+			+ src[idx].value + '&idx=' + idx + '&gubun=' + gubun;
+	url = url + "&t=" + (new Date()).getTime();
+	w = window.open(
+					url,
+					"part_popup",
+					'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=no,top=150,left=200,width=800,height=670');
+	w.focus();
+}
+
+function cfSearchPopPartForSOUpdate(part, dest, idx, gubun) {
+	if (!idx)
+		idx = 0;
+	
+	var src = $A(document.getElementsByName(part));
+	var url = '/svctracking/lite/ServiceOrderPartSearchPop.jsp?returnId=' + dest + '&partNo='
+			+ src[idx].value + '&idx=' + idx + '&gubun=' + gubun;
+	url = url + "&t=" + (new Date()).getTime();
+	w = window.open(
+					'',
+					"part_popup",
+					'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=no,top=150,left=200,width=800,height=670');
+	w.focus();
+	$('tempForm').action = url;
+	$('tempForm').target = 'part_popup';
+    $('tempForm').submit();
+}
+
+function cfSearchPopPartFromBOM(model, modelVer, objectId, part, dest, idx, gubun) {
+	if (!idx)
+		idx = 0;
+	
+	var src = $A(document.getElementsByName(part));
+	var url = '/master/part/PartListByModelVersion.jsp?returnId=' + dest + '&partNo='
+			+ src[idx].value + '&idx=' + idx + '&gubun=' + gubun + '&model=' + model + '&modelVer=' + modelVer + '&objectId=' +objectId;
+	url = url + "&t=" + (new Date()).getTime();
+	w = window.open(
+					url,
+					"part_popup",
+					'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=no,top=150,left=200,width=800,height=670');
+	w.focus();
+}
+
+function cfSearchPopPartFromBOM_AC(model, modelVer, objectId, part, dest, idx, gubun, ascCode) {
+	if (!idx)
+		idx = 0;
+	
+	var src = $A(document.getElementsByName(part));
+	var url = '/master/part/PartListByModelVersion.jsp?returnId=' + dest + '&partNo='
+			+ src[idx].value + '&idx=' + idx + '&gubun=' + gubun + '&model=' + model + '&modelVer=' + modelVer + '&objectId=' +objectId + '&ascCode=' + ascCode;
+	url = url + "&t=" + (new Date()).getTime();
+	w = window.open(
+					url,
+					"part_popup",
+					'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=no,top=150,left=200,width=800,height=670');
+	w.focus();
+}
+/**
+ * Search Model
+ * 
+ * @param model :
+ *            검색할 모델의 ID <input type="text" id="model" value="SGH-200"><SAPN
+ *            id="modelCode"></SPAN>
+ * @param desc :
+ *            선택된 모델이 박힐곳의 id 예) onclick="cfSearchPopModel('model','modelCode')"
+ */
+function cfSearchPopModel(model, dest) {
+	var url = "/master/part/ModelSearchPop.jsp";
+	url = url + "?model=" + $(model).value;
+	url = url + "&field1=" + dest;
+	url = url + "&t=" + (new Date()).getTime();
+	w = window
+			.open(
+					url,
+					"model_popup",
+					'toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,top=150,left=200,width=800,height=530');
+}
+/**
+ * Search Model
+ * 
+ * @param model :
+ *            검색할 모델의 ID <input type="text" id="model" value="SGH-200"><SAPN
+ *            id="modelCode"></SPAN>
+ * @param desc :
+ *            선택된 모델이 박힐곳의 id 예) onclick="cfSearchPopModel2('model','modelCode')"
+ */
+function cfSearchPopModel2(model, dest) {
+	var url = "/master/part/QuickPartsList.jsp";
+	url = url + "?model=" + model;
+	url = url + "&t=" + (new Date()).getTime();
+	w = window
+			.open(
+					url,
+					"model_popup2",
+					'toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,top=150,left=200,width=800,height=530');
+}
+
+function cfSearchPopMarketingModel(marketingName, dest, destModel) {
+	var url = "/master/part/MarketingModelSearchPop.jsp";
+	url = url + "?marketingName=" + $(marketingName).value;
+	url = url + "&field1=" + dest;
+	url = url + "&field2=" + destModel;
+	url = url + "&t=" + (new Date()).getTime();
+	w = window
+			.open(
+					url,
+					"model_popup",
+					'toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,top=150,left=200,width=800,height=530');
+}
+
+/**
+ * 현재 일자 가져오는 함수
+ * 
+ * @return
+ */
+function cfGetCurrDate() {
+	currdate = new Date();
+
+	var tmpyy  = currdate.getYear();
+	var ls_yy  = (tmpyy > 99)  ? tmpyy : 1900 + tmpyy;
+
+	var tmpmon = currdate.getMonth();
+	var ls_mon = (tmpmon < 9)  ? "0" + (tmpmon + 1) : tmpmon + 1 ;
+
+	var tmpday = currdate.getDate();
+	var ls_day = (tmpday < 10) ? "0" + tmpday : tmpday ;
+
+	return ls_yy.toString() + ls_mon.toString() + ls_day.toString() ;
+}
+
+/**
+ * return date from date string
+ * 
+ * @param date :
+ *            2009-01-01 or 20090101 or 01012009
+ * @param format :
+ *            yyyy-MM-dd or yyyyMMdd or ddMMyyyy
+ */
+function cfGetDate(strDate, format) {
+	var year = 0, month = 0, day = 0;
+	if (format == "yyyy.MM.dd" || format == "yyyy-MM-dd"
+			|| format == "yyyy/MM/dd") {
+		year = strDate.substr(0, 4);
+		month = strDate.substr(5, 2);
+		day = strDate.substr(8, 2);
+	} else if (format == "yyyyMMdd") {
+		year = strDate.substr(0, 4);
+		month = strDate.substr(4, 2);
+		day = strDate.substr(6, 2);
+	} else if (format == "dd.MM.yyyy" || format == "dd/MM/yyyy"
+			|| format == "dd-MM-yyyy") {
+		year = strDate.substr(6, 4);
+		month = strDate.substr(3, 2);
+		day = strDate.substr(0, 2);
+	} else if (format == "ddMMyyyy") {
+		year = strDate.substr(4, 4);
+		month = strDate.substr(2, 2);
+		day = strDate.substr(0, 2);
+	} else if (format == "MM.dd.yyyy" || format == "MM/dd/yyyy"
+		|| format == "MM-dd-yyyy") {
+		year = strDate.substr(6, 4);
+		month = strDate.substr(0, 2);		
+		day = strDate.substr(3, 2);
+	} else {
+		alert('define a date format in cfGetDate function javascript');
+	}
+	return new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day,
+			10));
+}
+
+/**
+ * return differreence between fromdate and todate
+ * 
+ * @param fromdate :
+ *            date type
+ * @param todate :
+ *            date type
+ */
+function cfGetDateDiff(fromDate, toDate) {
+	var oneDay = 1000 * 60 * 60 * 24;
+	var diff = toDate.getTime() - fromDate.getTime();
+
+	return Math.floor(diff / oneDay);
+}
+
+/**
+ * return
+ * 
+ * @param select :
+ *            select box
+ * @param option :
+ *            option that will be append
+ * @param idx :
+ *            option's index that will be append
+ */
+function cfAddOption(select, option, idx) {
+	if (!idx)
+		idx = select.options.length;
+	select.options[idx] = option;
+}
+
+/**
+ * return
+ * 
+ * @param obj :
+ *            <input type text object
+ */
+function cfIsNull(obj) {	
+	var ret = (obj.value.strip() == '');
+	if (ret) {
+		obj.select();
+	}
+	return ret;
+}
+
+/**
+ * return integer
+ * 
+ * @param num :
+ *            0.00
+ */
+function cfInt(num) {
+	var intVal = parseInt(num);
+	if (isNaN(intVal)) {
+		intVal = 0;
+	}
+	return intVal;
+}
+
+/**
+ * return array
+ * 
+ * @param obj :
+ *            document.frm.part : <form name="frm"><input name="part"><input
+ *            name="part"></form>
+ */
+function cfArray(obj) {
+	var arr = [];
+	if (!obj)
+		return arr;
+	
+	if(obj.nodeName == "SELECT" || obj.nodeName == "INPUT"){
+		arr.push(obj);
+		return arr;
+	}
+	
+	if (obj.length) {
+		for ( var i = 0, len = obj.length; i < len; i++) {
+			arr.push(obj[i]);
+		}
+	} else {
+		arr.push(obj);
+	}
+
+	return arr;
+}
+
+/**
+ * ,를 제거
+ */
+String.prototype.trimComma = function(){
+	return this.replace(/,/g,"");
+}
+
+/**
+ * chars의 문자열이외의 문자가 있으면 true
+ */
+String.prototype.exclude = function(chars){
+	var ret = false;
+	var allowChars = new String(chars);
+	
+    for (var i = 0; i < this.length; i++) {
+       if(!allowChars.include(this.charAt(i))){
+           ret = true;
+           break;
+       }
+    }
+    return ret;
+}
+/**
+ * check decimal value 123.02
+ */
+String.prototype.isDecimal = function(){
+	var chars = new String("0123456789.");	
+	this.trimComma();
+	this.strip();
+	return !this.exclude(chars);
+}
+/**
+ * check price value 1,123.02
+ */
+String.prototype.isPrice = function(){
+	var chars = new String("0123456789.,");	
+	//this.trimComma();
+	this.strip();
+	return !this.exclude(chars);
+}
+/**
+ * check number value 1234567890
+ */
+String.prototype.isNumber = function(){
+	var chars = new String("0123456789");
+	this.trimComma();
+	this.strip();	
+	return !this.exclude(chars);
+}
+/**
+ * check alphabet value a-z or A-Z
+ */
+String.prototype.isAlphabet = function(){
+	var chars = new String("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+	this.strip();	
+	return !this.exclude(chars);
+}
+/**
+ * is this a valid PO No? 
+ */
+String.prototype.isValidPoNo = function(){
+	var chars = new String("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-");
+	this.strip();	
+	return  !this.exclude(chars);
+}
+/**
+ * number and alphabet
+ */
+String.prototype.isAlphabetNumber = function(){
+	var chars = new String("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+	this.strip();	
+	return  !this.exclude(chars);
+}
+/**
+ * byte length
+ */
+String.prototype.byteLength = function(){
+	var len = 0;
+ 
+	if(this == null || this == undefined){
+		return 0;
+	}
+	
+	
+	for(var i = 0; i < this.length; i++) {
+			var c = escape(this.charAt(i));
+			if(c.length == 1) len++;
+			else if(c.indexOf("%u") != -1) len += 2;
+			else if(c.indexOf("%") != -1) len += c.length / 3;
+	}
+  
+	return len;
+}
+
+/**
+ * URL 특수문자 인코딩 함수
+ * 
+ * @param data
+ *            파라미터 데이터
+ */
+function cfUriEncode(data) {
+	if (data != "") {
+		var encdata = '';
+		var datas = data.split('&');
+		for (i = 0; i < datas.length; i++) {
+			if (i == 0)
+				encdata = datas[i];
+			else
+				encdata += encodeURIComponent("&") + datas[i];
+		}
+		datas = encdata.split('%');
+		for (i = 0; i < datas.length; i++) {
+			if (i == 0)
+				encdata = datas[i];
+			else
+				encdata += encodeURIComponent("%") + datas[i];
+		}
+		datas = encdata.split('+');
+		for (i = 0; i < datas.length; i++) {
+			if (i == 0)
+				encdata = datas[i];
+			else
+				encdata += encodeURIComponent("+") + datas[i];
+		}
+	} else {
+		encdata = "";
+	}
+	return encdata;
+}
+
+/**
+ * 공통 에러팝업 화면 호출함수
+ * 
+ * @param obj
+ *            JSON 객체
+ */
+function cfExceptionPop(obj) {
+	var url = "/common/ExceptionPopup.jsp";
+	url = url + "?accountNo=" + obj.accountNo;
+	url = url + "&requestDate=" + obj.requestDate;
+	url = url + "&requestTime=" + obj.requestTime;
+	url = url + "&uuid=" + obj.uuid;
+	url = url + "&errorCode=" + obj.errorCode;
+	url = url + "&errorMessage=" + obj.errorMessage;
+	w = window
+			.open(
+					url,
+					"exceptionPopup",
+					'toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,top=150,left=200,width=600,height=280');
+	w.focus();
+}
+
+/**
+ * 조회기간이 일정기간을 넘지 않도록
+ * 
+ * @param maxDays : 최대 조회가능 기간(30 등)
+ * @param from : from date
+ * @param to : to date
+ * @param format : format
+ *            
+ */
+function cfInAllowedPeriod(maxDays, from, to, format){
+	var fromDate = cfGetDate(from.value, format);
+	var toDate = cfGetDate(to.value, format);
+	var diff = cfGetDateDiff(fromDate, toDate);
+	return (diff <= maxDays);
+}
+
+/**
+ * 목록에 보여줄 행갯수 
+ */
+function cfMakeRowNumOfPage(){
+	var selectObj = $("rowNumOfPage");
+	for(var i = 10; i < 101; i+=10){
+		var opt = new Element("option", {"value":i});
+		opt.update(i);
+		if(i == numPerPage){
+			opt.selected = true;
+		}
+		selectObj.appendChild(opt);
+	}		
+}
+
+/**
+ * 
+ * @param theURL
+ * @param winName
+ * @param features
+ * @return
+ */
+function cfOpenBrWindow(theURL,winName,features) { //v2.0
+	window.open(theURL,winName,features);
+}
+
+
+function mergeCell(tbl, startRow, cNum, length, add)
+{
+	var isAdd = false;
+	if(tbl == null) return;
+	if(startRow == null || startRow.length == 0) startRow = 1;
+	if(cNum == null || cNum.length == 0) return ;
+	if(add  == null || add.length == 0) {
+		isAdd = false;
+	}else {
+		isAdd = true;
+		add   = parseInt(add);
+	}
+	cNum   = parseInt(cNum);
+	length = parseInt(length);
+
+	rows   = tbl.rows;
+	rowNum = rows.length;
+
+	tempVal  = '';
+	cnt      = 0;
+	startRow = parseInt(startRow);
+
+	for( i = startRow; i < rowNum; i++ ) {
+		curVal = rows[i].cells[cNum].innerHTML;
+		if(isAdd) curVal += rows[i].cells[add].innerHTML;
+		if( curVal == tempVal ) {
+			if(cnt == 0) {
+				cnt++;
+				startRow = i - 1;
+			}
+			cnt++;
+		}else if(cnt > 0) {
+			merge(tbl, startRow, cnt, cNum, length);
+			startRow = endRow = 0;
+			cnt = 0;
+		}else {
+		}
+		tempVal = curVal;
+	}
+
+	if(cnt > 0) {
+		merge(tbl, startRow, cnt, cNum, length);
+	}
+}
+
+/*******************************************
+mergeCell에서 사용하는 함수
+********************************************/
+function merge(tbl, startRow, cnt, cellNum, length)
+{
+	rows = tbl.rows;
+	row  = rows[startRow];
+	
+	for( i = startRow + 1; i < startRow + cnt; i++ ) {
+		for( j = 0; j < length; j++) {
+			rows[i].deleteCell(cellNum);
+		}
+	}
+	for( j = 0; j < length; j++) {
+		row.cells[cellNum + j].rowSpan = cnt;
+	}
+}
+
+
+
+/**
+ * popup for parts detail information
+ * 
+ * @param part : BN07-0000
+ */
+function cfPopupPartsDetail(part) {
+	var url = "/master/part/GeneralPartInfo.jsp?dataMode=D&partNo=" + part;
+	//var url = "/master/part/GeneralPartInfoDetail.jsp?dataMode=D&partNo=" + part;
+	w = window.open(
+					url,
+					"part_popup",
+					'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,top=150,left=200,width=800,height=600');
+	w.focus();
+}
+
+/**
+ * popup for Service Order's attach file
+ */
+function cfPopupSvcOrdAttFileList(objectID) {
+	var url = "/svctracking/common/SVCPopAttachList.jsp?objectID=" + objectID;
+	w = window.open(
+					url,
+					"part_popup",
+					'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=no,top=150,left=200,width=800,height=600');
+	w.focus();
+}
+
+/**
+ * popup for knowledge content
+ */
+function cfKnowledgeDocumentPopup(keyword, contentType, knowledgeId, boardId) {
+	
+	//http://skpupload.samsungcsportal.com/basis/knowledge/knowledgeDetail.skp?KNOWLEDGE_ID=25654535&mList=&boardId=9247
+	//knowledgeId = 25654535;
+	//boardId = 9247;
+	//contentType="KN";
+	var url = '/common/KnowledgeDocumentPopup.jsp?keyword=' + keyword + '&contentType='+ contentType + '&knowledgeId='+ knowledgeId + '&boardId='+ boardId;
+	
+	if(keyword == undefined && $j.trim(keyword) == ""){
+		return;
+	}
+	
+	if($j.trim(contentType) == "KN" && (knowledgeId == undefined || $j.trim(knowledgeId) == "")){
+		alert("Knowledge ID is mandatory.");
+		return;
+	}
+	
+	url = url + "&t=" + (new Date()).getTime();
+	w = window.open(
+					url,
+					"KnowledgeDocumentPopup",
+					'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,top=150,left=200,width=1000,height=600');
+	w.focus();
+}
+
+
+/**
+ * popup to Service Order Detail
+ */
+function cfServiceOrderDetailPopup(form, includeParameterInUrl) {
+	var url = "";
+	var popWin = window.open(
+					url,
+					"ServiceOrderDetailPopup",
+					'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,top=50,left=100,width=1000,height=700');
+	
+	var actionUrl = form.action;
+	if(includeParameterInUrl){
+		form.action = actionUrl + "&t=" + (new Date()).getTime();
+	}else{
+		form.action = actionUrl + "?t=" + (new Date()).getTime();
+	}
+		
+	if( popWin == null){
+		form.submit();
+	}else{
+		form.target = "ServiceOrderDetailPopup"; 
+		form.submit();
+		popWin.focus();
+	}
+}
+
+/*
+ * *
+ * check if the times in Service Order are valid 
+ */
+function cfValidTime(time){
+	var valid = true;
+	var timeValue = "";
+	if( typeof time === "object" ){
+		timeValue = time.value;
+	} else { 
+		timeValue = time;
+	}	
+	
+	var arrTime = timeValue.split(":");
+		
+	if(arrTime.length != 3){
+		valid = false;
+	}else if(timeValue == "00:00:00"){
+		valid = false;
+	}
+	
+	return valid;
+}
+
+
+function cfMinus(arr1, arr2){
+	var arrM = [];
+
+	for(var i = 0, len = arr1.length; i < len; i++){
+		var src =  arr1[i];
+		var exist = false;
+		for(var j = 0, len2 = arr2.length; j < len2; j++){
+				if( arr2[j] == src){
+					exist = true;
+					break;
+				}
+		}
+		
+		if(exist){			
+		}else{
+			arrM.push(src);
+		}
+		
+	}//for(var i = 0, len = arr1.length; i < len; i++){
+	return arrM;
+}
+
+
+
+
+function cfGetByteLength(str){
+	var len = 0;
+  
+	if(str == null)
+		return 0;
+  
+	for(var i = 0; i < str.length; i++) {
+			var c = escape(str.charAt(i));
+			if(c.length == 1) len++;
+			else if(c.indexOf("%u") != -1) len += 2;
+			else if(c.indexOf("%") != -1) len += c.length / 3;
+	}
+  
+	return len;	
+}
+
+
+
+
+
+/*
+ * 미주 통합
+ - RH-002
+ - 화면상단 Support Link 제공                                 
+ - 2015-10-26
+*/  
+function contactUsOpenPopupSEA() {
+    var url = "/contactus/contact_us_SEA.jsp";
+    var w = window.open(url,"ContactUsPopup",'toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,top=150,left=0,width=980,height=600');
+    w.focus();
+}	
+function qnaOpenPopupSEA() {
+	var url = "/common/qnaSkpSEA.jsp";
+	var w = window.open(url,"ContactUsPopup",'toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,top=150,left=0,width=980,height=600');
+	w.focus();
+}	
+function clickTopHelpSEA() {
+    var menLvl = '';
+    menLvl = parent.$('leftMenuForm').titleDir.value;
+    helpPopSEA(menLvl);
+}
+function helpPopSEA(id) {
+    $form = $j("#formHelp");
+    $form.find('input[name="MENUID"]').val(id);
+    popupHelpSEA($form[0]);
+}
+function popupHelpSEA(form) {
+    var url = "/common/HelpPop.jsp";
+    var target = "popupHelp";
+    var popWin = window
+            .open(
+                    "",
+                    target,
+                    'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,top=50,left=100,width=800,height=530');
+    form.action = url;
+    if (popWin == null) {
+        form.submit();
+    } else {
+        $j(popWin.document).ready(function() {
+            form.target = target;
+            form.submit();
+            popWin.focus();
+        });
+    }
+}    
+
+function addSupportLink(){
+    var tableTr = $j('.title:eq(0)').parent('tr');
+    var tableTitle = $j('.title:eq(0)').parent('tr').parent();
+    var tdCnt = 0;
+    //Title 우측에 버튼 있나 검사.
+    $(tableTr).find('td').each(function(){
+        tdCnt++;
+    });
+    var titleDiv = $j('#titleDiv').html();
+    if(titleDiv == null || titleDiv == ""){
+    	$j('#titleDiv').html('&nbsp;');
+    }
+    
+    
+    var  supportLinkTxt = '<td class="suport_link1"><a href="javascript:clickTopHelpSEA();" title="Help"><u>Help</u></a></td>'
+    	+ '<td class="suport_link1"><a href="javascript:qnaOpenPopupSEA();" title="Q&A"><u>Q&A</u></a></td>'
+        + '<td class="suport_link"><a href="javascript:contactUsOpenPopupSEA();" title="Contact Us"><u>Contact Us</u></a></td>';
+    //Title 우측에 버튼 없으면 타이틀라인 끝에 링크 추가.
+    if( tdCnt == 1){
+        tableTr.append(supportLinkTxt);
+    }else{ //Title 우측에 버튼 있으면 타이틀 라인 위에 링크 추가.
+   	 $(tableTitle).prepend("<tr><td width='100%' colspan='10'>"
+   			              + "<table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td width='*'>&nbsp;</td>"
+   	                      + supportLinkTxt+"</tr></table></td></tr>");
+    }	
+	
+}
+
+
+
+
+//----------for china
+
+/**
+ * 자재검색 팝업(For Warranty)
+ * 
+ * @param idx : Event발생 버튼의 Index
+ * @param callback : 입력값을 Return받을 부모창의 callback함수명
+ */
+function cfSearchPopPartForWty(idx, callback) {
+
+	var w = 800;
+	var h = 670;
+	
+	var strPop = 'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=no,';
+	strPop += cfGetPosString(w, h);
+	
+	var params = {};
+	params['idx'] = idx;
+	params['callback'] = callback;
+
+	window.open('/master/part/PartSearchForWtyPop.jsp?' + $j.param(params), 'part_popup', strPop);	
+}
+
+/**
+ * 자재검색 팝업(For Warranty) - CIC 함수호출하는걸로 새로 만듬(2013-03-27) 자재단가 때문..
+ * 
+ * @param idx : Event발생 버튼의 Index
+ * @param callback : 입력값을 Return받을 부모창의 callback함수명
+ */
+function cfSearchPopPartForWty2(idx, callback) {
+
+	var w = 800;
+	var h = 670;
+	
+	var strPop = 'toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,copyhistory=no,scrollbars=no,';
+	strPop += cfGetPosString(w, h);
+	
+	var params = {};
+	params['idx'] = idx;
+	params['callback'] = callback;
+
+	window.open('/wty/common/WtyPartsSearchPop.jsp?' + $j.param(params), 'wty_part_popup', strPop);	
+}
+
+
+/**
+ * Input/Search PBA IMEI
+ * 
+ * @param idx : Event발생 버튼의 Index
+ * @param matNo : 자재코드
+ * @param cnt : 갯수(개수만큼 칸을 만든다)
+ * @param type : 팝업타입(1:입력화면, 2:조회화면)
+ * @param callback : 입력값을 Return받을 부모창의 callback함수명
+ * @param imeis : imei번호( , 로구분)
+ */
+function cfPopPBA_IMEI(idx, matNo, cnt, type, callback, imeis) {
+	
+	var w = 400;
+	var h = 300;
+	
+	var strPop = 'menubar=no,toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=no,';
+	strPop += cfGetPosString(w, h);
+	
+	if ( imeis == null ) {
+		imeis = '';
+	}
+	var params = {};
+	params['idx'] = idx;
+	params['matNo'] = matNo;
+	params['cnt'] = cnt;
+	params['type'] = type;
+	params['callback'] = callback;
+	params['imeis'] = imeis;
+
+	window.open('/invmgnt/mr/PbaImeiPop.jsp?' + $j.param(params), 'PBA_IMEI', strPop);	
+}
+
+/**
+ * Search Part
+ * 
+ * @param idx : Event발생 버튼의 Index
+ * @param matNo : 자재코드
+ * @param trType : TR_TPYE(창고재고:'01', 엔지니어재고:'02')
+ * @param engineer : 엔지니어코드(trType이 02인 경우 필수)
+ * @param ascCode : 창고코드(필수)
+ * @param callback : 입력값을 Return받을 부모창의 callback함수명
+ * @param ascAcctNo : ASC코드(필수)
+ * @param referer : 참조코드(호출정보 등)
+ */
+function cfSearchPopParts2(idx, matNo, trType, engineer, ascCode, callback, ascAcctNo, referer) {
+	var w = 800;
+	var h = 500;
+	
+	var strPop = 'menubar=no,toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=no,';
+	strPop += cfGetPosString(w, h);
+	
+	var params = {};
+	params['idx'] = idx;
+	params['matNo'] = matNo;
+	params['trType'] = trType;
+	params['engineer'] = engineer;
+	params['ascCode'] = ascCode;
+	params['callback'] = callback;
+	params['ascAcctNo'] = ascAcctNo;
+	if ( referer == null ) {
+		params['referer'] = "";
+	} else {
+		params['referer'] = referer;
+	}
+
+	window.open('/invmgnt/mr/PartsSearchPop2.jsp?' + $j.param(params), 'Search_Part', strPop);
+}
+
+
+/**
+ * Disty Search Part
+ * 
+ * @param idx : Event발생 버튼의 Index
+ * @param matNo : 자재코드
+ * @param type : TPYE(SBSC:'S', DISTY:'D', ASC:'A')
+ * @param callback : 입력값을 Return받을 부모창의 callback함수명
+ */
+function cfSearchPopPartsCode(matNo, idx, type, callback) {
+	var w = 800;
+	var h = 500;
+	
+	var strPop = 'menubar=no,toolbar=no,location=no,directories=no,status=yes,scrollbars=no,resizable=yes,';
+	strPop += cfGetPosString(w, h);
+	
+	var params = {};
+	params['idx'] = idx;
+	params['type'] = type;
+	params['matNo'] = matNo;
+	params['callback'] = callback;
+
+	window.open('/disty/master/PartsCodeSearchPop.jsp?' + $j.param(params), 'Search_Part', strPop);
+}
+
+
+/**
+ * Search Part (Disty. 재고이동에서 사용)
+ * 
+ * @param idx : Event발생 버튼의 Index
+ * @param matNo : 자재코드
+ * @param ascCode : 창고코드(필수)
+ * @param callback : 입력값을 Return받을 부모창의 callback함수명
+ */
+function cfDistyPartSearchPop(idx, matNo, ascCode, callback) {
+	var w = 800;
+	var h = 500;
+	
+	var strPop = 'menubar=no,toolbar=no,location=no,directories=no,status=yes,scrollbars=no,resizable=yes,';
+	strPop += cfGetPosString(w, h);
+	
+	var params = {};
+	params['idx'] = idx;
+	params['matNo'] = matNo;
+	params['ascCode'] = ascCode;
+	params['callback'] = callback;
+
+	window.open('/disty/master/DistyPartSearchPop.jsp?' + $j.param(params), 'Search_Disty_Part', strPop);
+}
+
+/**
+ * Disty Search Model 
+ * @param idx : Event발생 버튼의 Index
+ * @param matNo : 자재코드
+ * @param type : 창고코드(필수)
+ * @param callback : 입력값을 Return받을 부모창의 callback함수명
+ */
+function cfSearchPopModelCode(matNo, idx, callback) {
+	var w = 800;
+	var h = 500;
+	
+	var strPop = 'menubar=no,toolbar=no,location=no,directories=no,status=yes,scrollbars=no,resizable=yes,';
+	strPop += cfGetPosString(w, h);
+	
+	var params = {};
+	params['idx'] = idx;
+	params['matNo'] = matNo;
+	params['callback'] = callback;
+
+	window.open('/disty/master/DistyModelSearchPop.jsp?' + $j.param(params), 'Search_Disty_Model', strPop);
+}
+
+/**
+ * 결재상신 
+ * @param id : apprId
+ * @param indi : PI_INDICATOR
+ * @param oType : PI_ORDER_TYPE
+ * @param form : form name
+ * @param gubun : 화면구분(N:신규, I:입고 O:출고, D:폐기, R:반납, A:재고조정)
+ */
+function cfItemAppprovalPop(id, indi, oType, form, pGubun) {
+	var url = "";
+	var w = 1050;
+	var h = 500;
+	
+	var strPop = 'menubar=no,toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=no,';
+	strPop += cfGetPosString(w, h);
+	
+//	var paramForm = Form.serialize($(form));
+	var paramForm = $(form);
+	var params = {};
+	params['apprId'] = id;
+	params['indi'] = indi;
+	params['oType'] = oType;
+	params['pGubun'] = pGubun;
+
+	if(pGubun == 'N'|| pGubun == 'O' || pGubun == 'D' || pGubun == 'M'){
+//		window.open('/common/ItemApprovalPop_new.jsp?' + $j.param(params) + '&'+ paramForm, 'ItemApprovalPop', strPop);		
+		w = window.open(url, 'App_popup', strPop);
+		w.focus();
+		
+		paramForm.action='/common/ItemApprovalPop_new.jsp?' + $j.param(params);
+		paramForm.target='App_popup';
+		paramForm.submit();
+	    
+	}else if(pGubun == 'I' || pGubun == 'A'){
+//		window.open('/common/ItemApprovalPop_in.jsp?' + $j.param(params) + '&'+ paramForm, 'ItemApprovalPop', strPop);
+		w = window.open(url, 'App_popup', strPop);
+		w.focus();
+		
+		paramForm.action='/common/ItemApprovalPop_in.jsp?' + $j.param(params);
+		paramForm.target='App_popup';
+		paramForm.submit();
+	}
+}
+
+/**
+ * 결재상신 
+ * @param id : apprId
+ * @param indi : PI_INDICATOR
+ * @param oType : PI_ORDER_TYPE
+ * @param wSts : WS_STS
+ * @param form : form name
+ * @param gubun : 화면구분(N:신규, I:입고 O:출고, D:폐기, R:반납, A:재고조정)
+ */
+function cfItemAppprovalLoanerPop(id, indi, oType, wSts, form, pGubun) {
+	var url = "";
+	var w = 1050;
+	var h = 500;
+	
+	var strPop = 'menubar=no,toolbar=no,location=no,directories=no,status=yes,scrollbars=yes,resizable=no,';
+	strPop += cfGetPosString(w, h);
+	
+//	var paramForm = Form.serialize($(form));
+	var paramForm = $(form);
+	var params = {};
+	params['apprId'] = id;
+	params['indi'] = indi;
+	params['oType'] = oType;
+	params['wSts'] = wSts;
+	params['pGubun'] = pGubun;
+
+	if(pGubun == 'L'){
+//		window.open('/common/ItemApprovalLoanerPop.jsp?' + $j.param(params) + '&'+ paramForm, 'ItemApprovalLoanerPop', strPop);
+		w = window.open(url, 'App_popup', strPop);
+		w.focus();
+		
+		paramForm.action='/common/ItemApprovalLoanerPop.jsp?' + $j.param(params);
+		paramForm.target='App_popup';
+		paramForm.submit();
+		
+	}else if(pGubun == 'LA'){		
+//		window.open('/common/ItemApprovalLoanerAdjPop.jsp?' + $j.param(params) + '&'+ paramForm, 'ItemApprovalLoanerPop', strPop);
+		w = window.open(url, 'App_popup', strPop);
+		w.focus();
+		
+		paramForm.action='/common/ItemApprovalLoanerAdjPop.jsp?' + $j.param(params);
+		paramForm.target='App_popup';
+		paramForm.submit();
+	}	
+}
+
+
+/**
+ * 팝업창이 중앙에 뜨도록 설정값 문자열을 Return한다.
+ * 예 : width=100, height=100, left=150, top=200
+ * 
+ * @param w : 팝업창 Width
+ * @param h : 팝업창 Height
+ */
+function cfGetPosString(w, h) {
+	var leftPos = (screen.width) ? (screen.width-w)/2 : 0;
+	var topPos = (screen.height) ? (screen.height-h)/2 : 0;
+
+	return 'width=' + w + ',height=' + h + ',left=' + leftPos + ', top='+ topPos;
+}
+
+function cfSetComma(str){
+	str = str+'';//string 으로 바꿈.
+	var pointIdx = str.indexOf('.');
+	var decimal = pointIdx == -1 ? '': str.substring(pointIdx);
+	var integer = pointIdx == -1 ? str: str.substring(0, pointIdx);
+	var tmp = '';
+	var cnt = 0;
+	for ( var i = integer.length-1; i > -1; i--) {
+		if(cnt>0 && cnt%3==0) tmp += ',';
+		tmp += integer.charAt(i);
+		cnt++;
+	}
+	var tmp2 = '';
+	for ( var i = tmp.length-1; i > -1; i--) {
+		tmp2 += tmp.charAt(i);
+	}
+	
+	str = tmp2 + decimal;
+	return str;
+}
+
+function cfGetParameterByName(name, url){
+	if(!url){
+		alert("Input URL first.");
+		return;
+	}
+	name = name.replace(/[\[\]]/g, "\\$&");
+	var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+	var results = regex.exec(url);
+	return results[2];
+}

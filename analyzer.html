@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open Pending Analyzer — GSPN Dashboard</title>
+  <meta name="description" content="Interactive visual dashboard to analyze open/pending GSPN service tickets from uploaded Excel files.">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+  <link rel="stylesheet" href="analyzer.css">
+</head>
+<body>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Top Navigation -->
+  <nav class="top-nav">
+    <div class="nav-brand">
+      <div class="nav-logo">📊</div>
+      <div>
+        <div class="nav-title">Open Pending Analyzer</div>
+        <div class="nav-subtitle">GSPN Service Ticket Dashboard</div>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <div class="file-info-badge" id="fileBadge">
+        <span class="material-symbols-rounded">check_circle</span>
+        <span id="fileBadgeText">No file loaded</span>
+      </div>
+      <div class="theme-toggle" id="themeToggle" title="Toggle theme"></div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Upload Zone -->
+    <div class="upload-zone" id="uploadZone">
+      <div class="upload-icon">
+        <span class="material-symbols-rounded">cloud_upload</span>
+      </div>
+      <h3>Upload GSPN Excel File</h3>
+      <p>Drag & drop your <strong>.xls.htm</strong>, <strong>.htm</strong>, <strong>.html</strong>, or <strong>.xlsx</strong> file here</p>
+      <button class="btn-browse" id="btnBrowse">Browse Files</button>
+      <input type="file" id="fileInput" accept=".htm,.html,.xls,.xlsx,.csv" hidden>
+    </div>
+
+    <!-- Load Another File Bar -->
+    <div class="load-another-bar" id="loadAnotherBar">
+      <div>
+        <div class="file-name" id="loadedFileName">—</div>
+        <div class="file-meta" id="loadedFileMeta">—</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline" id="btnLoadAnother">
+          <span class="material-symbols-rounded">upload_file</span> Load Another File
+        </button>
+        <button class="btn btn-primary" id="btnExportExcel">
+          <span class="material-symbols-rounded">download</span> Export Excel
+        </button>
+      </div>
+    </div>
+
+    <!-- Dashboard (hidden until data loaded) -->
+    <div class="dashboard" id="dashboard">
+
+      <!-- KPI Cards -->
+      <section class="kpi-grid" id="kpiGrid">
+        <div class="kpi-card">
+          <span class="kpi-label">Total Tickets</span>
+          <span class="kpi-value" id="kpiTotal">0</span>
+          <span class="kpi-sub">Open / Pending complaints</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Avg Aging (Days)</span>
+          <span class="kpi-value" id="kpiAvgAging">0</span>
+          <span class="kpi-sub" id="kpiAgingSub">—</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Overdue (&gt;3 Days)</span>
+          <span class="kpi-value" id="kpiOverdue">0</span>
+          <span class="kpi-sub" id="kpiOverdueSub">—</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">REDO Cases</span>
+          <span class="kpi-value" id="kpiRedo">0</span>
+          <span class="kpi-sub" id="kpiRedoSub">—</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">In Warranty</span>
+          <span class="kpi-value" id="kpiWarranty">0%</span>
+          <span class="kpi-sub" id="kpiWarrantySub">—</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Engineers Active</span>
+          <span class="kpi-value" id="kpiEngineers">0</span>
+          <span class="kpi-sub">Unique technicians assigned</span>
+        </div>
+      </section>
+
+      <!-- Chart Grid (2×2) -->
+      <section class="chart-grid">
+        <!-- Product Category -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title">
+              <span class="material-symbols-rounded">devices</span>
+              Product Category
+            </div>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chartProductCategory"></canvas>
+          </div>
+        </div>
+
+        <!-- Status Breakdown -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title">
+              <span class="material-symbols-rounded">assignment</span>
+              Status Breakdown
+            </div>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chartStatus"></canvas>
+          </div>
+        </div>
+
+        <!-- Aging Analysis -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title">
+              <span class="material-symbols-rounded">schedule</span>
+              Aging Analysis
+            </div>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chartAging"></canvas>
+          </div>
+        </div>
+
+        <!-- Engineer Workload -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title">
+              <span class="material-symbols-rounded">engineering</span>
+              Engineer Workload
+            </div>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chartEngineer"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Extra Charts Row (3 columns) -->
+      <section class="chart-grid-3">
+        <!-- Warranty Split -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title">
+              <span class="material-symbols-rounded">verified_user</span>
+              Warranty Split
+            </div>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chartWarranty"></canvas>
+          </div>
+        </div>
+
+        <!-- Service Type -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title">
+              <span class="material-symbols-rounded">build</span>
+              Service Type
+            </div>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chartServiceType"></canvas>
+          </div>
+        </div>
+
+        <!-- Daily Trend -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title">
+              <span class="material-symbols-rounded">trending_up</span>
+              Daily Assigned Trend
+            </div>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chartDailyTrend"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Data Table -->
+      <section class="table-section" id="tableSection">
+        <div class="table-toolbar">
+          <div class="table-toolbar-left">
+            <span class="table-title">Ticket Details</span>
+            <span class="table-count" id="tableCount">0</span>
+          </div>
+          <div class="table-toolbar-right">
+            <div class="table-search-wrapper">
+              <span class="material-symbols-rounded">search</span>
+              <input type="text" class="table-search" id="tableSearch" placeholder="Search tickets...">
+            </div>
+            <select class="filter-select" id="filterProduct">
+              <option value="">All Products</option>
+            </select>
+            <select class="filter-select" id="filterStatus">
+              <option value="">All Status</option>
+            </select>
+            <select class="filter-select" id="filterEngineer">
+              <option value="">All Engineers</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table" id="dataTable">
+            <thead id="dataTableHead"></thead>
+            <tbody id="dataTableBody"></tbody>
+          </table>
+        </div>
+        <div class="table-pagination" id="tablePagination">
+          <span class="pagination-info" id="paginationInfo">Showing 0 of 0</span>
+          <div class="pagination-controls" id="paginationControls"></div>
+        </div>
+      </section>
+
+    </div><!-- /dashboard -->
+
+  </main>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="analyzer.js"></script>
+</body>
+</html>

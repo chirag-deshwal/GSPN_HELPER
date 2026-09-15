@@ -1,0 +1,70 @@
+/**
+ * Always initialize Datepicker.
+ */
+initialDatePicker();
+
+/**
+ * Initialize jQuery Datepicker.
+ */
+function initialDatePicker() {
+	$j('body').css('font-size', '10px');
+
+	$j.datepicker.setDefaults({
+		showOn: 'both', 
+		buttonImage: '/img/ico_calendar_s.gif',
+		buttonImageOnly: true,
+		buttonText: 'Calendar',
+		showAnim: 'fadeIn',
+		duration: 'fast'
+	});
+}	
+
+var defaultDatePickerOption = {
+	changeMonth: true,
+	changeYear: true,
+	dateFormat: dateFormat
+};
+
+/**
+ * set a date input read only.
+ */
+function setDateReadOnly(obj, isReadOnly) {
+	$j(obj).prop('readOnly', isReadOnly);
+	if (isReadOnly) {
+		disableDatepicker(obj);
+	} else
+		enableDatepicker(obj);
+}
+
+/**
+ * set a datepicker to elements.
+ */
+function setDatepicker(obj) {
+	$j(obj).attr('maxlength', 10);
+	$j(obj).datepicker(defaultDatePickerOption);
+}
+
+/**
+ * enable a datepicker from elements.
+ */
+function enableDatepicker(obj) {
+	$j(obj).datepicker('enable');
+}
+
+/**
+ * disable a datepicker from elements.
+ */
+function disableDatepicker(obj) {
+	$j(obj).datepicker('disable');
+}
+
+/**
+ * Validates a field regarding date. (Event Call-back Function)
+ */
+function validateDate() {
+	if($j(this).val().length >= 10) {
+		alert('Input the date in the right format.');
+		$j(this).val($j(this).val().substring(0, 10));
+		return false;
+	}
+}
