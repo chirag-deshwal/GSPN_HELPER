@@ -120,11 +120,42 @@ function parseManagementLitePlainText(text) {
 
     // Map row2 fields to ML_HEADER_ROW2
     for (var j = 0; j < ML_HEADER_ROW2.length; j++) {
-      record[ML_HEADER_ROW2[j]] = (j < fields2.length) ? fields2[j].trim() : '';
+      var r2Val = (j < fields2.length) ? fields2[j].trim() : '';
+      if (ML_HEADER_ROW2[j] === 'Service Type' && typeof convertServiceType === 'function') {
+        r2Val = convertServiceType(r2Val);
+      }
+      record[ML_HEADER_ROW2[j]] = r2Val;
+    }
+
+    if (record['Service Type']) {
+      record['Service Type (Status)'] = record['Service Type'];
+    }
+    if (record['Status']) {
+      record['Status (GSPN)'] = record['Status'];
+    }
+    if (record['Reason']) {
+      record['Reason (GSPN)'] = record['Reason'];
     }
 
     // Add product category
     record['Product'] = getProductCategory(record['Model'] || '');
+    record['Service Order No.'] = record['Service Order No'] || '';
+
+    // Split Assigned and App Date if combined with time
+    if (record['Assigned'] && typeof splitDateTime === 'function') {
+      var sAssigned = splitDateTime(record['Assigned']);
+      if (sAssigned.time && !record['Assigned Time']) {
+        record['Assigned'] = sAssigned.date;
+        record['Assigned Time'] = sAssigned.time;
+      }
+    }
+    if (record['App Date'] && typeof splitDateTime === 'function') {
+      var sApp = splitDateTime(record['App Date']);
+      if (sApp.time && !record['App Time']) {
+        record['App Date'] = sApp.date;
+        record['App Time'] = sApp.time;
+      }
+    }
 
     records.push(record);
   }
@@ -158,9 +189,40 @@ function parseManagementLiteHTML(html) {
       record[ML_HEADER_ROW1[j]] = val;
     }
     for (var j = 0; j < ML_HEADER_ROW2.length; j++) {
-      record[ML_HEADER_ROW2[j]] = (j < cells2.length) ? (cells2[j].textContent || '').trim() : '';
+      var r2Val = (j < cells2.length) ? (cells2[j].textContent || '').trim() : '';
+      if (ML_HEADER_ROW2[j] === 'Service Type' && typeof convertServiceType === 'function') {
+        r2Val = convertServiceType(r2Val);
+      }
+      record[ML_HEADER_ROW2[j]] = r2Val;
+    }
+    if (record['Service Type']) {
+      record['Service Type (Status)'] = record['Service Type'];
+    }
+    if (record['Status']) {
+      record['Status (GSPN)'] = record['Status'];
+    }
+    if (record['Reason']) {
+      record['Reason (GSPN)'] = record['Reason'];
     }
     record['Product'] = getProductCategory(record['Model'] || '');
+    record['Service Order No.'] = record['Service Order No'] || '';
+
+    // Split Assigned and App Date if combined with time
+    if (record['Assigned'] && typeof splitDateTime === 'function') {
+      var sAssigned = splitDateTime(record['Assigned']);
+      if (sAssigned.time && !record['Assigned Time']) {
+        record['Assigned'] = sAssigned.date;
+        record['Assigned Time'] = sAssigned.time;
+      }
+    }
+    if (record['App Date'] && typeof splitDateTime === 'function') {
+      var sApp = splitDateTime(record['App Date']);
+      if (sApp.time && !record['App Time']) {
+        record['App Date'] = sApp.date;
+        record['App Time'] = sApp.time;
+      }
+    }
+
     records.push(record);
   }
 
@@ -200,7 +262,8 @@ var PC_OUTPUT_COLUMNS = [
   'Model Name', 'Product', 'Engineer',
   'Telephone(Home)', 'Telephone(Office)', 'Telephone(Mobile)', 'E-Mail',
   'Service Type', 'Customer Preferred Date', 'Purchase Date',
-  'Appointment Date', 'ASC Assigned',
+  'Appointment Date', 'App Date', 'App Time',
+  'ASC Assigned', 'Assigned', 'Assigned Time',
   'Symptom 1', 'Symptom 2', 'Symptom 3',
   '1st Service Comment', 'Remark'
 ];
@@ -265,7 +328,40 @@ function parsePrintCommandPlainText(text) {
   for (var b = 0; b < blocks.length; b++) {
     var record = parseOneBlock(blocks[b]);
     if (record && record['Service Order No']) {
+      // Split ASC Assigned into Date and Time
+      if (record['ASC Assigned']) {
+        var sAssigned = splitDateTime(record['ASC Assigned']);
+        record['Assigned'] = sAssigned.date;
+        record['Assigned Time'] = sAssigned.time;
+      }
+      // Split Appointment Date into Date and Time
+      if (record['Appointment Date']) {
+        var sApp = splitDateTime(record['Appointment Date']);
+        record['App Date'] = sApp.date;
+        record['App Time'] = sApp.time;
+      }
+
+      record['No'] = b + 1;
+      record['Service Order No.'] = record['Service Order No'] || '';
+      record['ASC Job No'] = record['Customer No'] || '';
+      record['Model'] = record['Model Name'] || '';
       record['Product'] = getProductCategory(record['Model Name'] || '');
+      record['Serial'] = record['Serial'] || '';
+      record['Wty Status'] = record['Wty Status'] || '';
+      record['VOC'] = record['Symptom 1'] || '';
+
+      if (record['Service Type'] && typeof convertServiceType === 'function') {
+        record['Service Type'] = convertServiceType(record['Service Type']);
+      }
+      if (record['Service Type']) {
+        record['Service Type (Status)'] = record['Service Type'];
+      }
+
+      if (!record['City'] && record['Address']) {
+        var cityMatch = record['Address'].match(/\b(GURGAON|GURUGRAM|DELHI|NEW DELHI|NOIDA|FARIDABAD|GHAZIABAD|MANESAR)\b/i);
+        if (cityMatch) record['City'] = cityMatch[1].toUpperCase();
+      }
+
       records.push(record);
     }
   }
@@ -296,6 +392,9 @@ function parseOneBlock(lines) {
         var afterColon = candidateLabel.substring(colonIdx + 1).trim();
         var matchedColonField = matchKnownField(beforeColon);
         if (matchedColonField) {
+          if (matchedColonField === 'Service Type' && typeof convertServiceType === 'function') {
+            afterColon = convertServiceType(afterColon);
+          }
           record[matchedColonField] = afterColon;
           j++;
           continue;
@@ -322,6 +421,9 @@ function parseOneBlock(lines) {
         var value = valueParts.join(' ').trim();
         // Remove leading colon if present
         value = value.replace(/^:\s*/, '');
+        if (matchedField === 'Service Type' && typeof convertServiceType === 'function') {
+          value = convertServiceType(value);
+        }
         record[matchedField] = value;
       } else {
         j++;
@@ -371,7 +473,40 @@ function parsePrintCommandHTML(html) {
       }
     }
     if (record['Service Order No']) {
+      // Split ASC Assigned into Date and Time
+      if (record['ASC Assigned']) {
+        var sAssigned = splitDateTime(record['ASC Assigned']);
+        record['Assigned'] = sAssigned.date;
+        record['Assigned Time'] = sAssigned.time;
+      }
+      // Split Appointment Date into Date and Time
+      if (record['Appointment Date']) {
+        var sApp = splitDateTime(record['Appointment Date']);
+        record['App Date'] = sApp.date;
+        record['App Time'] = sApp.time;
+      }
+
+      record['No'] = records.length + 1;
+      record['Service Order No.'] = record['Service Order No'] || '';
+      record['ASC Job No'] = record['Customer No'] || '';
+      record['Model'] = record['Model Name'] || '';
       record['Product'] = getProductCategory(record['Model Name'] || '');
+      record['Serial'] = record['Serial'] || '';
+      record['Wty Status'] = record['Wty Status'] || '';
+      record['VOC'] = record['Symptom 1'] || '';
+
+      if (record['Service Type'] && typeof convertServiceType === 'function') {
+        record['Service Type'] = convertServiceType(record['Service Type']);
+      }
+      if (record['Service Type']) {
+        record['Service Type (Status)'] = record['Service Type'];
+      }
+
+      if (!record['City'] && record['Address']) {
+        var cityMatch = record['Address'].match(/\b(GURGAON|GURUGRAM|DELHI|NEW DELHI|NOIDA|FARIDABAD|GHAZIABAD|MANESAR)\b/i);
+        if (cityMatch) record['City'] = cityMatch[1].toUpperCase();
+      }
+
       records.push(record);
     }
   }

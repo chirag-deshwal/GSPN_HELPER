@@ -1,24 +1,49 @@
 /**
  * tools.js — Page controller for tools.html
- * Handles Step 1 (Print Text) and Step 2 (Management Lite) data inputs.
+ * Handles Step 1 (Print Text Data) and Step 2 (Management Lite Data).
+ * Features 18-column standard GGN_OPEN_PENDING template, robust date/time splitting,
+ * TAT IFS formula categorization, and Model Product categorization.
  */
 
 var combinedState = {
   rawRecords: [],
   columns: [],
   data: [],
-  template: 'GGN_OPEN_PENDING',
+  template: 'GGN_STANDARD',
   sortCol: null,
   sortDir: 1
 };
 
+// ── Standard 28-Column Template for GGN Standerd ─────────────────────────────
 var MASTER_COLUMNS_GGN = [
-  'Service Order No','ASC Job No','Customer Name','Customer No',
-  'Telephone(Mobile)','Telephone(Home)','Telephone(Office)',
-  'City','Address','Model','Product','Serial','Wty Status','TAT',
-  'Service Type','Status','Reason','Created','Assigned','Assigned Time',
-  'App Date','App Time','Engineer','Symptom 1','Symptom 2','Symptom 3',
-  '1st Service Comment','Remark','VOC','REDO','High Priority'
+  'Date',
+  'SVC',
+  'No.',
+  'Service Order No.',
+  'Assigned Date',
+  'Aging',
+  'TAT',
+  'Model Name',
+  'Product',
+  'WIFI',
+  'Engineer',
+  'TL Name',
+  'Telephone (Mobile)',
+  'Remarks',
+  'Sub Remarks',
+  'Address',
+  'SR.',
+  'Wty Status',
+  'Customer Name',
+  'App Date',
+  'App Time',
+  'Service Type (Status)',
+  'Status (GSPN)',
+  'Reason (GSPN)',
+  'Pending At',
+  'Pending Reason',
+  '1st Service Comment',
+  'REDO'
 ];
 
 var LS_KEY = 'gspn_tools_state';
@@ -79,7 +104,7 @@ function deleteCustomTemplateFromTools(tplId) {
   var list = getSavedCustomTemplates().filter(function(t) { return t.id !== tplId; });
   try { localStorage.setItem('gspn_custom_templates', JSON.stringify(list)); } catch(e) {}
   if (combinedState.template === 'CUSTOM_' + tplId) {
-    combinedState.template = 'GGN_OPEN_PENDING';
+    combinedState.template = 'GGN_STANDARD';
   }
   loadCustomTemplatesInTools();
   if (combinedState.rawRecords && combinedState.rawRecords.length > 0) {
@@ -116,16 +141,161 @@ function applySelectedTemplate() {
     combinedState.columns = cols;
     combinedState.data = raw.map(function(r) { return Object.assign({}, r); });
 
-  } else if (combinedState.template === 'GGN_OPEN_PENDING') {
-    // Standard Samsung GGN 31-column template
+  } else if (combinedState.template === 'GGN_STANDARD' || combinedState.template === 'GGN_OPEN_PENDING' || combinedState.template === 'GGN Standerd') {
+    // Standard Samsung GGN Standerd 28-column template
     combinedState.columns = MASTER_COLUMNS_GGN.slice();
-    combinedState.data = raw.map(function(r) {
+    combinedState.data = raw.map(function(r, idx) {
       var row = {};
       if (r['_isMerged']) row['_isMerged'] = true;
-      for (var c = 0; c < MASTER_COLUMNS_GGN.length; c++) {
-        var colName = MASTER_COLUMNS_GGN[c];
-        row[colName] = (r[colName] !== undefined && r[colName] !== null) ? r[colName] : '';
+
+      // 1. Date (Today's date format -> mm/DD/yyyy)
+      row['Date'] = typeof formatTodayDate === 'function' ? formatTodayDate('/', 'mm/dd/yyyy') : (function() {
+        var d = new Date();
+        var mm = String(d.getMonth() + 1).padStart(2, '0');
+        var dd = String(d.getDate()).padStart(2, '0');
+        return mm + '/' + dd + '/' + d.getFullYear();
+      })();
+
+      // 2. SVC (Service center name: if no service center data, leave empty "")
+      var svcVal = (r['SVC'] || r['Service Center'] || r['Service Center Name'] || r['ASC Name'] || '').toString().trim();
+      if (/^4\d{9}$/.test(svcVal) || /^\d{8,}$/.test(svcVal)) {
+        svcVal = '';
       }
+      row['SVC'] = svcVal;
+
+      // 3. No. (Index of the column like SR. NO.: 1, 2, 3...)
+      row['No.'] = idx + 1;
+      row['S. No'] = idx + 1;
+      row['No'] = idx + 1;
+
+      // 4. Service Order No. (Call ID starting from 4******* [10 digits], fallback to ASC Job No / Customer No)
+      var soVal = (r['Service Order No.'] || r['Service Order No'] || r['SO No'] || '').toString().trim();
+      if (!soVal || !/^4\d{9}$/.test(soVal)) {
+        var candidates = [
+          r['ASC Job No'],
+          r['ASC_JOB_NO'],
+          r['Customer No'],
+          r['Service Order No.'],
+          r['Service Order No'],
+          r['SO No']
+        ];
+        for (var c = 0; c < candidates.length; c++) {
+          var cand = (candidates[c] || '').toString().trim();
+          var m = cand.match(/\b(4\d{9})\b/);
+          if (m) {
+            soVal = m[1];
+            break;
+          }
+        }
+      }
+      if (!soVal) {
+        soVal = (r['Service Order No.'] || r['Service Order No'] || r['ASC Job No'] || r['ASC_JOB_NO'] || r['Customer No'] || r['SO No'] || '').toString().trim();
+      }
+      row['Service Order No.'] = soVal;
+      row['Service Order No'] = soVal;
+
+      // 5. Assigned Date (robust date split)
+      var assignedDate = r['Assigned Date'] || r['Assigned'] || '';
+      if (!assignedDate) {
+        var rawAssigned = r['ASC Assigned'] || '';
+        if (typeof splitDateTime === 'function') {
+          var sAssigned = splitDateTime(rawAssigned);
+          assignedDate = sAssigned.date;
+        } else {
+          assignedDate = rawAssigned;
+        }
+      }
+      row['Assigned Date'] = assignedDate;
+
+      // 6. Aging (formula: =TODAY() - ASSIGNED_DATE)
+      var agingVal = (r['Aging'] !== undefined && r['Aging'] !== null && r['Aging'] !== '') ? r['Aging'] : '';
+      if ((agingVal === '' || isNaN(parseFloat(agingVal))) && assignedDate) {
+        if (typeof calcAging === 'function') {
+          agingVal = calcAging(assignedDate);
+        }
+      }
+      row['Aging'] = (agingVal !== undefined && agingVal !== null) ? agingVal : '';
+
+      // 7. TAT (computed via getTATLabel)
+      var tatVal = r['TAT'] || '';
+      if (!tatVal && row['Aging'] !== '') {
+        tatVal = typeof getTATLabel === 'function' ? getTATLabel(row['Aging']) : '';
+      }
+      row['TAT'] = tatVal;
+
+      // 8. Model Name
+      row['Model Name'] = r['Model Name'] || r['Model'] || '';
+
+      // 9. Product (15-branch formula)
+      row['Product'] = r['Product'] || (typeof getProductCategory === 'function' ? getProductCategory(row['Model Name']) : '');
+
+      // 10. WIFI
+      row['WIFI'] = r['WIFI'] || r['Wifi'] || '';
+
+      // 11. Engineer
+      row['Engineer'] = r['Engineer'] || '';
+
+      // 12. TL Name
+      row['TL Name'] = r['TL Name'] || '';
+
+      // 13. Telephone (Mobile)
+      row['Telephone (Mobile)'] = r['Telephone (Mobile)'] || r['Telephone(Mobile)'] || r['Mobile'] || '';
+
+      // 14. Remarks & 15. Sub Remarks (Rule 6: MUST BE STRICTLY BLANK)
+      row['Remarks'] = '';
+      row['Sub Remarks'] = '';
+
+      // 16. Address
+      row['Address'] = r['Address'] || '';
+
+      // 17. SR.
+      row['SR.'] = r['SR.'] || r['Serial'] || r['Serial No.'] || r['Serial No'] || '';
+
+      // 18. Wty Status
+      row['Wty Status'] = r['Wty Status'] || r['Warranty Status'] || r['Wty. Status'] || '';
+
+      // 19. Customer Name (Changed from City to Customer Name as requested)
+      row['Customer Name'] = r['Customer Name'] || '';
+
+      // 20. App Date & 21. App Time
+      var appDate = r['App Date'] || '';
+      var appTime = r['App Time'] || '';
+      if (!appDate || !appTime) {
+        var rawApp = r['Appointment Date'] || r['App Date'] || '';
+        if (typeof splitDateTime === 'function') {
+          var sApp = splitDateTime(rawApp);
+          if (!appDate) appDate = sApp.date;
+          if (!appTime) appTime = sApp.time;
+        } else {
+          appDate = rawApp;
+        }
+      }
+      row['App Date'] = appDate;
+      row['App Time'] = appTime;
+
+      // 22. Service Type (Status) (with abbreviation conversion e.g. IH -> IN-HOME)
+      var svcType = r['Service Type (Status)'] || r['Service Type'] || '';
+      if (typeof convertServiceType === 'function') {
+        svcType = convertServiceType(svcType);
+      }
+      row['Service Type (Status)'] = svcType;
+
+      // 23. Status (GSPN)
+      row['Status (GSPN)'] = r['Status (GSPN)'] || r['Status'] || '';
+
+      // 24. Reason (GSPN)
+      row['Reason (GSPN)'] = r['Reason (GSPN)'] || r['Reason'] || '';
+
+      // 25. Pending At & 26. Pending Reason (Rule 6: MUST BE STRICTLY BLANK)
+      row['Pending At'] = '';
+      row['Pending Reason'] = '';
+
+      // 27. 1st Service Comment
+      row['1st Service Comment'] = r['1st Service Comment'] || '';
+
+      // 28. REDO (Coming from Management_lite)
+      row['REDO'] = (r['REDO'] !== undefined && r['REDO'] !== null && r['REDO'] !== '') ? r['REDO'] : (r['Redo'] || 'N');
+
       return row;
     });
 
@@ -142,12 +312,14 @@ function applySelectedTemplate() {
 
     if (found && found.columns && found.columns.length > 0) {
       combinedState.columns = found.columns.map(function(c) { return c.name; });
-      combinedState.data = raw.map(function(r) {
+      combinedState.data = raw.map(function(r, idx) {
         var row = {};
         if (r['_isMerged']) row['_isMerged'] = true;
         for (var c = 0; c < found.columns.length; c++) {
           var colDef = found.columns[c];
-          if (!colDef.sources || colDef.sources.length === 0) {
+          if (colDef.name === 'No' && (!colDef.sources || colDef.sources.length === 0)) {
+            row['No'] = idx + 1;
+          } else if (!colDef.sources || colDef.sources.length === 0) {
             row[colDef.name] = '';
           } else {
             var parts = [];
@@ -165,7 +337,7 @@ function applySelectedTemplate() {
         return row;
       });
     } else {
-      // Fallback
+      // Fallback to GGN standard
       combinedState.columns = MASTER_COLUMNS_GGN.slice();
       combinedState.data = raw.map(function(r) { return Object.assign({}, r); });
     }
@@ -186,14 +358,17 @@ function selectCombinedTemplate(templateName, cardEl) {
     applySelectedTemplate();
     renderCombinedPreview(combinedState.columns, combinedState.data);
     saveState();
-    showToast('Applied template: ' + (templateName.indexOf('CUSTOM_') === 0 ? 'Custom Template' : templateName), 'success');
+    var displayName = (templateName === 'GGN_STANDARD' || templateName === 'GGN_OPEN_PENDING' || templateName === 'GGN Standerd')
+      ? 'GGN Standerd'
+      : (templateName.indexOf('CUSTOM_') === 0 ? 'Custom Template' : templateName);
+    showToast('Applied template: ' + displayName, 'success');
   }
 }
 
 function scrollToElement(elId) {
   setTimeout(function() {
     var el = document.getElementById(elId);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (el && typeof el.scrollIntoView === 'function') el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 120);
 }
 function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
@@ -218,10 +393,12 @@ function extractAllCombined() {
   try {
     var pcRecords = [], mlRecords = [];
 
+    // Step 1: Print Text Data
     if (t2) {
       var res2 = parsePrintCommandText(t2);
       if (res2 && res2.data) pcRecords = pcRecords.concat(res2.data);
     }
+    // Step 2: Management Lite Data
     if (t3) {
       var res3 = parseManagementLiteText(t3);
       if (res3 && res3.data) mlRecords = res3.data;
@@ -230,26 +407,34 @@ function extractAllCombined() {
     var combined = [], mergedCount = 0;
 
     if (pcRecords.length > 0 && mlRecords.length > 0) {
+      // Merge Step 1 and Step 2 by matching Service Order No
       var map = {};
       for (var i = 0; i < mlRecords.length; i++) {
         var mRow = mlRecords[i];
-        var so = (mRow['Service Order No'] || '').trim();
+        var so = (mRow['Service Order No.'] || mRow['Service Order No'] || '').trim();
         if (so) map[so] = Object.assign({}, mRow);
         else combined.push(Object.assign({}, mRow));
       }
+
       for (var j = 0; j < pcRecords.length; j++) {
         var pRow = pcRecords[j];
-        var pso = (pRow['Service Order No'] || '').trim();
+        var pso = (pRow['Service Order No.'] || pRow['Service Order No'] || '').trim();
         if (pso && map[pso]) {
           var target = map[pso];
           for (var key in pRow) {
+            // Never overwrite core Management Lite status/reason/redo fields from Print Command
+            if (key === 'Reason' || key === 'Reason (GSPN)' || key === 'Status' || key === 'Status (GSPN)' || key === 'REDO') {
+              continue;
+            }
             if (pRow[key] && (!target[key] || key === 'Address' || key === 'Telephone(Mobile)' ||
                 key === 'Engineer' || key === 'Customer No' || key.indexOf('Symptom') !== -1 ||
-                key === '1st Service Comment' || key === 'Remark')) {
+                key === '1st Service Comment' || key === 'Remark' || key === 'VOC')) {
               target[key] = pRow[key];
             }
           }
           if (pRow['Model Name'] && !target['Model']) target['Model'] = pRow['Model Name'];
+          if (pRow['Customer Name'] && !target['Customer Name']) target['Customer Name'] = pRow['Customer Name'];
+          if (pRow['City'] && !target['City']) target['City'] = pRow['City'];
           target['_isMerged'] = true;
           mergedCount++;
         } else if (pso) {
@@ -261,13 +446,15 @@ function extractAllCombined() {
         }
       }
       for (var k in map) combined.push(map[k]);
+
     } else if (mlRecords.length > 0) {
       combined = mlRecords;
     } else {
       combined = pcRecords;
       for (var i = 0; i < combined.length; i++) {
-        if (combined[i]['Model Name'] && !combined[i]['Model'])
+        if (combined[i]['Model Name'] && !combined[i]['Model']) {
           combined[i]['Model'] = combined[i]['Model Name'];
+        }
       }
     }
 
@@ -277,14 +464,63 @@ function extractAllCombined() {
       return;
     }
 
+    // Apply New Internal Logic: Aging/TAT, Product Category, Date/Time separation
     for (var i = 0; i < combined.length; i++) {
-      var cr = combined[i]['Created'] || combined[i]['ASC Assigned'] || '';
-      if (cr) {
-        var tatDays = calcTAT(cr);
-        combined[i]['TAT'] = (typeof tatDays === 'number') ? tatDays + 'd' : '';
+      var item = combined[i];
+
+      // Sequential No
+      item['No'] = i + 1;
+
+      // Standard Service Order No.
+      if (!item['Service Order No.'] && item['Service Order No']) {
+        item['Service Order No.'] = item['Service Order No'];
       }
-      if (!combined[i]['Product'] && combined[i]['Model'])
-        combined[i]['Product'] = getProductCategory(combined[i]['Model']);
+
+      // Model & Product categorization (15-branch IF formula)
+      var modelVal = item['Model Name'] || item['Model'] || '';
+      item['Model Name'] = modelVal;
+      item['Model'] = modelVal;
+      item['Product'] = typeof getProductCategory === 'function' ? getProductCategory(modelVal) : '';
+
+      // Date & Time Separation for Assigned Date
+      var rawAssigned = item['Assigned Date'] || item['ASC Assigned'] || item['Assigned'] || '';
+      if (rawAssigned && typeof splitDateTime === 'function') {
+        var sAssigned = splitDateTime(rawAssigned);
+        if (sAssigned.date) {
+          item['Assigned Date'] = sAssigned.date;
+          item['Assigned'] = sAssigned.date;
+        }
+        if (sAssigned.time && !item['Assigned Time']) item['Assigned Time'] = sAssigned.time;
+      } else if (rawAssigned) {
+        item['Assigned Date'] = rawAssigned;
+        item['Assigned'] = rawAssigned;
+      }
+
+      // Date & Time Separation for App Date
+      var rawApp = item['Appointment Date'] || item['App Date'] || '';
+      if (rawApp && typeof splitDateTime === 'function') {
+        var sApp = splitDateTime(rawApp);
+        if (sApp.date) item['App Date'] = sApp.date;
+        if (sApp.time && !item['App Time']) item['App Time'] = sApp.time;
+      }
+
+      // Service Type expansion (e.g. IH -> IN-HOME)
+      var curSvcType = item['Service Type (Status)'] || item['Service Type'] || '';
+      if (curSvcType && typeof convertServiceType === 'function') {
+        curSvcType = convertServiceType(curSvcType);
+        item['Service Type'] = curSvcType;
+        item['Service Type (Status)'] = curSvcType;
+      }
+
+      // TAT & Aging (formula: =TODAY() - ASSIGNED_DATE)
+      var assignedForAging = item['Assigned Date'] || item['Assigned'] || item['ASC Assigned'] || '';
+      if (assignedForAging) {
+        var agingDays = typeof calcAging === 'function' ? calcAging(assignedForAging) : calcTAT(assignedForAging);
+        if (typeof agingDays === 'number' && !isNaN(agingDays)) {
+          item['Aging'] = agingDays;
+          item['TAT'] = typeof getTATLabel === 'function' ? getTATLabel(agingDays) : '';
+        }
+      }
     }
 
     combinedState.rawRecords = combined;
@@ -394,7 +630,7 @@ function clearAllInputs() {
     localStorage.removeItem(LS_KEY);
     localStorage.removeItem('gspn_extracted_data');
   } catch(e) {}
-  setStatus('globalStatusBar', 'globalStatusText', 'idle', 'Paste data into Step 1 or Step 2, then click Extract & Combine Data.');
+  setStatus('globalStatusBar', 'globalStatusText', 'idle', 'Paste data into Step 1 or Step 2 below, then click Extract & Combine Data.');
   hideElement('combinedResultsSection');
   toggleBtn('btnExportCombined', false);
   toggleBtn('btnCopyCombined', false);
@@ -405,7 +641,7 @@ function clearAllInputs() {
 function exportCombinedExcel() {
   if (!combinedState.data.length) return;
   var safeName = combinedState.template.replace(/[^a-zA-Z0-9_-]/g, '_');
-  downloadExcel(combinedState.columns, combinedState.data, 'GSPN_' + safeName);
+  downloadExcel(combinedState.columns, combinedState.data, 'GSPN_' + safeName, combinedState.template);
   showToast('Excel downloaded (' + combinedState.columns.length + ' cols)!', 'success');
 }
 
@@ -423,10 +659,10 @@ function showCombinedStats(statsId, data, mergedCount) {
   if (!statsEl) return;
   var inW = 0, outW = 0, prodCounts = {};
   for (var i = 0; i < data.length; i++) {
-    var wty = (data[i]['Wty Status'] || '').toLowerCase();
+    var wty = (data[i]['Wty Status'] || data[i]['Warranty Status'] || '').toLowerCase();
     if (wty.indexOf('in warranty') !== -1 || wty.indexOf('in_warranty') !== -1) inW++;
     else outW++;
-    var prod = data[i]['Product'] || 'UNKNOWN';
+    var prod = data[i]['Product'] || 'Other';
     prodCounts[prod] = (prodCounts[prod] || 0) + 1;
   }
   var topProduct = 'N/A', topCount = 0;
@@ -491,7 +727,17 @@ function renderCombinedPreview(columns, data) {
     bHTML += '<tr' + (isMerged ? ' style="background:rgba(124,58,237,0.04);"' : '') + '>';
     bHTML += '<td style="text-align:center;font-size:10px;color:#94a3b8;font-weight:600;background:rgba(241,245,249,0.7);border-right:1px solid #e2e8f0;">' + (r + 1) + '</td>';
     for (var c = 0; c < columns.length; c++) {
-      bHTML += '<td>' + escapeHtml(displayData[r][columns[c]] || '') + '</td>';
+      var col = columns[c];
+      var cellVal = displayData[r][col];
+      var valStr = (cellVal !== undefined && cellVal !== null) ? String(cellVal) : '';
+
+      if (col === 'TAT' && valStr) {
+        var agingVal = displayData[r]['Aging'];
+        var style = typeof getTATStyle === 'function' ? getTATStyle(agingVal) : { class: '', bg: '', color: '' };
+        bHTML += '<td style="text-align:center;"><span class="' + (style.class || '') + '" style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;' + (style.bg ? 'background:' + style.bg + ';color:' + style.color + ';' : '') + '">' + escapeHtml(valStr) + '</span></td>';
+      } else {
+        bHTML += '<td>' + escapeHtml(valStr) + '</td>';
+      }
     }
     bHTML += '</tr>';
   }
@@ -530,4 +776,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   } catch(e) {}
 });
-

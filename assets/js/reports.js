@@ -149,23 +149,40 @@ function renderSummaryStats(data) {
 }
 
 function renderTatBars(data) {
-  var buckets = { '0-1 Day': 0, '2-3 Days': 0, '4-7 Days': 0, '8+ Days': 0 };
+  var buckets = {
+    '0–2 Days': 0,
+    '3–7 Days': 0,
+    '8–10 Days': 0,
+    '11–14 Days': 0,
+    '15–30 Days': 0,
+    '>30 Days': 0
+  };
   var colors = {
-    '0-1 Day': '#10b981',
-    '2-3 Days': '#3b82f6',
-    '4-7 Days': '#f59e0b',
-    '8+ Days': '#ef4444'
+    '0–2 Days': '#10b981',
+    '3–7 Days': '#3b82f6',
+    '8–10 Days': '#f59e0b',
+    '11–14 Days': '#f97316',
+    '15–30 Days': '#ef4444',
+    '>30 Days': '#991b1b'
   };
 
   for (var i = 0; i < data.length; i++) {
-    var created = data[i]['Created'] || data[i]['ASC Assigned'] || '';
-    var tat = calcTAT(created);
-    if (typeof tat !== 'number') tat = 0;
+    var agingVal = data[i]['Aging'];
+    var tat;
+    if (agingVal !== undefined && agingVal !== null && agingVal !== '') {
+      tat = parseFloat(agingVal);
+    } else {
+      var created = data[i]['Created'] || data[i]['Assigned'] || data[i]['ASC Assigned'] || '';
+      tat = calcTAT(created);
+    }
+    if (typeof tat !== 'number' || isNaN(tat)) tat = 0;
 
-    if (tat <= 1) buckets['0-1 Day']++;
-    else if (tat <= 3) buckets['2-3 Days']++;
-    else if (tat <= 7) buckets['4-7 Days']++;
-    else buckets['8+ Days']++;
+    if (tat <= 2) buckets['0–2 Days']++;
+    else if (tat <= 7) buckets['3–7 Days']++;
+    else if (tat <= 10) buckets['8–10 Days']++;
+    else if (tat <= 14) buckets['11–14 Days']++;
+    else if (tat <= 30) buckets['15–30 Days']++;
+    else buckets['>30 Days']++;
   }
 
   var total = data.length;
