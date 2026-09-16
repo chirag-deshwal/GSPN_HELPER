@@ -901,7 +901,7 @@
 
     // --- APPLICATION STATE ---
     let appState = {
-      reportDate: '2026-09-11',
+      reportDate: new Date().toISOString().split('T')[0],
       selectedBranch: 'Gurgaon-CE',
       selectedAsc: '4903753',
       records: [],
@@ -1082,17 +1082,37 @@
 
     /**
      * Calculates Aging in whole days: =TODAY() - REQUESTED_DATE
+     * If cutoffDate is null/invalid or earlier than reqDate (e.g. stale report cutoff), defaults to today's date
      */
     function calcAging(reqDateVal, cutoffDateVal) {
       const reqDate = parseDate(reqDateVal);
       if (!reqDate) return 0;
-      const cutoff = parseDate(cutoffDateVal) || new Date();
+      let cutoff = parseDate(cutoffDateVal);
+      const today = new Date();
+      if (!cutoff || cutoff < reqDate) {
+        cutoff = today;
+      }
       
       const cMidnight = new Date(cutoff.getFullYear(), cutoff.getMonth(), cutoff.getDate());
       const rMidnight = new Date(reqDate.getFullYear(), reqDate.getMonth(), reqDate.getDate());
       
       const diffDays = Math.round((cMidnight - rMidnight) / (1000 * 60 * 60 * 24));
       return diffDays >= 0 ? diffDays : 0;
+    }
+
+    /**
+     * Formats Excel fractional day numbers (e.g. 0.541666667) into HH:mm:ss string (e.g. 13:00:00)
+     */
+    function formatExcelTime(val) {
+      if (val === undefined || val === null || val === '') return '';
+      const num = parseFloat(val);
+      if (!isNaN(num) && num > 0 && num < 1 && (typeof val === 'number' || String(val).startsWith('0.'))) {
+        const totalMinutes = Math.round(num * 24 * 60);
+        const hours = Math.floor(totalMinutes / 60);
+        const mins = totalMinutes % 60;
+        return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:00`;
+      }
+      return String(val).trim();
     }
 
     /**
@@ -1307,23 +1327,46 @@
           
           const modelVal = String(r['Model'] || r.model || r['Model Code'] || r.modelCode || r['Model Name'] || r['Model_Name'] || '').trim();
           const serialVal = String(r['Serial'] || r.serial || r['Serial No'] || r.serialNo || '').trim();
-          const sType = convertServiceType(r['Service Type'] || r.serviceType || '');
-          const rawWty = String(r['Wty Status'] || r.wtyStatus || r['Warranty'] || r.warranty || r['Warranty Status'] || '').trim();
-          const wtyVal = normalizeWarrantyStatus(rawWty, sType);
+          let sType = convertServiceType(r['Service Type'] || r.serviceType || r['Service Type (Status)'] || '');
+          let rawWty = String(r['Wty Status'] || r.wtyStatus || r['Warranty'] || r.warranty || r['Warranty Status'] || '').trim();
           
-          const vocVal = String(r['VOC'] || r.voc || '').trim();
-          const redoVal = String(r['REDO'] || r.redo || 'N').trim();
-          const riskSensingVal = String(r['Risk Sensing'] || r.riskSensing || 'Normal').trim();
-          const redVal = String(r['RED'] || r.red || 'N').trim();
-          const highPriorityVal = String(r['High Priority'] || r.highPriority || 'Normal').trim();
-          const custName = String(r['Customer Name'] || r.customerName || '').trim();
-          const cityVal = String(r['City'] || r.city || '').trim();
-          const appDateVal = String(r['App Date'] || r.appDate || r['First Anticipated Date'] || r.firstAnticipatedDate || '').trim();
-          const appTimeVal = String(r['App Time'] || r.appTime || '').trim();
-          const statusVal = String(r['Status'] || r.status || '').trim();
-          const reasonVal = String(r['Reason'] || r.reason || '').trim();
-          const b2bVal = String(r['B2B'] || r.b2b || 'N').trim();
-          const riskReasonVal = String(r['Risk Reason'] || r.riskReason || 'None').trim();
+          let vocVal = String(r['VOC'] || r.voc || r['Customer VOC'] || '').trim();
+          let redoVal = String(r['REDO'] || r.redo || 'N').trim();
+          let riskSensingVal = String(r['Risk Sensing'] || r.riskSensing || 'Normal').trim();
+          let redVal = String(r['RED'] || r.red || 'N').trim();
+          let highPriorityVal = String(r['High Priority'] || r.highPriority || 'Normal').trim();
+          let custName = String(r['Customer Name'] || r.customerName || '').trim();
+          let cityVal = String(r['City'] || r.city || '').trim();
+          let appDateVal = String(r['App Date'] || r.appDate || r['First Anticipated Date'] || r.firstAnticipatedDate || '').trim();
+          let appTimeVal = formatExcelTime(r['App Time'] || r.appTime || '');
+          let statusVal = String(r['Status'] || r.status || r['Status (GSPN)'] || r['Call Status'] || '').trim();
+          let reasonVal = String(r['Reason'] || r.reason || r['Reason (GSPN)'] || '').trim();
+          let b2bVal = String(r['B2B'] || r.b2b || 'N').trim();
+          let riskReasonVal = String(r['Risk Reason'] || r.riskReason || 'None').trim();
+
+          // Intelligent Disambiguation & Self-Healing:
+          // 1. If VOC contains warranty keyword ("In Warranty" / "Out of Warranty" / "IW" / "OW")
+          if (vocVal.toUpperCase().includes('WARRANTY') || vocVal.toUpperCase() === 'IW' || vocVal.toUpperCase() === 'OW') {
+            if (!rawWty || rawWty.toUpperCase() === 'IW') {
+              rawWty = vocVal;
+            }
+            vocVal = '-';
+          }
+          let wtyVal = normalizeWarrantyStatus(rawWty, sType);
+
+          // 2. If Status contains Service Type name (e.g. "Initial Installation")
+          const knownServiceTypes = ['INITIAL INSTALLATION', 'IN-HOME', 'DEMONSTRATION', 'STOCK REPAIR', 'CUSTOMER CARE', 'PICK-UP SERVICE', 'CARRY IN', 'RETURN HANDLING'];
+          if (knownServiceTypes.includes(statusVal.toUpperCase())) {
+            if (!sType || sType === 'Other') {
+              sType = convertServiceType(statusVal);
+            }
+            if (reasonVal && reasonVal !== statusVal) {
+              statusVal = reasonVal;
+              reasonVal = '-';
+            } else {
+              statusVal = 'Open';
+            }
+          }
 
           // Aging calculation matching website tools.js & core.js:
           // 1. If Aging is already present as a numeric value in raw data, preserve it!
@@ -1900,7 +1943,7 @@
           <td class="py-1.5 px-3 border-r text-slate-800 font-sans">${r.customerName}</td>
           <td class="py-1.5 px-2.5 border-r text-slate-600 font-sans">${r.city}</td>
           <td class="py-1.5 px-2.5 border-r text-center text-slate-600">${r.appDate}</td>
-          <td class="py-1.5 px-2.5 border-r text-center text-slate-600">${r.appTime}</td>
+          <td class="py-1.5 px-2.5 border-r text-center text-slate-600 font-mono">${formatExcelTime(r.appTime)}</td>
           <td class="py-1.5 px-2 border-r text-center font-semibold ${r.b2b === 'Y' ? 'text-indigo-600' : 'text-slate-400'}">${r.b2b || 'N'}</td>
           <td class="py-1.5 px-3 text-slate-600 font-sans max-w-[160px] truncate" title="${r.riskReason}">${r.riskReason || 'None'}</td>
         `;
@@ -2178,9 +2221,47 @@
      */
     function parseUploadedData(dataArray) {
       if (!Array.isArray(dataArray) || dataArray.length === 0) return [];
+
+      const standard25 = [
+        'Date', 'Branch Name', 'No', 'Service Order No.', 'ASC Job No',
+        'Created', 'Assigned', 'Assigned Time', 'Model', 'Serial',
+        'Wty Status', 'VOC', 'REDO', 'Risk Sensing', 'RED', 'High Priority',
+        'Customer Name', 'City', 'App Date', 'App Time', 'Service Type',
+        'Status', 'Reason', 'B2B', 'Risk Reason'
+      ];
+
+      // Handle array of arrays (e.g. SheetJS header: 1)
+      let normalizedRows = dataArray;
+      if (Array.isArray(dataArray[0])) {
+        let headerRowIdx = -1;
+        for (let i = 0; i < Math.min(dataArray.length, 5); i++) {
+          const r = dataArray[i].map(c => String(c || '').trim().toUpperCase());
+          if (r.some(cell => cell.includes('SERVICE ORDER') || cell.includes('SO NO') || cell.includes('ASC JOB') || cell.includes('BRANCH') || cell.includes('MODEL'))) {
+            headerRowIdx = i;
+            break;
+          }
+        }
+        let headers = standard25;
+        let dataStart = 0;
+        if (headerRowIdx !== -1) {
+          headers = dataArray[headerRowIdx].map(c => String(c || '').trim());
+          dataStart = headerRowIdx + 1;
+        }
+        normalizedRows = [];
+        for (let r = dataStart; r < dataArray.length; r++) {
+          const arr = dataArray[r];
+          if (!arr || arr.every(cell => !cell)) continue;
+          const obj = {};
+          const targetHeaders = (arr.length === 25 && headers.length !== 25) ? standard25 : headers;
+          targetHeaders.forEach((h, idx) => {
+            obj[h] = arr[idx] !== undefined && arr[idx] !== null ? String(arr[idx]).trim() : '';
+          });
+          normalizedRows.push(obj);
+        }
+      }
       
       const records = [];
-      dataArray.forEach((row, idx) => {
+      normalizedRows.forEach((row, idx) => {
         // 1. Date
         const dateCol = row['Date'] || row['date'] || row['Report Date'] || '';
 
@@ -2217,15 +2298,14 @@
         const serial = row['Serial'] || row['serial'] || row['Serial No'] || row['serialNo'] || row['Serial Number'] || '';
 
         // 21. Service Type
-        const sType = row['Service Type'] || row['serviceType'] || row['Service Type (Status)'] || '';
+        let sType = row['Service Type'] || row['serviceType'] || row['Service Type (Status)'] || '';
 
         // 11. Wty Status (Standardized: "In Warranty" -> "IW", "Out of Warranty" -> "OW")
-        const rawWty = row['Wty Status'] || row['wtyStatus'] || row['Warranty Status']
+        let rawWty = row['Wty Status'] || row['wtyStatus'] || row['Warranty Status']
                        || row['Warranty'] || row['warranty'] || row['IW/OW'] || '';
-        const wtyStatus = normalizeWarrantyStatus(rawWty, sType);
 
         // 12. VOC
-        const voc = row['VOC'] || row['voc'] || row['Customer VOC'] || row['Complaint'] || row['Defect'] || '';
+        let voc = row['VOC'] || row['voc'] || row['Customer VOC'] || row['Complaint'] || row['Defect'] || '';
 
         // 13. REDO
         const redo = row['REDO'] || row['redo'] || row['Redo'] || 'N';
@@ -2250,13 +2330,31 @@
                      || row['First Anticipated Date'] || row['firstAnticipatedDate'] || '';
 
         // 20. App Time
-        const appTime = row['App Time'] || row['appTime'] || row['Appointment Time'] || '';
+        const appTime = formatExcelTime(row['App Time'] || row['appTime'] || row['Appointment Time'] || '');
 
         // 22. Status
-        const status = row['Status'] || row['status'] || row['Call Status'] || '';
+        let status = row['Status'] || row['status'] || row['Status (GSPN)'] || row['Call Status'] || '';
 
         // 23. Reason
-        const reason = row['Reason'] || row['reason'] || row['Pending Reason'] || '';
+        let reason = row['Reason'] || row['reason'] || row['Reason (GSPN)'] || row['Pending Reason'] || '';
+
+        // Disambiguation & Self-Healing:
+        if (String(voc).toUpperCase().includes('WARRANTY') || String(voc).toUpperCase() === 'IW' || String(voc).toUpperCase() === 'OW') {
+          if (!rawWty || String(rawWty).toUpperCase() === 'IW') rawWty = voc;
+          voc = '-';
+        }
+        const wtyStatus = normalizeWarrantyStatus(rawWty, sType);
+
+        const knownServiceTypes = ['INITIAL INSTALLATION', 'IN-HOME', 'DEMONSTRATION', 'STOCK REPAIR', 'CUSTOMER CARE', 'PICK-UP SERVICE', 'CARRY IN', 'RETURN HANDLING'];
+        if (knownServiceTypes.includes(String(status).trim().toUpperCase())) {
+          if (!sType || sType === 'Other') sType = status;
+          if (reason && reason !== status) {
+            status = reason;
+            reason = '-';
+          } else {
+            status = 'Open';
+          }
+        }
 
         // 24. B2B
         const b2b = row['B2B'] || row['b2b'] || 'N';
@@ -2671,9 +2769,17 @@
             const workbook = XLSX.read(data, { type: 'array' });
             const firstSheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[firstSheetName];
+            
+            // First attempt: standard object conversion
             const json = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+            let parsed = parseUploadedData(json);
 
-            const parsed = parseUploadedData(json);
+            // Fallback attempt: if no records recognized, parse with header: 1 to find header row
+            if (parsed.length === 0) {
+              const rawRows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
+              parsed = parseUploadedData(rawRows);
+            }
+
             // Update the file indicator to show parse result
             const indicator = document.getElementById('fileSelectedIndicator');
             const statusEl  = document.getElementById('selectedFileStatus');
@@ -2681,7 +2787,7 @@
               appState.pendingUploadRecords = parsed;
               if (statusEl) statusEl.textContent = `— ✅ ${parsed.length} records parsed`;
               document.getElementById('parseStatusText').textContent = `✅ Parsed ${parsed.length} service records from "${file.name}".`;
-              document.getElementById('parseDetailText').textContent = `Sheet: ${firstSheetName} · ${json.length} rows read`;
+              document.getElementById('parseDetailText').textContent = `Sheet: ${firstSheetName} · ${parsed.length} calls recognized`;
               document.getElementById('parseFeedbackBox').classList.remove('hidden');
               document.getElementById('btnApplyUpload').disabled = false;
               showToast(`Loaded ${parsed.length} calls from ${file.name}`);
@@ -2713,17 +2819,43 @@
         try {
           // Parse TSV (tab separated values)
           const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-          if (lines.length < 2) {
-            showToast('Data must include at least 1 header line and 1 data row.', 'error');
+          if (lines.length < 1) {
+            showToast('Please paste valid table data.', 'error');
             return;
           }
 
-          const headers = lines[0].split('\t').map(h => h.trim());
+          const standard25 = [
+            'Date', 'Branch Name', 'No', 'Service Order No.', 'ASC Job No',
+            'Created', 'Assigned', 'Assigned Time', 'Model', 'Serial',
+            'Wty Status', 'VOC', 'REDO', 'Risk Sensing', 'RED', 'High Priority',
+            'Customer Name', 'City', 'App Date', 'App Time', 'Service Type',
+            'Status', 'Reason', 'B2B', 'Risk Reason'
+          ];
+
+          let headers = lines[0].split('\t').map(h => h.trim());
+          let dataStartIndex = 1;
+
+          // Check if first line contains "Date   Branch Name   No" with spaces instead of tabs
+          if (headers.length < 25 && headers[0].includes('Date') && headers[0].includes('Branch Name')) {
+            const sub = headers[0].split(/\s{2,}/).map(s => s.trim()).filter(Boolean);
+            if (sub.length >= 2) {
+              headers.splice(0, 1, ...sub);
+            }
+          }
+
+          // Check if line 0 is actually a data row, not a header row
+          const isHeader = headers.some(h => ['SERVICE ORDER NO.', 'SO NO', 'ASC JOB NO', 'MODEL', 'BRANCH NAME', 'CUSTOMER NAME'].includes(h.toUpperCase()));
+          if (!isHeader) {
+            headers = standard25;
+            dataStartIndex = 0;
+          }
+
           const rows = [];
-          for (let i = 1; i < lines.length; i++) {
+          for (let i = dataStartIndex; i < lines.length; i++) {
             const parts = lines[i].split('\t');
             const rowObj = {};
-            headers.forEach((h, idx) => {
+            const targetCols = (parts.length === 25 && headers.length !== 25) ? standard25 : headers;
+            targetCols.forEach((h, idx) => {
               rowObj[h] = parts[idx] ? parts[idx].trim() : '';
             });
             rows.push(rowObj);
@@ -2786,7 +2918,7 @@
 
           // Auto-detect report date from the data if Date column is present
           const dateCandidates = appState.records
-            .map(r => r['Date'] || r.dateCol || '')
+            .map(r => r['Date'] || r.date || r.dateCol || r['App Date'] || r.appDate || r['Created'] || r.created || r['Assigned'] || r.assigned || '')
             .filter(Boolean);
           if (dateCandidates.length > 0) {
             // Use the most recent date as the report cutoff
