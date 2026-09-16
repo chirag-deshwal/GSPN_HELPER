@@ -414,6 +414,13 @@
           <span class="inline-flex items-center px-2 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">
             <span class="w-2.5 h-2.5 rounded bg-red-600 mr-1.5"></span> D+7 By Products
           </span>
+          <button id="btnPreviewRaw" class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs shadow transition border border-blue-500 cursor-pointer" title="Preview and inspect the processed RAW Data with TAT, Product &amp; Warranty Status">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            <span>Preview RAW (<span id="previewRawBadge">0</span>)</span>
+          </button>
         </div>
       </div>
 
@@ -907,20 +914,32 @@
     };
 
     /**
+     * Standardizes Warranty Status:
+     * "In Warranty" / "In-Warranty" / "IW" / "YES" / "Y" -> "IW"
+     * "Out of Warranty" / "Out-of-Warranty" / "OW" / "NO" / "N" -> "OW"
+     */
+    function normalizeWarrantyStatus(wtyVal, sType) {
+      const wf = String(wtyVal || '').trim().toUpperCase();
+      if (wf === 'IW' || wf === 'IN-WARRANTY' || wf === 'IN WARRANTY' || wf === 'IN_WARRANTY' || wf === 'YES' || wf === 'Y' || wf === 'I.W.') {
+        return 'IW';
+      }
+      if (wf === 'OW' || wf === 'OUT-OF-WARRANTY' || wf === 'OUT OF WARRANTY' || wf === 'OUT_OF_WARRANTY' || wf === 'NO' || wf === 'N' || wf === 'O.W.') {
+        return 'OW';
+      }
+      // Heuristic fallback: if service type is Stock Repair or Return Handling → OW, else IW
+      const st = String(sType || '').trim().toUpperCase();
+      if (st === 'STOCK REPAIR' || st === 'RETURN HANDLING') {
+        return 'OW';
+      }
+      return 'IW';
+    }
+
+    /**
      * Determines if a call is In-Warranty (IW) or Out-of-Warranty (OW).
-     * Logic: If aging <= 365 and model code is not a stock/accessory item, treat as IW.
-     * Checks the 'wtyStatus' / 'warranty' field from excel if available, otherwise uses aging heuristic.
      */
     function isInWarranty(record) {
-      // If explicit warranty field exists
-      const wf = String(record.wtyStatus || record.warranty || record['Wty Status'] || record['Warranty'] || record['Warranty Status'] || '').trim().toUpperCase();
-      if (wf === 'IW' || wf === 'IN-WARRANTY' || wf === 'IN WARRANTY' || wf === 'YES' || wf === 'Y') return true;
-      if (wf === 'OW' || wf === 'OUT-OF-WARRANTY' || wf === 'OUT OF WARRANTY' || wf === 'NO' || wf === 'N') return false;
-      // Heuristic: if service type is Stock Repair or Return Handling → likely OW
-      const sType = String(record.serviceType || '').toUpperCase();
-      if (sType === 'STOCK REPAIR' || sType === 'RETURN HANDLING') return false;
-      // Default: In-Warranty
-      return true;
+      const wf = record.wtyStatus || record.warranty || record['Wty Status'] || record['Warranty'] || record['Warranty Status'];
+      return normalizeWarrantyStatus(wf, record.serviceType) === 'IW';
     }
 
     // --- CORE FORMULAS & UTILITIES (Refactored from core.js) ---
@@ -1202,8 +1221,8 @@
           modelCode: modelCode,
           serialNo: `SN${trackingId}X`,
           serviceType: sType,
-          warranty: isIW ? 'In Warranty' : 'Out of Warranty',
-          wtyStatus: isIW ? 'In Warranty' : 'Out of Warranty'
+          warranty: isIW ? 'IW' : 'OW',
+          wtyStatus: isIW ? 'IW' : 'OW'
         };
       }
 
@@ -1288,7 +1307,9 @@
           
           const modelVal = String(r['Model'] || r.model || r['Model Code'] || r.modelCode || r['Model Name'] || r['Model_Name'] || '').trim();
           const serialVal = String(r['Serial'] || r.serial || r['Serial No'] || r.serialNo || '').trim();
-          const wtyVal = String(r['Wty Status'] || r.wtyStatus || r['Warranty'] || r.warranty || r['Warranty Status'] || '').trim();
+          const sType = convertServiceType(r['Service Type'] || r.serviceType || '');
+          const rawWty = String(r['Wty Status'] || r.wtyStatus || r['Warranty'] || r.warranty || r['Warranty Status'] || '').trim();
+          const wtyVal = normalizeWarrantyStatus(rawWty, sType);
           
           const vocVal = String(r['VOC'] || r.voc || '').trim();
           const redoVal = String(r['REDO'] || r.redo || 'N').trim();
@@ -1299,7 +1320,6 @@
           const cityVal = String(r['City'] || r.city || '').trim();
           const appDateVal = String(r['App Date'] || r.appDate || r['First Anticipated Date'] || r.firstAnticipatedDate || '').trim();
           const appTimeVal = String(r['App Time'] || r.appTime || '').trim();
-          const sType = convertServiceType(r['Service Type'] || r.serviceType || '');
           const statusVal = String(r['Status'] || r.status || '').trim();
           const reasonVal = String(r['Reason'] || r.reason || '').trim();
           const b2bVal = String(r['B2B'] || r.b2b || 'N').trim();
@@ -1754,6 +1774,12 @@
       renderExecutiveTable(matrixData);
       renderCharts(matrixData);
       renderRawRecordsTable(processed);
+
+      // Update count badges
+      const rawBadge = document.getElementById('rawRecordCountBadge');
+      if (rawBadge) rawBadge.textContent = processed.length;
+      const previewBadge = document.getElementById('previewRawBadge');
+      if (previewBadge) previewBadge.textContent = processed.length;
     }
 
     // --- RAW RECORDS DRAWER/MODAL RENDERING & CALL CLOSURE ---
@@ -1823,8 +1849,22 @@
         return;
       }
 
-      // Render top 150 for responsiveness
-      const slice = filtered.slice(0, 150);
+      // Product badge color mapping matching the matrix table
+      const prodBadgeColors = {
+        'AC': 'bg-red-100 text-red-800 border-red-300',
+        'WM': 'bg-green-100 text-green-800 border-green-300',
+        'REF': 'bg-yellow-100 text-yellow-800 border-yellow-300',
+        'AV': 'bg-slate-800 text-white border-slate-900',
+        'MW': 'bg-emerald-100 text-emerald-800 border-emerald-300',
+        'AUD': 'bg-rose-100 text-rose-800 border-rose-300',
+        'DW': 'bg-blue-100 text-blue-800 border-blue-300',
+        'HHP': 'bg-teal-100 text-teal-800 border-teal-300',
+        'IT': 'bg-red-100 text-red-700 border-red-200',
+        'Other': 'bg-amber-100 text-amber-800 border-amber-300'
+      };
+
+      // Render all or up to 1000 records so user sees their full dataset (e.g. 408 calls)
+      const slice = filtered.slice(0, 1000);
       slice.forEach(r => {
         const tr = document.createElement('tr');
         tr.className = `transition ${r.isClosed ? 'bg-emerald-50/70 text-slate-700' : 'hover:bg-slate-50'}`;
@@ -1842,14 +1882,14 @@
           <td class="py-1.5 px-3 border-r font-extrabold text-blue-700 font-mono">${r.serviceOrderNo}</td>
           <td class="py-1.5 px-2.5 border-r text-slate-700 font-sans">${r.branchName}</td>
           <td class="py-1.5 px-2.5 border-r text-slate-600 font-mono">${r.ascJobNo}</td>
-          <td class="py-1.5 px-2.5 border-r text-center text-slate-600">${r.created}</td>
+          <td class="py-1.5 px-2.5 border-r text-center text-slate-600">${r.created || r.assigned}</td>
           <td class="py-1.5 px-2 border-r text-center font-bold ${r.aging > 15 ? 'text-rose-600 font-extrabold' : 'text-slate-800'}">${r.aging}</td>
-          <td class="py-1.5 px-2.5 border-r text-center"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${r.aging > 15 ? 'bg-rose-100 text-rose-800' : 'bg-slate-100 text-slate-700'}">${r.tatBucket}</span></td>
+          <td class="py-1.5 px-2.5 border-r text-center"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold border ${r.aging > 14 ? 'bg-rose-100 text-rose-800 border-rose-300 font-bold' : (r.aging > 7 ? 'bg-amber-100 text-amber-800 border-amber-200' : 'bg-slate-100 text-slate-700 border-slate-200')}">${r.tatBucket}</span></td>
           <td class="py-1.5 px-2.5 border-r text-slate-800 font-sans">${r.serviceType}</td>
           <td class="py-1.5 px-2.5 border-r text-slate-800 font-medium">${r.model}</td>
-          <td class="py-1.5 px-2 border-r text-center"><span class="px-1 rounded bg-slate-200 text-slate-800 font-bold">${r.product}</span></td>
+          <td class="py-1.5 px-2 border-r text-center"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold border ${prodBadgeColors[r.product] || 'bg-slate-100 text-slate-800 border-slate-300'}">${r.product}</span></td>
           <td class="py-1.5 px-2.5 border-r text-slate-500 font-mono">${r.serial}</td>
-          <td class="py-1.5 px-2 border-r text-center"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${String(r.wtyStatus).toLowerCase().includes('in') ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${r.wtyStatus || 'In Warranty'}</span></td>
+          <td class="py-1.5 px-2 border-r text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${r.wtyStatus === 'IW' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'}">${r.wtyStatus}</span></td>
           <td class="py-1.5 px-2.5 border-r text-slate-800 font-sans"><span class="px-1.5 py-0.5 rounded bg-blue-50 text-blue-800 font-medium">${r.status || '-'}</span></td>
           <td class="py-1.5 px-3 border-r text-slate-700 font-sans max-w-[200px] truncate" title="${r.reason}">${r.reason || '-'}</td>
           <td class="py-1.5 px-3 border-r text-slate-600 font-sans max-w-[200px] truncate" title="${r.voc}">${r.voc || '-'}</td>
@@ -2176,9 +2216,13 @@
         // 10. Serial
         const serial = row['Serial'] || row['serial'] || row['Serial No'] || row['serialNo'] || row['Serial Number'] || '';
 
-        // 11. Wty Status
-        const wtyStatus = row['Wty Status'] || row['wtyStatus'] || row['Warranty Status']
+        // 21. Service Type
+        const sType = row['Service Type'] || row['serviceType'] || row['Service Type (Status)'] || '';
+
+        // 11. Wty Status (Standardized: "In Warranty" -> "IW", "Out of Warranty" -> "OW")
+        const rawWty = row['Wty Status'] || row['wtyStatus'] || row['Warranty Status']
                        || row['Warranty'] || row['warranty'] || row['IW/OW'] || '';
+        const wtyStatus = normalizeWarrantyStatus(rawWty, sType);
 
         // 12. VOC
         const voc = row['VOC'] || row['voc'] || row['Customer VOC'] || row['Complaint'] || row['Defect'] || '';
@@ -2207,9 +2251,6 @@
 
         // 20. App Time
         const appTime = row['App Time'] || row['appTime'] || row['Appointment Time'] || '';
-
-        // 21. Service Type
-        const sType = row['Service Type'] || row['serviceType'] || row['Service Type (Status)'] || '';
 
         // 22. Status
         const status = row['Status'] || row['status'] || row['Call Status'] || '';
@@ -2505,11 +2546,17 @@
         mailModal.classList.add('hidden');
       });
 
-      // Raw Data Modal
-      document.getElementById('btnOpenRawDataModal').addEventListener('click', () => {
+      // Raw Data Modal & Preview RAW
+      function openRawDataInspector() {
         renderRawRecordsTable(computeProcessedRecords());
         rawDataModal.classList.remove('hidden');
-      });
+      }
+
+      const btnOpenRawDataModal = document.getElementById('btnOpenRawDataModal');
+      if (btnOpenRawDataModal) btnOpenRawDataModal.addEventListener('click', openRawDataInspector);
+
+      const btnPreviewRaw = document.getElementById('btnPreviewRaw');
+      if (btnPreviewRaw) btnPreviewRaw.addEventListener('click', openRawDataInspector);
       document.getElementById('btnCloseRawDataModal').addEventListener('click', () => {
         rawDataModal.classList.add('hidden');
       });
