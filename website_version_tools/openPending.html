@@ -515,7 +515,7 @@
           </div>
           <div>
             <h3 class="text-base font-bold font-outfit">Upload Daily Excel or Paste Data</h3>
-            <p class="text-xs text-blue-200">Expected 25 columns: <strong>Date · Branch Name · No · Service Order No. · ASC Job No · Created · Assigned · Assigned Time · Model · Serial · Wty Status · VOC · REDO · Risk Sensing · RED · High Priority · Customer Name · City · App Date · App Time · Service Type · Status · Reason · B2B · Risk Reason</strong></p>
+            <p class="text-xs text-blue-200">Supports Standard 25 Columns &amp; 18-Column TRIM DATA (<code>GGN_TRIM_DATA_ML</code>) · Auto maps Service Order No., Created Date, Aging, Product, &amp; Warranty</p>
           </div>
         </div>
         <button id="btnCloseUploadModal" class="text-white/70 hover:text-white p-1 rounded-lg hover:bg-white/10 transition">
@@ -534,7 +534,7 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            Upload .xlsx / .xls / .csv
+            Upload .xlsx / .xls / .csv / .htm / .html
           </button>
           <button id="tabBtnPaste" class="py-2 px-4 text-xs font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 focus:outline-none flex items-center gap-1.5">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -547,14 +547,14 @@
         <!-- Tab 1: File Upload Drag-Drop Area -->
         <div id="tabContentFile" class="space-y-3">
           <div id="dragDropArea" class="border-2 border-dashed border-slate-300 hover:border-blue-500 bg-slate-50 hover:bg-blue-50/50 rounded-xl p-8 text-center transition cursor-pointer flex flex-col items-center justify-center">
-            <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv" class="hidden" />
+            <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv,.htm,.html,.tsv" class="hidden" />
             <div id="dragDropIconArea" class="w-14 h-14 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mb-3">
               <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
             </div>
             <p id="dragDropMainText" class="text-sm font-bold text-slate-700">Click to browse or Drag &amp; Drop Excel file here</p>
-            <p id="dragDropSubText" class="text-xs text-slate-500 mt-1">Supports GSPN Excel export (<code>.xlsx</code>, <code>.xls</code>, <code>.csv</code>)</p>
+            <p id="dragDropSubText" class="text-xs text-slate-500 mt-1">Supports GSPN Excel export &amp; TRIM DATA (<code>.xlsx</code>, <code>.xls</code>, <code>.csv</code>, <code>.htm</code>, <code>.html</code>)</p>
             <!-- File selected indicator (hidden until file is picked) -->
             <div id="fileSelectedIndicator" class="hidden mt-3 px-4 py-2 bg-emerald-50 border border-emerald-300 rounded-lg flex items-center gap-2">
               <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -963,9 +963,16 @@
     /**
      * Converts short service type codes to standard names
      */
+    /**
+     * Converts short service type codes to standard names
+     * STRICTLY returns string service type, NEVER numbers
+     */
     function convertServiceType(code) {
       if (!code) return 'Other';
-      const c = String(code).trim().toUpperCase();
+      const str = String(code).trim();
+      // If code is numeric (e.g. '1', '0') or empty, it cannot be a service type
+      if (!str || /^\d+$/.test(str)) return 'Other';
+      const c = str.toUpperCase();
       const map = {
         'IH': 'IN-HOME',
         'IN HOME': 'IN-HOME',
@@ -989,7 +996,7 @@
         'RH': 'Return Handling',
         'RETURN HANDLING': 'Return Handling'
       };
-      return map[c] || String(code).trim();
+      return map[c] || str;
     }
 
     /**
@@ -1042,6 +1049,8 @@
     /**
      * Parses diverse GSPN date strings or Excel serial numbers into Date
      * Intelligently disambiguates between DD.MM.YYYY and MM.DD.YYYY (e.g. 09.16.2026 vs 15.09.2026)
+     * Supports 2-digit years (e.g. 16-09-26 -> 16 Sep 2026)
+     * Gracefully ignores placeholder dates like 00.00.0000
      */
     function parseDate(val) {
       if (!val && val !== 0) return null;
@@ -1059,7 +1068,7 @@
       }
 
       let str = String(val).trim();
-      if (!str) return null;
+      if (!str || str === '00.00.0000' || str === '00/00/0000' || str === '00-00-00' || str === '00-00-0000') return null;
 
       // Strip time in parentheses: "05/09/2026 (12:00:00)" -> "05/09/2026"
       str = str.replace(/\s*\(.*?\)\s*/g, '').trim();
@@ -1067,12 +1076,13 @@
         str = str.split(/\s+/)[0];
       }
 
-      // Check numeric date parts: DD.MM.YYYY or MM.DD.YYYY or DD/MM/YYYY or DD-MM-YYYY
-      let m = str.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})$/);
+      // Check numeric date parts: DD.MM.YYYY or DD-MM-YY or MM-DD-YY
+      let m = str.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{2,4})$/);
       if (m) {
         let p1 = parseInt(m[1], 10);
         let p2 = parseInt(m[2], 10);
         let y = parseInt(m[3], 10);
+        if (y < 100) y = 2000 + y;
         let day = p1, month = p2;
         // If p1 <= 12 and p2 > 12, then p1 is month and p2 is day (e.g. 09.16.2026)
         if (p1 <= 12 && p2 > 12) {
@@ -1095,8 +1105,10 @@
      */
     function formatDateString(val) {
       if (!val && val !== 0) return '';
+      const str = String(val).trim();
+      if (str === '00.00.0000' || str === '00/00/0000' || str === '00-00-00' || str === '00-00-0000') return '-';
       const d = parseDate(val);
-      if (!d) return String(val).trim();
+      if (!d) return str;
       const dd = String(d.getDate()).padStart(2, '0');
       const mm = String(d.getMonth() + 1).padStart(2, '0');
       const yyyy = d.getFullYear();
@@ -1105,6 +1117,23 @@
 
     function formatDateToDot(dateObj) {
       return formatDateString(dateObj);
+    }
+
+    /**
+     * Intelligently infers Branch Name from City name (e.g. ERNAKULAM -> Cochin-CE)
+     */
+    function inferBranchFromCity(city, defaultBranch) {
+      if (!city) return defaultBranch || 'Gurgaon-CE';
+      const c = String(city).toUpperCase().trim();
+      if (c.includes('ERNAKULAM') || c.includes('COCHIN') || c.includes('KOCHI')) return 'Cochin-CE';
+      if (c.includes('SURAT')) return 'Surat-CE';
+      if (c.includes('AHMEDABAD')) return 'Ahmedabad-CE';
+      if (c.includes('GURGAON') || c.includes('GURUGRAM')) return 'Gurgaon-CE';
+      if (c.includes('LUCKNOW')) return 'Lucknow-CE';
+      if (c.includes('GANDHINAGAR')) return 'Gandhinagar-CE';
+      if (c.includes('GHAZIABAD')) return 'Ghaziabad-CE';
+      if (c.includes('MORADABAD')) return 'Moradabad-HHP';
+      return defaultBranch || 'Gurgaon-CE';
     }
 
     /**
@@ -1133,14 +1162,16 @@
      */
     function formatExcelTime(val) {
       if (val === undefined || val === null || val === '') return '';
+      const str = String(val).trim();
+      if (str === '00:00:00' || str === '00:00') return '-';
       const num = parseFloat(val);
-      if (!isNaN(num) && num > 0 && num < 1 && (typeof val === 'number' || String(val).startsWith('0.'))) {
+      if (!isNaN(num) && num > 0 && num < 1 && (typeof val === 'number' || str.startsWith('0.'))) {
         const totalMinutes = Math.round(num * 24 * 60);
         const hours = Math.floor(totalMinutes / 60);
         const mins = totalMinutes % 60;
         return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:00`;
       }
-      return String(val).trim();
+      return str;
     }
 
     /**
@@ -1169,7 +1200,7 @@
           const cleanK = k.toUpperCase().replace(/[^A-Z0-9]/g, '');
           if (cleanK === cleanAlias) {
             const val = row[k];
-            if (val !== undefined && val !== null) return val;
+            if (val !== undefined && val !== null && val !== '') return val;
           }
         }
       }
@@ -1179,57 +1210,98 @@
     /**
      * Dynamically maps ANY input row (array or object with arbitrary headers)
      * to the exact standard 25 columns with strict data formatting:
-     * - Dates: DD.MM.YYYY
+     * - Dates: DD.MM.YYYY (supports 2-digit years and fallback to Date)
      * - Times: HH:mm:ss
      * - Model & Serial: strictly String
+     * - Service Type: strictly String (never numbers)
+     * - Aging: extracted from Age column or calculated from Created/Assigned date
      */
     function mapRowToStandard25(row, idx) {
       let r = row;
       if (Array.isArray(row)) {
-        r = {
-          'Date': row[0] !== undefined ? row[0] : '',
-          'Branch Name': row[1] !== undefined ? row[1] : '',
-          'No': row[2] !== undefined ? row[2] : (idx + 1),
-          'Service Order No.': row[3] !== undefined ? row[3] : '',
-          'ASC Job No': row[4] !== undefined ? row[4] : '',
-          'Created': row[5] !== undefined ? row[5] : '',
-          'Assigned': row[6] !== undefined ? row[6] : '',
-          'Assigned Time': row[7] !== undefined ? row[7] : '',
-          'Model': row[8] !== undefined ? row[8] : '',
-          'Serial': row[9] !== undefined ? row[9] : '',
-          'Wty Status': row[10] !== undefined ? row[10] : '',
-          'VOC': row[11] !== undefined ? row[11] : '',
-          'REDO': row[12] !== undefined ? row[12] : '',
-          'Risk Sensing': row[13] !== undefined ? row[13] : '',
-          'RED': row[14] !== undefined ? row[14] : '',
-          'High Priority': row[15] !== undefined ? row[15] : '',
-          'Customer Name': row[16] !== undefined ? row[16] : '',
-          'City': row[17] !== undefined ? row[17] : '',
-          'App Date': row[18] !== undefined ? row[18] : '',
-          'App Time': row[19] !== undefined ? row[19] : '',
-          'Service Type': row[20] !== undefined ? row[20] : '',
-          'Status': row[21] !== undefined ? row[21] : '',
-          'Reason': row[22] !== undefined ? row[22] : '',
-          'B2B': row[23] !== undefined ? row[23] : '',
-          'Risk Reason': row[24] !== undefined ? row[24] : ''
-        };
+        if (row.length === 18 || (row.length < 24 && row.length >= 14)) {
+          // Format 2: 18-Column TRIM DATA format
+          r = {
+            'No': row[0] !== undefined ? row[0] : (idx + 1),
+            'ASC Job No': row[1] !== undefined ? row[1] : '',
+            'Service Order No.': row[1] !== undefined ? row[1] : '',
+            'Date': row[2] !== undefined ? row[2] : '',
+            'Created': row[2] !== undefined ? row[2] : '',
+            'Assigned': row[2] !== undefined ? row[2] : '',
+            'Model': row[3] !== undefined ? row[3] : '',
+            'Serial': row[4] !== undefined ? row[4] : '',
+            'Wty Status': row[5] !== undefined ? row[5] : '',
+            'Customer Name': row[6] !== undefined ? row[6] : '',
+            'City': row[7] !== undefined ? row[7] : '',
+            'App Date': row[8] !== undefined ? row[8] : '',
+            'App Time': row[9] !== undefined ? row[9] : '',
+            'Service Type': row[10] !== undefined ? row[10] : '',
+            'Status': row[11] !== undefined ? row[11] : '',
+            'Reason': row[12] !== undefined ? row[12] : '',
+            'Age': row[13] !== undefined ? row[13] : '',
+            'TAT': row[14] !== undefined ? row[14] : '',
+            'Product': row[15] !== undefined ? row[15] : '',
+            'Eng Name': row[16] !== undefined ? row[16] : '',
+            'TL Name': row[17] !== undefined ? row[17] : ''
+          };
+        } else {
+          // Format 1: Standard 25-Column format
+          r = {
+            'Date': row[0] !== undefined ? row[0] : '',
+            'Branch Name': row[1] !== undefined ? row[1] : '',
+            'No': row[2] !== undefined ? row[2] : (idx + 1),
+            'Service Order No.': row[3] !== undefined ? row[3] : '',
+            'ASC Job No': row[4] !== undefined ? row[4] : '',
+            'Created': row[5] !== undefined ? row[5] : '',
+            'Assigned': row[6] !== undefined ? row[6] : '',
+            'Assigned Time': row[7] !== undefined ? row[7] : '',
+            'Model': row[8] !== undefined ? row[8] : '',
+            'Serial': row[9] !== undefined ? row[9] : '',
+            'Wty Status': row[10] !== undefined ? row[10] : '',
+            'VOC': row[11] !== undefined ? row[11] : '',
+            'REDO': row[12] !== undefined ? row[12] : '',
+            'Risk Sensing': row[13] !== undefined ? row[13] : '',
+            'RED': row[14] !== undefined ? row[14] : '',
+            'High Priority': row[15] !== undefined ? row[15] : '',
+            'Customer Name': row[16] !== undefined ? row[16] : '',
+            'City': row[17] !== undefined ? row[17] : '',
+            'App Date': row[18] !== undefined ? row[18] : '',
+            'App Time': row[19] !== undefined ? row[19] : '',
+            'Service Type': row[20] !== undefined ? row[20] : '',
+            'Status': row[21] !== undefined ? row[21] : '',
+            'Reason': row[22] !== undefined ? row[22] : '',
+            'B2B': row[23] !== undefined ? row[23] : '',
+            'Risk Reason': row[24] !== undefined ? row[24] : ''
+          };
+        }
       }
 
-      // Format Date values
-      const dateVal = formatDateString(findFieldValue(r, ['DATE', 'REPORT DATE', 'CALL DATE', 'ENTRY DATE', 'REPORT_DATE']));
-      const branchVal = String(findFieldValue(r, ['BRANCH NAME', 'BRANCH_NAME', 'BRANCH', 'CP NAME', 'CP_NAME', 'SVC', 'SERVICE CENTER NAME', 'SERVICE CENTER']) || 'Gurgaon-CE').trim();
-      const noVal = findFieldValue(r, ['NO', 'NO.', 'S.NO', 'S NO', 'SL NO', 'SR NO', 'SR.NO']) || (idx + 1);
-      const soNo = cleanTrackingNumber(String(findFieldValue(r, ['SERVICE ORDER NO.', 'SERVICE ORDER NO', 'SERVICE ORDER NUMBER', 'SERVICE_ORDER_NO', 'SERVICE ORDER', 'SO NO', 'SO NO.', 'SO_NO', 'TRACKING NO', 'TRACKING NO.', 'TRACKING_NO', 'TRACKING NUMBER', 'ORDER NO'])));
-      const ascJobNo = String(findFieldValue(r, ['ASC JOB NO', 'ASC JOB NO.', 'ASC_JOB_NO', 'ASC JOB NUMBER', 'ASC REF. NO', 'ASC REF NO', 'ASC_REF_NO', 'ASC REF NUMBER', 'JOB NO', 'JOB NO.'])).trim();
-      const createdVal = formatDateString(findFieldValue(r, ['CREATED', 'CREATED DATE', 'CREATED_DATE', 'REQUESTED DATE', 'REQUESTED_DATE', 'REQUEST DATE', 'REQ DATE', 'CREATION DATE']));
-      const assignedVal = formatDateString(findFieldValue(r, ['ASSIGNED', 'ASSIGNED DATE', 'ASSIGNED_DATE', 'ASC ASSIGNED', 'ASC ASSIGNED DATE', 'ASC_ASSIGNED']));
+      // Dates: Prioritize Created, fallback to Date
+      const rawCreated = findFieldValue(r, ['CREATED', 'CREATED DATE', 'CREATED_DATE', 'REQUESTED DATE', 'REQUESTED_DATE', 'REQUEST DATE', 'REQ DATE', 'CREATION DATE']);
+      const rawDate = findFieldValue(r, ['DATE', 'REPORT DATE', 'CALL DATE', 'ENTRY DATE', 'REPORT_DATE']);
+      const createdVal = formatDateString(rawCreated || rawDate);
+      const dateVal = formatDateString(rawDate || rawCreated);
+      const rawAssigned = findFieldValue(r, ['ASSIGNED', 'ASSIGNED DATE', 'ASSIGNED_DATE', 'ASC ASSIGNED', 'ASC ASSIGNED DATE', 'ASC_ASSIGNED']);
+      const assignedVal = formatDateString(rawAssigned || rawCreated || rawDate);
       const assignedTimeVal = formatExcelTime(findFieldValue(r, ['ASSIGNED TIME', 'ASSIGNED_TIME', 'ASC ASSIGNED TIME', 'ASSIGN TIME']));
-      
+
+      // Order & Job Numbers: If one is missing, fall back to the other so neither is blank
+      const rawSo = findFieldValue(r, ['SERVICE ORDER NO.', 'SERVICE ORDER NO', 'SERVICE ORDER NUMBER', 'SERVICE_ORDER_NO', 'SERVICE ORDER', 'SO NO', 'SO NO.', 'SO_NO', 'TRACKING NO', 'TRACKING NO.', 'TRACKING_NO', 'TRACKING NUMBER', 'ORDER NO']);
+      const rawAscJob = findFieldValue(r, ['ASC JOB NO', 'ASC JOB NO.', 'ASC_JOB_NO', 'ASC JOB NUMBER', 'ASC REF. NO', 'ASC REF NO', 'ASC_REF_NO', 'ASC REF NUMBER', 'JOB NO', 'JOB NO.']);
+      const ascJobNo = String(rawAscJob || rawSo || '').trim();
+      const soNo = cleanTrackingNumber(String(rawSo || rawAscJob || ''));
+
+      const noVal = findFieldValue(r, ['NO', 'NO.', 'S.NO', 'S NO', 'SL NO', 'SR NO', 'SR.NO']) || (idx + 1);
+
       // Model & Serial: STRICTLY STRING format per user instructions
       const modelVal = String(findFieldValue(r, ['MODEL', 'MODEL CODE', 'MODEL_CODE', 'MODEL NAME', 'MODEL_NAME', 'MODEL NO', 'MODEL NUMBER']) || '').trim();
       const serialVal = String(findFieldValue(r, ['SERIAL', 'SERIAL NO', 'SERIAL NO.', 'SERIAL_NO', 'SERIAL NUMBER', 'SERIAL_NUMBER', 'IMEI', 'IMEI NO', 'IMEI NUMBER']) || '').trim();
 
-      let sType = convertServiceType(findFieldValue(r, ['SERVICE TYPE', 'SERVICE_TYPE', 'SERVICE TYPE (STATUS)', 'SVC TYPE', 'TYPE OF SERVICE', 'CALL TYPE']));
+      // Service Type: MUST BE STRING, never numbers
+      let rawServiceType = findFieldValue(r, ['SERVICE TYPE', 'SERVICE_TYPE', 'SERVICE TYPE (STATUS)', 'SVC TYPE', 'TYPE OF SERVICE', 'CALL TYPE']);
+      if (rawServiceType && /^\d+$/.test(String(rawServiceType).trim())) rawServiceType = '';
+      let sType = convertServiceType(rawServiceType);
+
       let rawWty = String(findFieldValue(r, ['WTY STATUS', 'WTY_STATUS', 'WARRANTY STATUS', 'WARRANTY_STATUS', 'WARRANTY', 'WTY', 'IW/OW', 'WTY TYPE']) || '').trim();
       let vocVal = String(findFieldValue(r, ['VOC', 'CUSTOMER VOC', 'CUSTOMER_VOC', 'COMPLAINT', 'DEFECT', 'PROBLEM', 'CUSTOMER COMPLAINT', 'SYMPTOM']) || '').trim();
       const redoVal = String(findFieldValue(r, ['REDO', 'RE-DO', 'RE DO', 'REPEAT', 'IS REDO']) || 'N').trim();
@@ -1240,6 +1312,12 @@
       // Customer Name mapping: includes Customer Care, Care, Customer Name, etc.
       const custName = String(findFieldValue(r, ['CUSTOMER NAME', 'CUSTOMER_NAME', 'CUSTOMER', 'CUST NAME', 'CUST_NAME', 'CUSTOMER CARE', 'CARE', 'CLIENT NAME', 'CLIENT', 'NAME']) || '').trim();
       const cityVal = String(findFieldValue(r, ['CITY', 'LOCATION', 'DISTRICT', 'TOWN', 'PLACE']) || '').trim();
+
+      // Branch Name: if missing, infer from City
+      let branchVal = String(findFieldValue(r, ['BRANCH NAME', 'BRANCH_NAME', 'BRANCH', 'CP NAME', 'CP_NAME', 'SVC', 'SERVICE CENTER NAME', 'SERVICE CENTER']) || '').trim();
+      if (!branchVal) {
+        branchVal = inferBranchFromCity(cityVal, appState.selectedBranch);
+      }
 
       // App Date & App Time: STRICTLY DATE and TIME format
       const appDateVal = formatDateString(findFieldValue(r, ['APP DATE', 'APP_DATE', 'APPOINTMENT DATE', 'APPOINTMENT_DATE', 'FIRST ANTICIPATED DATE', 'ANTICIPATED DATE', 'FIRST_ANTICIPATED_DATE', 'PROMISE DATE', 'APPT DATE']));
@@ -1268,8 +1346,9 @@
         }
       }
 
-      // Pre-existing Aging or Product
-      const rawAging = findFieldValue(r, ['AGING', 'AGING (DAYS)', 'TAT']);
+      // Pre-existing Age, TAT, Product or ASC Code
+      const rawAging = findFieldValue(r, ['AGE', 'AGING', 'AGING (DAYS)', 'TAT DAYS', 'DAYS']);
+      const rawTat = findFieldValue(r, ['TAT', 'TAT BUCKET', 'TAT CATEGORY']);
       const rawProd = findFieldValue(r, ['PRODUCT', 'PRODUCT CATEGORY', 'PRODUCT_CATEGORY', 'CATEGORY', 'PRODUCT GROUP', 'DIV', 'DIVISION']);
       const cpCode = String(findFieldValue(r, ['DEALER BP', 'CP CODE', 'CPCODE', 'ASC CODE']) || (ascJobNo ? ascJobNo.split('-')[0] : '') || '').trim();
 
@@ -1300,6 +1379,7 @@
         'B2B': b2bVal,
         'Risk Reason': riskReasonVal,
         'Aging': rawAging,
+        'TAT': rawTat,
         'Product': rawProd,
         'Dealer BP': cpCode,
 
@@ -1502,17 +1582,17 @@
 
       return appState.records
         .map((r, idx) => {
-          const rawSo = r['Service Order No.'] || r['Service Order No'] || r.serviceOrderNo || r['Tracking No'] || r.trackingNo || r['SO No'] || '';
+          const rawSo = r['Service Order No.'] || r['Service Order No'] || r.serviceOrderNo || r['Tracking No'] || r.trackingNo || r['SO No'] || r['ASC Job No'] || r['ASC Job No.'] || r.ascJobNo || '';
           const cleanSo = cleanTrackingNumber(rawSo);
           const noVal = r['No'] || r.no || (idx + 1);
           const dateVal = formatDateString(r['Date'] || r.date || r.dateCol || '');
           const branchVal = String(r['Branch Name'] || r['Branch_Name'] || r.branchName || r['CP Name'] || r.cpName || 'Gurgaon-CE').trim();
-          const ascJobVal = String(r['ASC Job No'] || r['ASC Job No.'] || r.ascJobNo || r['ASC Ref. No'] || r.ascRefNo || r['ASC Ref No'] || '').trim();
+          const ascJobVal = String(r['ASC Job No'] || r['ASC Job No.'] || r.ascJobNo || r['ASC Ref. No'] || r.ascRefNo || r['ASC Ref No'] || cleanSo || '').trim();
           const cpCode = String(r['Dealer BP'] || r['CP Code'] || r['ASC Code'] || r.cpCode || (ascJobVal ? ascJobVal.split('-')[0] : '') || '4903753').trim();
           
           // Dates for aging calculation (Assigned date prioritized per website logic)
-          const createdVal = formatDateString(r['Created'] || r.created || r['Requested Date'] || r.requestedDate || r['Created Date'] || '');
-          const assignedVal = formatDateString(r['Assigned'] || r.assigned || r['Assigned Date'] || r['ASC Assigned'] || '');
+          const createdVal = formatDateString(r['Created'] || r.created || r['Requested Date'] || r.requestedDate || r['Created Date'] || dateVal || '');
+          const assignedVal = formatDateString(r['Assigned'] || r.assigned || r['Assigned Date'] || r['ASC Assigned'] || createdVal || dateVal || '');
           const assignedTimeVal = formatExcelTime(r['Assigned Time'] || r.assignedTime || '');
           
           // Model & Serial: Strictly strings
@@ -1562,18 +1642,32 @@
           // Aging calculation matching website tools.js & core.js:
           // 1. If Aging is already present as a numeric value in raw data, preserve it!
           const rawAging = (r['Aging'] !== undefined && r['Aging'] !== null && r['Aging'] !== '') ? r['Aging']
+                         : ((r['Age'] !== undefined && r['Age'] !== null && r['Age'] !== '') ? r['Age']
                          : ((r.aging !== undefined && r.aging !== null && r.aging !== '') ? r.aging
                          : (r['Aging (Days)'] !== undefined ? r['Aging (Days)']
-                         : (r['TAT'] !== undefined ? r['TAT'] : '')));
+                         : (r['TAT'] !== undefined ? r['TAT'] : ''))));
           let aging = 0;
           if (rawAging !== '' && rawAging !== null && rawAging !== undefined && !isNaN(parseFloat(rawAging))) {
             aging = Math.max(0, Math.round(parseFloat(rawAging)));
           } else {
-            // Formula =TODAY() - ASSIGNED_DATE (fallback to Created / Requested Date)
-            const dateForAging = assignedVal || createdVal;
+            // Formula =TODAY() - ASSIGNED_DATE (fallback to Created / Requested Date or Date)
+            const dateForAging = assignedVal || createdVal || dateVal;
             aging = calcAging(dateForAging, cutoffDate);
           }
-          const tatBucket = getTATBucket(aging);
+          
+          let tatBucket = r['TAT'] || r['tat'] || '';
+          if (tatBucket) {
+            tatBucket = String(tatBucket).replace(/\s+/g, ' ').trim();
+            if (tatBucket.includes('>30') || tatBucket.includes('30+')) tatBucket = '30+ Days';
+            else if (tatBucket.includes('15–30') || tatBucket.includes('15-30')) tatBucket = '15–30 Days';
+            else if (tatBucket.includes('11–14') || tatBucket.includes('11-14')) tatBucket = '11–14 Days';
+            else if (tatBucket.includes('8–10') || tatBucket.includes('8-10')) tatBucket = '8–10 Days';
+            else if (tatBucket.includes('3–7') || tatBucket.includes('3-7')) tatBucket = '3–7 Days';
+            else if (tatBucket.includes('0–2') || tatBucket.includes('0-2')) tatBucket = '0–2 Days';
+            else tatBucket = getTATBucket(aging);
+          } else {
+            tatBucket = getTATBucket(aging);
+          }
 
           // Product category matching website core.js getProductCategory & normalizeProductCategory
           const rawProd = r['Product'] || r.product || r['Product Category'] || r['Product_Category'] || '';
@@ -2458,8 +2552,13 @@
       
       const records = [];
       rawRows.forEach((row, idx) => {
+        if (!row) return;
+        if (typeof row === 'object' && !Array.isArray(row)) {
+          const vals = Object.values(row).map(v => String(v || '').trim()).filter(v => v && v !== '&nbsp;');
+          if (vals.length === 0) return;
+        }
         const std = mapRowToStandard25(row, idx);
-        if (std['Service Order No.'] || std['Model'] || std['Created'] || std['Assigned'] || std['Branch Name']) {
+        if (std['Service Order No.'] || std['Model'] || std['Serial']) {
           records.push(std);
         }
       });
@@ -2802,18 +2901,63 @@
         reader.onload = function(e) {
           try {
             const data = new Uint8Array(e.target.result);
-            const workbook = XLSX.read(data, { type: 'array' });
-            const firstSheetName = workbook.SheetNames[0];
-            const worksheet = workbook.Sheets[firstSheetName];
-            
-            // First attempt: standard object conversion
-            const json = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
-            let parsed = parseUploadedData(json);
 
-            // Fallback attempt: if no records recognized, parse with header: 1 to find header row
+            // Check if file is an Excel HTML frameset workbook (e.g. GGN_TRIM_DATA_ML_16-09-2026_1709.xls)
+            let textPreview = '';
+            try {
+              const textDecoder = new TextDecoder('utf-8');
+              textPreview = textDecoder.decode(data.slice(0, 4000));
+            } catch (_) {}
+
+            if (textPreview.includes('Excel Workbook Frameset') || (textPreview.includes('<frameset') && textPreview.includes('sheet001.htm'))) {
+              const match = textPreview.match(/src=["']([^"']*sheet001\.htm)["']/i) || textPreview.match(/HRef=["']([^"']*sheet001\.htm)["']/i);
+              const sheetRef = match ? match[1] : 'sheet001.htm';
+              const indicator = document.getElementById('fileSelectedIndicator');
+              const statusEl  = document.getElementById('selectedFileStatus');
+              if (statusEl) statusEl.textContent = '— ⚠️ HTML Frameset file';
+              document.getElementById('parseStatusText').innerHTML = `⚠️ <strong>${escapeHtml(file.name)}</strong> is an Excel HTML Workbook Frameset.`;
+              document.getElementById('parseDetailText').innerHTML = `The data table is in <code>${escapeHtml(sheetRef)}</code> inside the adjacent files folder. Please select <code>sheet001.htm</code> directly, or copy and paste the rows from Excel into the <strong>"Paste Excel"</strong> tab.`;
+              document.getElementById('parseFeedbackBox').classList.remove('hidden');
+              showToast('Excel Frameset detected. Select sheet001.htm or copy-paste rows.', 'error');
+              return;
+            }
+
+            let parsed = [];
+
+            // If file is an HTML file containing a <table> directly (e.g. sheet001.htm or single-page Excel HTML)
+            if (textPreview.includes('<table') || textPreview.includes('<TABLE')) {
+              try {
+                const fullText = new TextDecoder('utf-8').decode(data);
+                const doc = new DOMParser().parseFromString(fullText, 'text/html');
+                const table = doc.querySelector('table');
+                if (table) {
+                  const tableRows = XLSX.utils.sheet_to_json(XLSX.utils.table_to_sheet(table), { defval: '' });
+                  parsed = parseUploadedData(tableRows);
+                  if (parsed.length === 0) {
+                    const rawRows = XLSX.utils.sheet_to_json(XLSX.utils.table_to_sheet(table), { header: 1, defval: '' });
+                    parsed = parseUploadedData(rawRows);
+                  }
+                }
+              } catch (domErr) {
+                console.warn('DOM table parse fallback:', domErr);
+              }
+            }
+
+            // Standard SheetJS parse for binary xlsx, xls, csv, or sheets
             if (parsed.length === 0) {
-              const rawRows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
-              parsed = parseUploadedData(rawRows);
+              const workbook = XLSX.read(data, { type: 'array' });
+              const firstSheetName = workbook.SheetNames[0];
+              const worksheet = workbook.Sheets[firstSheetName];
+              
+              // First attempt: standard object conversion
+              const json = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+              parsed = parseUploadedData(json);
+
+              // Fallback attempt: if no records recognized, parse with header: 1 to find header row
+              if (parsed.length === 0) {
+                const rawRows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
+                parsed = parseUploadedData(rawRows);
+              }
             }
 
             // Update the file indicator to show parse result
@@ -2823,14 +2967,14 @@
               appState.pendingUploadRecords = parsed;
               if (statusEl) statusEl.textContent = `— ✅ ${parsed.length} records parsed`;
               document.getElementById('parseStatusText').textContent = `✅ Parsed ${parsed.length} service records from "${file.name}".`;
-              document.getElementById('parseDetailText').textContent = `Sheet: ${firstSheetName} · ${parsed.length} calls recognized`;
+              document.getElementById('parseDetailText').textContent = `${parsed.length} calls recognized and processed.`;
               document.getElementById('parseFeedbackBox').classList.remove('hidden');
               document.getElementById('btnApplyUpload').disabled = false;
               showToast(`Loaded ${parsed.length} calls from ${file.name}`);
             } else {
               if (statusEl) statusEl.textContent = '— ⚠️ No recognizable records found';
-              document.getElementById('parseStatusText').textContent = '⚠️ No records recognized. Check column headers match the expected template.';
-              document.getElementById('parseDetailText').textContent = `File: ${file.name} · ${json.length} rows read`;
+              document.getElementById('parseStatusText').textContent = '⚠️ No records recognized. Check column headers match standard template or TRIM DATA.';
+              document.getElementById('parseDetailText').textContent = `File: ${file.name}`;
               document.getElementById('parseFeedbackBox').classList.remove('hidden');
               showToast('No records recognized. Check column headers.', 'error');
             }
@@ -2868,21 +3012,28 @@
             'Status', 'Reason', 'B2B', 'Risk Reason'
           ];
 
+          const trim18Headers = [
+            'No', 'ASC Job No', 'Date', 'Model', 'Serial', 'Wty Status',
+            'Customer Name', 'City', 'App Date', 'App Time', 'Service Type',
+            'Status', 'Reason', 'Age', 'TAT', 'Product', 'Eng Name', 'TL Name'
+          ];
+
           let headers = lines[0].split('\t').map(h => h.trim());
           let dataStartIndex = 1;
 
-          // Check if first line contains "Date   Branch Name   No" with spaces instead of tabs
-          if (headers.length < 25 && headers[0].includes('Date') && headers[0].includes('Branch Name')) {
+          // Check if first line contains multiple headers separated by spaces
+          if (headers.length < 18 && headers[0].includes('Date') && (headers[0].includes('Branch Name') || headers[0].includes('ASC Job No'))) {
             const sub = headers[0].split(/\s{2,}/).map(s => s.trim()).filter(Boolean);
             if (sub.length >= 2) {
               headers.splice(0, 1, ...sub);
             }
           }
 
-          // Check if line 0 is actually a data row, not a header row
-          const isHeader = headers.some(h => ['SERVICE ORDER NO.', 'SO NO', 'ASC JOB NO', 'MODEL', 'BRANCH NAME', 'CUSTOMER NAME'].includes(h.toUpperCase()));
+          // Check if line 0 is actually a header row or a data row
+          const isHeader = headers.some(h => ['SERVICE ORDER NO.', 'SO NO', 'ASC JOB NO', 'MODEL', 'BRANCH NAME', 'CUSTOMER NAME', 'AGE', 'TAT'].includes(h.toUpperCase()));
           if (!isHeader) {
-            headers = standard25;
+            const firstLineCols = lines[0].split('\t').length;
+            headers = (firstLineCols === 18) ? trim18Headers : standard25;
             dataStartIndex = 0;
           }
 
@@ -2890,7 +3041,7 @@
           for (let i = dataStartIndex; i < lines.length; i++) {
             const parts = lines[i].split('\t');
             const rowObj = {};
-            const targetCols = (parts.length === 25 && headers.length !== 25) ? standard25 : headers;
+            const targetCols = (!isHeader && parts.length === 18) ? trim18Headers : (parts.length === 25 && headers.length !== 25 ? standard25 : headers);
             targetCols.forEach((h, idx) => {
               rowObj[h] = parts[idx] ? parts[idx].trim() : '';
             });
@@ -2901,12 +3052,12 @@
           if (parsed.length > 0) {
             appState.pendingUploadRecords = parsed;
             document.getElementById('parseStatusText').textContent = `Parsed ${parsed.length} pasted records successfully.`;
-            document.getElementById('parseDetailText').textContent = `${headers.length} columns detected.`;
+            document.getElementById('parseDetailText').textContent = `${headers.length} columns detected · Ready to apply.`;
             document.getElementById('parseFeedbackBox').classList.remove('hidden');
             document.getElementById('btnApplyUpload').disabled = false;
             showToast(`Parsed ${parsed.length} records from paste!`);
           } else {
-            showToast('Unable to parse columns. Ensure headers match expected list.', 'error');
+            showToast('Unable to parse columns. Ensure headers match standard or TRIM DATA format.', 'error');
           }
         } catch (err) {
           console.error(err);
