@@ -995,6 +995,29 @@
     }
 
     /**
+     * Normalizes product strings or detects product from category/model (matching website core.js)
+     */
+    function normalizeProductCategory(val, model) {
+      if (val) {
+        const s = String(val).trim().toUpperCase();
+        const directCodes = ['AC', 'WM', 'REF', 'AV', 'MW', 'AUD', 'DW', 'HHP', 'IT'];
+        if (directCodes.includes(s)) return s;
+        if (s === 'OTHER' || s === 'OTHERS') return 'Other';
+
+        if (s.includes('AIR') || s.includes('A/C') || s.startsWith('AC')) return 'AC';
+        if (s.includes('WASH') || s.startsWith('WM')) return 'WM';
+        if (s.includes('REF') || s.includes('FRIDGE') || s.startsWith('REF')) return 'REF';
+        if (s.includes('TV') || s.includes('PANEL') || s.startsWith('AV')) return 'AV';
+        if (s.includes('MICRO') || s.startsWith('MW')) return 'MW';
+        if (s.includes('AUDIO') || s.includes('SOUND') || s.startsWith('AUD')) return 'AUD';
+        if (s.includes('DISH') || s.startsWith('DW')) return 'DW';
+        if (s.includes('PHONE') || s.includes('MOBILE') || s.startsWith('HHP') || s.startsWith('SM-')) return 'HHP';
+        if (s.includes('MONITOR') || s.startsWith('IT')) return 'IT';
+      }
+      return getProductCategory(model || val);
+    }
+
+    /**
      * Parses diverse GSPN date strings or Excel serial numbers into Date
      */
     function parseDate(val) {
@@ -1258,12 +1281,12 @@
           const ascJobVal = String(r['ASC Job No'] || r['ASC Job No.'] || r.ascJobNo || r['ASC Ref. No'] || r.ascRefNo || r['ASC Ref No'] || '').trim();
           const cpCode = String(r['Dealer BP'] || r['CP Code'] || r['ASC Code'] || r.cpCode || (ascJobVal ? ascJobVal.split('-')[0] : '') || '4903753').trim();
           
-          // Created date is the primary date for aging calculation
-          const createdVal = String(r['Created'] || r.created || r['Requested Date'] || r.requestedDate || r['Created Date'] || dateVal || '').trim();
-          const assignedVal = String(r['Assigned'] || r.assigned || '').trim();
+          // Dates for aging calculation (Assigned date prioritized per website logic)
+          const createdVal = String(r['Created'] || r.created || r['Requested Date'] || r.requestedDate || r['Created Date'] || '').trim();
+          const assignedVal = String(r['Assigned'] || r.assigned || r['Assigned Date'] || r['ASC Assigned'] || '').trim();
           const assignedTimeVal = String(r['Assigned Time'] || r.assignedTime || '').trim();
           
-          const modelVal = String(r['Model'] || r.model || r['Model Code'] || r.modelCode || '').trim();
+          const modelVal = String(r['Model'] || r.model || r['Model Code'] || r.modelCode || r['Model Name'] || r['Model_Name'] || '').trim();
           const serialVal = String(r['Serial'] || r.serial || r['Serial No'] || r.serialNo || '').trim();
           const wtyVal = String(r['Wty Status'] || r.wtyStatus || r['Warranty'] || r.warranty || r['Warranty Status'] || '').trim();
           
@@ -1282,9 +1305,25 @@
           const b2bVal = String(r['B2B'] || r.b2b || 'N').trim();
           const riskReasonVal = String(r['Risk Reason'] || r.riskReason || 'None').trim();
 
-          const aging = calcAging(createdVal, cutoffDate);
+          // Aging calculation matching website tools.js & core.js:
+          // 1. If Aging is already present as a numeric value in raw data, preserve it!
+          const rawAging = (r['Aging'] !== undefined && r['Aging'] !== null && r['Aging'] !== '') ? r['Aging']
+                         : ((r.aging !== undefined && r.aging !== null && r.aging !== '') ? r.aging
+                         : (r['Aging (Days)'] !== undefined ? r['Aging (Days)']
+                         : (r['TAT'] !== undefined ? r['TAT'] : '')));
+          let aging = 0;
+          if (rawAging !== '' && rawAging !== null && rawAging !== undefined && !isNaN(parseFloat(rawAging))) {
+            aging = Math.max(0, Math.round(parseFloat(rawAging)));
+          } else {
+            // Formula =TODAY() - ASSIGNED_DATE (fallback to Created / Requested Date)
+            const dateForAging = assignedVal || createdVal;
+            aging = calcAging(dateForAging, cutoffDate);
+          }
           const tatBucket = getTATBucket(aging);
-          const product = getProductCategory(modelVal);
+
+          // Product category matching website core.js getProductCategory & normalizeProductCategory
+          const rawProd = r['Product'] || r.product || r['Product Category'] || r['Product_Category'] || '';
+          const product = normalizeProductCategory(rawProd, modelVal);
           const callId = cleanSo || `CALL-${idx + 1}`;
           const isClosed = appState.closedCallIds.has(callId);
 
@@ -1541,12 +1580,12 @@
       let svcLabel = svcNames[ascCode] || Object.values(svcNames)[0] || appState.selectedBranch;
       if (appState.selectedAsc === 'ALL') svcLabel = Object.values(svcNames).join(' / ') || 'All Centers';
 
-      // Helper to format 0 values nicely (like screenshot: blank or number)
-      function cellVal(val, isTotalRow) {
-        if (val === 0 || val === '0' || !val) {
-          return isTotalRow ? '<span class="text-slate-300">-</span>' : '';
+      // Helper to format 0 values: strictly show 0 for any 0/Blank/NA value (never blank, never '-')
+      function cellVal(val) {
+        if (val === undefined || val === null || val === '' || val === 'NA' || val === 'N/A' || isNaN(Number(val))) {
+          return 0;
         }
-        return val;
+        return Number(val);
       }
 
       // 1. Render Summary TOTAL Row at the top
@@ -1558,21 +1597,21 @@
         <td class="py-2.5 px-2 border-r border-slate-300 text-left font-mono font-bold">${ascCode}</td>
         <td class="py-2.5 px-2 border-r border-slate-300 text-left font-bold">${branchName}</td>
         <td class="py-2.5 px-3 border-r border-slate-300 text-left font-bold text-blue-900">Total</td>
-        <td class="py-2.5 px-2 border-r border-slate-300 bg-blue-100/80 text-blue-900 font-extrabold text-center tabular-nums">${t.total}</td>
-        <td class="py-2.5 px-2 border-r border-slate-300 text-center tabular-nums font-semibold">${cellVal(t.aging['0–2 Days'], true)}</td>
-        <td class="py-2.5 px-2 border-r border-slate-300 table-cell-aging text-center tabular-nums font-semibold">${cellVal(t.aging['3–7 Days'], true)}</td>
-        <td class="py-2.5 px-2 border-r border-slate-300 table-cell-aging text-center tabular-nums font-semibold">${cellVal(t.aging['8–10 Days'], true)}</td>
-        <td class="py-2.5 px-2 border-r border-slate-300 table-cell-aging text-center tabular-nums font-semibold">${cellVal(t.aging['11–14 Days'], true)}</td>
-        <td class="py-2.5 px-2 border-r border-slate-300 table-cell-aging-hot text-center tabular-nums font-bold">${cellVal(t.aging['15–30 Days'], true)}</td>
-        <td class="py-2.5 px-2 border-r-2 border-slate-400 table-cell-aging-hot text-center tabular-nums font-bold">${cellVal(t.aging['30+ Days'], true)}</td>
-        <td class="py-2.5 px-2 border-r border-slate-300 bg-[#c1f0c8] text-slate-900 font-extrabold text-center tabular-nums">${cellVal(t.iw, true)}</td>
-        <td class="py-2.5 px-2 border-r-2 border-slate-400 bg-[#c1f0c8] text-slate-900 font-extrabold text-center tabular-nums">${cellVal(t.ow, true)}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 bg-blue-100/80 text-blue-900 font-extrabold text-center tabular-nums">${cellVal(t.total)}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 text-center tabular-nums font-semibold">${cellVal(t.aging['0–2 Days'])}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 table-cell-aging text-center tabular-nums font-semibold">${cellVal(t.aging['3–7 Days'])}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 table-cell-aging text-center tabular-nums font-semibold">${cellVal(t.aging['8–10 Days'])}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 table-cell-aging text-center tabular-nums font-semibold">${cellVal(t.aging['11–14 Days'])}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 table-cell-aging-hot text-center tabular-nums font-bold">${cellVal(t.aging['15–30 Days'])}</td>
+        <td class="py-2.5 px-2 border-r-2 border-slate-400 table-cell-aging-hot text-center tabular-nums font-bold">${cellVal(t.aging['30+ Days'])}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 bg-[#c1f0c8] text-slate-900 font-extrabold text-center tabular-nums">${cellVal(t.iw)}</td>
+        <td class="py-2.5 px-2 border-r-2 border-slate-400 bg-[#c1f0c8] text-slate-900 font-extrabold text-center tabular-nums">${cellVal(t.ow)}</td>
       `;
 
       // D+7 Product columns for Total row
       PRODUCT_CATEGORIES.forEach(p => {
-        const val = t.productsD7[p.code] || 0;
-        totalHtml += `<td class="py-2.5 px-2 border-r border-slate-200 text-center font-extrabold text-slate-800 tabular-nums">${cellVal(val, true)}</td>`;
+        const val = t.productsD7[p.code];
+        totalHtml += `<td class="py-2.5 px-2 border-r border-slate-200 text-center font-extrabold text-slate-800 tabular-nums">${cellVal(val)}</td>`;
       });
 
       totalTr.innerHTML = totalHtml;
@@ -1585,8 +1624,8 @@
         tr.className = 'hover:bg-slate-50 transition border-b border-slate-200 text-center';
 
         let rowHtml = `
-          <td class="py-2 px-2 border-r border-slate-200 text-left text-slate-400 text-[11px]"></td>
-          <td class="py-2 px-2 border-r border-slate-200 text-left text-slate-400 text-[11px]"></td>
+          <td class="py-2 px-2 border-r border-slate-200 text-left text-slate-400 text-[11px] font-mono">${ascCode}</td>
+          <td class="py-2 px-2 border-r border-slate-200 text-left text-slate-400 text-[11px]">${branchName}</td>
           <td class="py-2 px-3 border-r border-slate-200 text-left font-medium text-slate-800">${sType}</td>
           <td class="py-2 px-2 border-r border-slate-200 font-bold text-slate-900 bg-slate-50 tabular-nums">${cellVal(row.total)}</td>
           <td class="py-2 px-2 border-r border-slate-200 tabular-nums text-slate-700">${cellVal(row.aging['0–2 Days'])}</td>
@@ -1600,7 +1639,7 @@
         `;
 
         PRODUCT_CATEGORIES.forEach(p => {
-          const val = row.productsD7[p.code] || 0;
+          const val = row.productsD7[p.code];
           rowHtml += `<td class="py-2 px-2 border-r border-slate-200 text-slate-700 tabular-nums">${cellVal(val)}</td>`;
         });
 
@@ -1928,6 +1967,14 @@
 
       const t = matrixData.totalRow;
 
+      // Helper to strictly format 0 values (never blank, never '-')
+      function fmtVal(v) {
+        if (v === undefined || v === null || v === '' || v === 'NA' || v === 'N/A' || isNaN(Number(v))) {
+          return 0;
+        }
+        return Number(v);
+      }
+
       // Color maps for D+7 headers matching screenshot
       const prodColors = {
         'AC': { bg: '#ef4444', text: '#ffffff' },
@@ -1969,11 +2016,11 @@
           <tr style="background-color: #dce6f1; font-weight: bold; border-bottom: 2px solid #64748b;">
             <th style="padding: 5px; border: 1px solid #cbd5e1; text-align: left;">ASC_CODE</th>
             <th style="padding: 5px; border: 1px solid #cbd5e1; text-align: left;">Branch_Name</th>
-            <th style="padding: 5px; border: 1px solid #cbd5e1; text-align: left; min-width: 130px;">Service Type</th>
-            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #dce6f1; font-weight: bold;">Total</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; text-align: left;">Service Type</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #cbd5e1;">Total</th>
             <th style="padding: 5px; border: 1px solid #cbd5e1;">0–2 Days</th>
-            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffc7ce; color: #991b1b;">3–7 Days</th>
-            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffc7ce; color: #991b1b;">8–10 Days</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffe4e6; color: #991b1b;">3–7 Days</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffe4e6; color: #991b1b;">8–10 Days</th>
             <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffc7ce; color: #991b1b;">11–14 Days</th>
             <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffc7ce; font-weight: bold; color: #991b1b;">15–30 Days</th>
             <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffc7ce; font-weight: bold; color: #991b1b;">30+ Days</th>
@@ -1999,20 +2046,20 @@
             <td style="padding: 6px; border: 1px solid #94a3b8; text-align: left;">${ascCode}</td>
             <td style="padding: 6px; border: 1px solid #94a3b8; text-align: left;">${branchName}</td>
             <td style="padding: 6px; border: 1px solid #94a3b8; text-align: left; font-weight: bold; color: #0c4a6e;">Total</td>
-            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #bae6fd; font-weight: bold;">${t.total}</td>
-            <td style="padding: 6px; border: 1px solid #94a3b8;">${t.aging['0–2 Days'] || '-'}</td>
-            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #ffe4e6;">${t.aging['3–7 Days'] || '-'}</td>
-            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #ffe4e6;">${t.aging['8–10 Days'] || '-'}</td>
-            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #ffe4e6;">${t.aging['11–14 Days'] || '-'}</td>
-            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #fecaca; font-weight: bold;">${t.aging['15–30 Days'] || '-'}</td>
-            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #fca5a5; font-weight: bold;">${t.aging['30+ Days'] || '-'}</td>
-            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #c1f0c8; color: #0f172a; font-weight: bold;">${t.iw || '-'}</td>
-            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #c1f0c8; color: #0f172a; font-weight: bold;">${t.ow || '-'}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #bae6fd; font-weight: bold;">${fmtVal(t.total)}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8;">${fmtVal(t.aging['0–2 Days'])}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #ffe4e6;">${fmtVal(t.aging['3–7 Days'])}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #ffe4e6;">${fmtVal(t.aging['8–10 Days'])}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #ffe4e6;">${fmtVal(t.aging['11–14 Days'])}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #fecaca; font-weight: bold;">${fmtVal(t.aging['15–30 Days'])}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #fca5a5; font-weight: bold;">${fmtVal(t.aging['30+ Days'])}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #c1f0c8; color: #0f172a; font-weight: bold;">${fmtVal(t.iw)}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #c1f0c8; color: #0f172a; font-weight: bold;">${fmtVal(t.ow)}</td>
       `;
 
       PRODUCT_CATEGORIES.forEach(p => {
-        const val = t.productsD7[p.code] || 0;
-        html += `<td style="padding: 6px; border: 1px solid #94a3b8; font-weight: bold;">${val || '-'}</td>`;
+        const val = t.productsD7[p.code];
+        html += `<td style="padding: 6px; border: 1px solid #94a3b8; font-weight: bold;">${fmtVal(val)}</td>`;
       });
       html += `</tr>`;
 
@@ -2024,23 +2071,23 @@
 
         html += `
           <tr style="background-color: ${bg};">
-            <td style="padding: 5px; border: 1px solid #cbd5e1; text-align: left; color: #64748b;"></td>
-            <td style="padding: 5px; border: 1px solid #cbd5e1; text-align: left; color: #64748b;"></td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; text-align: left; color: #64748b; font-family: monospace;">${ascCode}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; text-align: left; color: #64748b;">${branchName}</td>
             <td style="padding: 5px; border: 1px solid #cbd5e1; text-align: left; font-weight: 500;">${sType}</td>
-            <td style="padding: 5px; border: 1px solid #cbd5e1; font-weight: bold; background-color: #f1f5f9;">${row.total || ''}</td>
-            <td style="padding: 5px; border: 1px solid #cbd5e1;">${row.aging['0–2 Days'] || ''}</td>
-            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffe4e6;">${row.aging['3–7 Days'] || ''}</td>
-            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffe4e6;">${row.aging['8–10 Days'] || ''}</td>
-            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffe4e6;">${row.aging['11–14 Days'] || ''}</td>
-            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #fecaca; font-weight: bold;">${row.aging['15–30 Days'] || ''}</td>
-            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #fca5a5; font-weight: bold;">${row.aging['30+ Days'] || ''}</td>
-            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #c1f0c8; color: #0f172a;">${row.iw || ''}</td>
-            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #c1f0c8; color: #0f172a;">${row.ow || ''}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; font-weight: bold; background-color: #f1f5f9;">${fmtVal(row.total)}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1;">${fmtVal(row.aging['0–2 Days'])}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffe4e6;">${fmtVal(row.aging['3–7 Days'])}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffe4e6;">${fmtVal(row.aging['8–10 Days'])}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffe4e6;">${fmtVal(row.aging['11–14 Days'])}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #fecaca; font-weight: bold;">${fmtVal(row.aging['15–30 Days'])}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #fca5a5; font-weight: bold;">${fmtVal(row.aging['30+ Days'])}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #c1f0c8; color: #0f172a;">${fmtVal(row.iw)}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #c1f0c8; color: #0f172a;">${fmtVal(row.ow)}</td>
         `;
 
         PRODUCT_CATEGORIES.forEach(p => {
-          const val = row.productsD7[p.code] || '';
-          html += `<td style="padding: 5px; border: 1px solid #cbd5e1;">${val}</td>`;
+          const val = row.productsD7[p.code];
+          html += `<td style="padding: 5px; border: 1px solid #cbd5e1;">${fmtVal(val)}</td>`;
         });
         html += `</tr>`;
       });
@@ -2112,18 +2159,19 @@
         const ascJobNo = row['ASC Job No'] || row['ASC Job No.'] || row['ascJobNo']
                       || row['ASC Ref. No'] || row['ascRefNo'] || row['ASC Ref No'] || '';
 
-        // 6. Created (Primary date for aging)
+        // 6. Created (Primary date for aging fallback)
         const created = row['Created'] || row['created'] || row['Created Date']
-                     || row['Requested Date'] || row['requestedDate'] || dateCol || '';
+                     || row['Requested Date'] || row['requestedDate'] || '';
 
-        // 7. Assigned
-        const assigned = row['Assigned'] || row['assigned'] || row['Assigned Date'] || '';
+        // 7. Assigned (Prioritized date for aging per website tools.js)
+        const assigned = row['Assigned'] || row['assigned'] || row['Assigned Date']
+                      || row['ASC Assigned'] || row['ASC Assigned Date'] || '';
 
         // 8. Assigned Time
         const assignedTime = row['Assigned Time'] || row['assignedTime'] || row['Time'] || '';
 
         // 9. Model
-        const model = row['Model'] || row['model'] || row['Model Code'] || row['modelCode'] || row['Model Name'] || '';
+        const model = row['Model'] || row['model'] || row['Model Code'] || row['modelCode'] || row['Model Name'] || row['Model_Name'] || '';
 
         // 10. Serial
         const serial = row['Serial'] || row['serial'] || row['Serial No'] || row['serialNo'] || row['Serial Number'] || '';
@@ -2175,11 +2223,22 @@
         // 25. Risk Reason
         const riskReason = row['Risk Reason'] || row['riskReason'] || row['Remarks'] || 'None';
 
+        // 26. Pre-existing Aging if present in file (matching website tools.js)
+        const rawAging = (row['Aging'] !== undefined && row['Aging'] !== null && row['Aging'] !== '') ? row['Aging']
+                       : ((row['aging'] !== undefined && row['aging'] !== null && row['aging'] !== '') ? row['aging']
+                       : (row['Aging (Days)'] !== undefined ? row['Aging (Days)']
+                       : (row['TAT'] !== undefined ? row['TAT'] : '')));
+
+        // 27. Pre-existing Product Category if present in file
+        const rawProd = row['Product'] || row['product'] || row['Product Category']
+                     || row['Product_Category'] || row['Category'] || row['Product Group']
+                     || row['DIV'] || row['Division'] || '';
+
         // ASC Code fallback
         const cpCode = row['Dealer BP'] || row['CP Code'] || row['cpCode']
                     || row['ASC Code'] || (ascJobNo ? String(ascJobNo).split('-')[0] : '') || '';
 
-        if (soNo || model || created || sType || branchName) {
+        if (soNo || model || created || assigned || sType || branchName) {
           records.push({
             'Date': String(dateCol),
             'Branch Name': String(branchName).trim() || 'Gurgaon-CE',
@@ -2206,8 +2265,12 @@
             'Reason': String(reason).trim(),
             'B2B': String(b2b).trim(),
             'Risk Reason': String(riskReason).trim(),
+            'Aging': rawAging,
+            'Product': rawProd,
 
             // Legacy keys for backward compatibility
+            aging: rawAging,
+            product: rawProd,
             trackingNo: String(soNo),
             serviceOrderNo: String(soNo),
             dateCol: String(dateCol),
@@ -2674,9 +2737,9 @@
           branchSel.value = 'ALL';
           ascSel.value    = 'ALL';
 
-          // Auto-detect report date from the data if Date/Requested Date column is present
+          // Auto-detect report date from the data if Date column is present
           const dateCandidates = appState.records
-            .map(r => r.dateCol || r.requestedDate || '')
+            .map(r => r['Date'] || r.dateCol || '')
             .filter(Boolean);
           if (dateCandidates.length > 0) {
             // Use the most recent date as the report cutoff
