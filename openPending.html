@@ -1,0 +1,2358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RC-GD Pendency & Service Operations Report</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+              950: '#082f49',
+            },
+            corporate: {
+              navy: '#0f2e59',
+              dark: '#0a192f',
+              slate: '#1e293b',
+              light: '#f8fafc',
+              border: '#e2e8f0',
+              pinkTint: '#ffe4e6',
+              pinkDeep: '#fecdd3'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            outfit: ['Outfit', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- SheetJS (XLSX) CDN for Excel Upload/Export -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    .font-outfit { font-family: 'Outfit', sans-serif; }
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+    
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* Print Optimization Stylesheet */
+    @media print {
+      body { background: white !important; padding: 0 !important; }
+      .no-print { display: none !important; }
+      .print-shadow-none { box-shadow: none !important; border: 1px solid #cbd5e1 !important; }
+      .overflow-x-auto { overflow: visible !important; }
+      @page { size: landscape; margin: 8mm; }
+    }
+
+    /* Cell Heatmap and Hover states */
+    .table-cell-aging {
+      background-color: #ffe4e6;
+      transition: all 0.15s ease;
+    }
+    .table-cell-aging:hover {
+      background-color: #fecdd3;
+    }
+    .table-cell-aging-hot {
+      background-color: #fecaca;
+      font-weight: 700;
+      color: #991b1b;
+    }
+    .table-cell-aging-hot:hover {
+      background-color: #fca5a5;
+    }
+    
+    /* Subtle pulse animation for live badge */
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.2); }
+    }
+    .live-dot {
+      animation: pulse-dot 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-16">
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Top Executive Navigation Bar -->
+  <header class="bg-white text-slate-900 shadow-sm border-b border-slate-200 sticky top-0 z-30 no-print">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-14">
+        <!-- Logo & Title -->
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-lg bg-[#0f2e59] flex items-center justify-center shadow">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h1 class="text-sm font-bold tracking-tight text-[#0f2e59] font-outfit">RC-GD Pendency &amp; Service Operations Report</h1>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-300">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 live-dot"></span>Live Daily
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400 leading-tight">Executive Daily Service Pendency · Ageing · D+7 Product Breakdown</p>
+          </div>
+        </div>
+
+        <!-- Quick Header Action Buttons -->
+        <div class="flex items-center space-x-2">
+          <!-- Home Navigation Button -->
+          <a href="index.html" class="inline-flex items-center px-3 py-1.5 border border-slate-300 rounded text-xs font-semibold bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition focus:outline-none" title="Return to GSPN Tools Home">
+            <svg class="w-3.5 h-3.5 mr-1.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            Home
+          </a>
+
+          <!-- Excel Upload Button -->
+          <button id="btnOpenUploadModal" class="inline-flex items-center px-3 py-1.5 border border-[#0f2e59] rounded text-xs font-semibold bg-[#0f2e59] hover:bg-[#163d6e] text-white shadow-sm transition focus:outline-none">
+            <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            Upload Excel
+          </button>
+
+          <!-- Copy for Mail Button -->
+          <button id="btnCopyForMail" class="inline-flex items-center px-3 py-1.5 rounded text-xs font-semibold bg-amber-500 hover:bg-amber-600 text-white shadow transition active:scale-95 focus:outline-none font-bold">
+            <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+            </svg>
+            Copy HTML for Mail
+          </button>
+
+          <!-- Export Excel Button -->
+          <button id="btnExportExcel" class="inline-flex items-center px-3 py-1.5 border border-slate-300 rounded text-xs font-medium bg-white hover:bg-slate-50 text-slate-700 transition focus:outline-none">
+            <svg class="w-3.5 h-3.5 mr-1.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Export Excel
+          </button>
+
+          <!-- Print Report Button -->
+          <button onclick="window.print()" class="inline-flex items-center px-3 py-1.5 border border-slate-300 rounded text-xs font-medium bg-white hover:bg-slate-50 text-slate-700 transition focus:outline-none" title="Print or Save as PDF">
+            <svg class="w-3.5 h-3.5 mr-1.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            Print
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-4 space-y-4">
+
+    <!-- Filter & Metadata Control Card -->
+    <section class="bg-white rounded border border-slate-300 shadow-sm p-3 print-shadow-none">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <!-- Report Meta Info -->
+        <div class="flex items-center space-x-3">
+          <div class="p-2 bg-[#0f2e59] text-white rounded flex-shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-[11px] uppercase font-bold tracking-wider text-slate-400">Target Report Matrix</span>
+              <span id="activeBranchTag" class="text-[11px] font-bold px-2 py-0.5 rounded bg-[#dbeafe] text-[#1d4ed8] border border-[#93c5fd]">Branch: Gurgaon-CE</span>
+              <span id="activeAscTag" class="text-[11px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-300">ASC: 4903753</span>
+            </div>
+            <div class="text-base font-bold text-[#0f2e59] font-outfit" id="reportTitleWithDate">
+              RC-GD Pendency dt <span id="reportDateHeaderSpan">11.09.2026</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="flex flex-wrap items-end gap-3">
+          <!-- Branch Selector -->
+          <div class="flex flex-col">
+            <label for="branchSelect" class="text-[10px] font-bold text-slate-500 uppercase mb-1">Branch Name</label>
+            <select id="branchSelect" class="bg-white border border-slate-300 text-slate-800 text-xs font-medium rounded focus:ring-blue-500 focus:border-blue-500 block p-1.5 transition">
+              <option value="ALL">All Branches</option>
+              <option value="Gurgaon-CE" selected>Gurgaon-CE</option>
+              <option value="Ahmedabad-CE">Ahmedabad-CE</option>
+              <option value="Lucknow-HHP">Lucknow-HHP</option>
+              <option value="Moradabad-HHP">Moradabad-HHP</option>
+              <option value="Surat-CE">Surat-CE</option>
+              <option value="Lucknow-CE">Lucknow-CE</option>
+              <option value="Gandhinagar-CE">Gandhinagar-CE</option>
+              <option value="Ghaziabad-CE">Ghaziabad-CE</option>
+              <option value="Cochin-CE">Cochin-CE</option>
+            </select>
+          </div>
+
+          <!-- ASC Code Selector -->
+          <div class="flex flex-col">
+            <label for="ascSelect" class="text-[10px] font-bold text-slate-500 uppercase mb-1">ASC Code</label>
+            <select id="ascSelect" class="bg-white border border-slate-300 text-slate-800 text-xs font-medium rounded focus:ring-blue-500 focus:border-blue-500 block p-1.5 transition">
+              <option value="4903753" selected>4903753 (Default)</option>
+              <option value="9225951">9225951 (Surat)</option>
+              <option value="ALL">All ASC Codes</option>
+            </select>
+          </div>
+
+          <!-- Report Date Picker -->
+          <div class="flex flex-col">
+            <label for="reportDatePicker" class="text-[10px] font-bold text-slate-500 uppercase mb-1">Report Cutoff Date</label>
+            <input type="date" id="reportDatePicker" value="2026-09-11" class="bg-white border border-slate-300 text-slate-800 text-xs font-medium rounded focus:ring-blue-500 focus:border-blue-500 block p-1.5 transition">
+          </div>
+
+          <!-- View Raw Records Button -->
+          <div class="flex flex-col justify-end">
+            <button id="btnOpenRawDataModal" class="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded transition inline-flex items-center">
+              <svg class="w-3.5 h-3.5 mr-1 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+              </svg>
+              Raw Records (<span id="rawRecordCountBadge">275</span>)
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top KPI Bar (4 Key Executive Metrics) -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <!-- Card 1: Total Pending Calls -->
+      <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-sm relative overflow-hidden transition hover:shadow-md print-shadow-none">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Total Pending Calls</span>
+          <span class="p-2 rounded-lg bg-blue-50 text-blue-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-slate-900 font-outfit tabular-nums" id="kpiTotalPending">275</span>
+          <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+            <span id="kpiFreshCount">112</span> Fresh (&le;2d)
+          </span>
+        </div>
+        <div class="mt-2 flex items-center justify-between text-xs text-slate-500">
+          <span>Fresh Calls Ratio:</span>
+          <span class="font-bold text-slate-700" id="kpiFreshPct">40.7%</span>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">
+          <div id="kpiFreshBar" class="bg-blue-600 h-1.5 rounded-full" style="width: 40.7%"></div>
+        </div>
+      </div>
+
+      <!-- Card 2: In-Home Service Calls -->
+      <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-sm relative overflow-hidden transition hover:shadow-md print-shadow-none">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">In-Home Service</span>
+          <span class="p-2 rounded-lg bg-indigo-50 text-indigo-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+          </span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-slate-900 font-outfit tabular-nums" id="kpiInHome">27</span>
+          <span class="text-xs font-medium text-slate-500">Active Field Calls</span>
+        </div>
+        <div class="mt-2 flex items-center justify-between text-xs text-slate-500">
+          <span>% of Total Pending:</span>
+          <span class="font-bold text-indigo-700" id="kpiInHomePct">9.8%</span>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">
+          <div id="kpiInHomeBar" class="bg-indigo-600 h-1.5 rounded-full" style="width: 9.8%"></div>
+        </div>
+      </div>
+
+      <!-- Card 3: Installation & Demo Calls -->
+      <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-sm relative overflow-hidden transition hover:shadow-md print-shadow-none">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Installation &amp; Demo</span>
+          <span class="p-2 rounded-lg bg-emerald-50 text-emerald-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-slate-900 font-outfit tabular-nums" id="kpiInstallDemo">35</span>
+          <span class="text-xs text-slate-500 font-medium">31 Inst + 4 Demo</span>
+        </div>
+        <div class="mt-2 flex items-center justify-between text-xs text-slate-500">
+          <span>Customer Delivery SLA:</span>
+          <span class="font-bold text-emerald-700" id="kpiInstallDemoPct">12.7%</span>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">
+          <div id="kpiInstallDemoBar" class="bg-emerald-600 h-1.5 rounded-full" style="width: 12.7%"></div>
+        </div>
+      </div>
+
+      <!-- Card 4: Critical Pending (>15 Days) -->
+      <div class="bg-white rounded-xl p-5 border border-rose-200 shadow-sm relative overflow-hidden transition hover:shadow-md print-shadow-none">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-rose-600">Critical Pending (>15d)</span>
+          <span class="p-2 rounded-lg bg-rose-50 text-rose-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-rose-700 font-outfit tabular-nums" id="kpiCritical">13</span>
+          <span class="text-xs font-bold text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full border border-rose-300">
+            Immediate Action
+          </span>
+        </div>
+        <div class="mt-2 flex items-center justify-between text-xs text-slate-500">
+          <span>Aging &gt;15d Escalation:</span>
+          <span class="font-bold text-rose-700" id="kpiCriticalPct">4.7%</span>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">
+          <div id="kpiCriticalBar" class="bg-rose-600 h-1.5 rounded-full" style="width: 4.7%"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Visual Analytics Charts (Collapsible / Responsive) -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-5 no-print">
+      <!-- Donut Chart: Ageing Buckets -->
+      <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-bold text-slate-800 font-outfit flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span> Ageing Distribution
+          </h2>
+          <span class="text-xs text-slate-400">Aging Profile</span>
+        </div>
+        <div class="h-56 relative flex items-center justify-center">
+          <canvas id="chartAging"></canvas>
+        </div>
+      </div>
+
+      <!-- Bar Chart: D+7 Product Breakdown -->
+      <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-sm lg:col-span-2">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-bold text-slate-800 font-outfit flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-rose-600"></span> D+7 Pending Calls by Product Category
+          </h2>
+          <span class="text-xs text-slate-400">Calls with Aging &gt; 7 Days</span>
+        </div>
+        <div class="h-56 relative">
+          <canvas id="chartProducts"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Line Summary Micro-Cards (Table 2 Extension) -->
+    <section class="bg-white rounded-xl border border-slate-200/80 shadow-sm p-4 print-shadow-none">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-2">
+          <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+          Table 2: D+7 Calls by Product Line (Quick Overview)
+        </h2>
+        <span class="text-xs text-slate-400">Total D+7 Calls: <strong id="totalD7Badge" class="text-rose-700 font-bold">519</strong></span>
+      </div>
+
+      <!-- 10 Product Category Badges Strip -->
+      <div id="productSummaryCardsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-10 gap-2 text-center">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- Core Combined Matrix Table (Exact Match to User Screenshot) -->
+    <section class="bg-white rounded-xl border border-slate-300 shadow-md overflow-hidden print-shadow-none">
+      
+      <!-- Table Header Bar -->
+      <div class="px-5 py-3.5 bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800">
+        <div>
+          <span class="text-xs font-semibold text-blue-300 uppercase tracking-widest">Executive Operations Matrix</span>
+          <h2 class="text-base font-bold font-outfit text-white">Table 1 &amp; Table 2: Service Type Pendency &amp; Product D+7 Breakdown</h2>
+        </div>
+        <div class="flex items-center gap-2 text-xs no-print">
+          <span class="inline-flex items-center px-2 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">
+            <span class="w-2.5 h-2.5 rounded bg-rose-200 border border-rose-300 mr-1.5"></span> Soft Tint = Ageing (&gt;3 Days)
+          </span>
+          <span class="inline-flex items-center px-2 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">
+            <span class="w-2.5 h-2.5 rounded bg-red-600 mr-1.5"></span> D+7 By Products
+          </span>
+        </div>
+      </div>
+
+      <!-- Responsive Scroll Container -->
+      <div class="overflow-x-auto">
+        <table id="mainExecutiveTable" class="w-full text-xs text-slate-800 border-collapse">
+          <thead>
+            <!-- Top Super-Header row -->
+            <tr>
+              <!-- Left section title (covers ASC_CODE, Branch_Name, Service Type) -->
+              <th colspan="3" class="bg-[#002060] text-white font-bold py-2.5 px-3 text-left border-r border-slate-300 text-sm tracking-wide">
+                <span id="excelMainHeaderDateSpan">RC-GD Pendency dt 11.09.2026</span>
+              </th>
+              <!-- Aging header (covers Total, 0-2, 3-7, 8-10, 11-14, 15-30, 30+) -->
+              <th colspan="7" class="bg-[#dce6f1] text-slate-900 font-bold py-2.5 px-3 text-center border-r border-slate-300 text-sm tracking-wide">
+                Aging
+              </th>
+              <!-- WAR Status header (covers IW, OW) -->
+              <th colspan="2" class="bg-white text-slate-900 font-bold py-2.5 px-3 text-center border-r border-slate-300 text-sm tracking-wide">
+                WAR Status
+              </th>
+              <!-- Right section title (covers 10 products) -->
+              <th colspan="10" class="bg-[#dce6f1] text-rose-900 font-bold py-2.5 px-3 text-center text-sm tracking-wide">
+                D+7 Calls By Products
+              </th>
+            </tr>
+
+            <!-- Sub-headers row -->
+            <tr class="bg-[#dce6f1] text-slate-800 font-bold border-b-2 border-slate-300 text-center text-xs">
+              <!-- Left Columns (No separate SVC / MSC column) -->
+              <th class="py-2 px-2 border-r border-slate-300 text-left w-24">ASC_CODE</th>
+              <th class="py-2 px-2 border-r border-slate-300 text-left w-28">Branch_Name</th>
+              <th class="py-2 px-3 border-r border-slate-300 text-left min-w-[140px]">Service Type</th>
+              <th class="py-2 px-2 border-r border-slate-300 font-extrabold w-14">Total</th>
+              <th class="py-2 px-2 border-r border-slate-300 w-16">0–2 Days</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#ffc7ce] text-rose-950 font-bold w-16">3–7 Days</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#ffc7ce] text-rose-950 font-bold w-16">8–10 Days</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#ffc7ce] text-rose-950 font-bold w-16">11–14 Days</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#ffc7ce] text-rose-950 font-extrabold w-16">15–30 Days</th>
+              <th class="py-2 px-2 border-r-2 border-slate-400 bg-[#ffc7ce] text-rose-950 font-extrabold w-16">30+ Days</th>
+
+              <!-- IW / OW Warranty Columns - BOTH soft pastel green (#c1f0c8) matching user screenshot -->
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#c1f0c8] text-slate-900 font-bold w-14" title="In-Warranty Calls">IW</th>
+              <th class="py-2 px-2 border-r-2 border-slate-400 bg-[#c1f0c8] text-slate-900 font-bold w-14" title="Out-of-Warranty Calls">OW</th>
+
+              <!-- Right Columns (D+7 Product Colors) -->
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#ffff00] text-slate-900 font-bold w-12" title="Air Conditioner">AC</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#92d050] text-slate-900 font-bold w-12" title="Washing Machine">WM</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#dce6f1] text-slate-900 font-bold w-12" title="Refrigerator">REF</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#ffff00] text-slate-900 font-bold w-12" title="Audio Video / TV">AV</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#92d050] text-slate-900 font-bold w-12" title="Microwave">MW</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#dce6f1] text-slate-900 font-bold w-12" title="Audio / Soundbar">AUD</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#ffff00] text-slate-900 font-bold w-12" title="Dish Washer">DW</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#92d050] text-slate-900 font-bold w-12" title="Handheld Phones">HHP</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#dce6f1] text-slate-900 font-bold w-12" title="IT / Monitors">IT</th>
+              <th class="py-2 px-2 bg-[#ffff00] text-slate-900 font-bold w-12" title="Other Appliances">Other</th>
+            </tr>
+          </thead>
+          <tbody id="matrixTableBody" class="divide-y divide-slate-200">
+            <!-- Populated dynamically via JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Table Footer Note -->
+      <div class="px-4 py-2.5 bg-slate-50 border-t border-slate-200 text-[11px] text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-2">
+        <div>
+          <span>&bull; Data logic synced: Tracking numbers trimmed of "Edit". Aging calculated as <code>Report Date &minus; Requested Date</code>.</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span>Generated for executive operations dispatch</span>
+          <button id="btnQuickCopyFromFooter" class="text-blue-700 font-bold hover:underline">Copy HTML for Mail &rarr;</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 1: Upload Daily Excel / TSV Modal -->
+  <!-- ========================================================================= -->
+  <div id="uploadModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-3xl overflow-hidden animate-in fade-in zoom-in duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 bg-gradient-to-r from-[#0f2e59] to-[#1e3a8a] text-white flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="p-2 bg-blue-500/20 rounded-lg">
+            <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-base font-bold font-outfit">Upload Daily Excel or Paste Data</h3>
+            <p class="text-xs text-blue-200">Expected columns: <strong>Tracking No · Date · Branch_Name · ASC Ref. No · Requested Date · Service Type · Model Code · Serial No · Customer Name · First Anticipated Date · Dealer BP · Dealer Name · City · Phone Number · Email Id</strong></p>
+          </div>
+        </div>
+        <button id="btnCloseUploadModal" class="text-white/70 hover:text-white p-1 rounded-lg hover:bg-white/10 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Body Tabs -->
+      <div class="p-6 space-y-4">
+        
+        <!-- Tab Buttons -->
+        <div class="flex border-b border-slate-200">
+          <button id="tabBtnFile" class="py-2 px-4 text-xs font-bold border-b-2 border-blue-600 text-blue-600 focus:outline-none flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Upload .xlsx / .xls / .csv
+          </button>
+          <button id="tabBtnPaste" class="py-2 px-4 text-xs font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 focus:outline-none flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            Paste Excel / Tab-Separated Text
+          </button>
+        </div>
+
+        <!-- Tab 1: File Upload Drag-Drop Area -->
+        <div id="tabContentFile" class="space-y-3">
+          <div id="dragDropArea" class="border-2 border-dashed border-slate-300 hover:border-blue-500 bg-slate-50 hover:bg-blue-50/50 rounded-xl p-8 text-center transition cursor-pointer flex flex-col items-center justify-center">
+            <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv" class="hidden" />
+            <div id="dragDropIconArea" class="w-14 h-14 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mb-3">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+            </div>
+            <p id="dragDropMainText" class="text-sm font-bold text-slate-700">Click to browse or Drag &amp; Drop Excel file here</p>
+            <p id="dragDropSubText" class="text-xs text-slate-500 mt-1">Supports GSPN Excel export (<code>.xlsx</code>, <code>.xls</code>, <code>.csv</code>)</p>
+            <!-- File selected indicator (hidden until file is picked) -->
+            <div id="fileSelectedIndicator" class="hidden mt-3 px-4 py-2 bg-emerald-50 border border-emerald-300 rounded-lg flex items-center gap-2">
+              <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span id="selectedFileName" class="text-xs font-semibold text-emerald-800 truncate max-w-[260px]">No file selected</span>
+              <span id="selectedFileStatus" class="text-xs text-emerald-600">— Reading...</span>
+            </div>
+            <span id="dragDropBrowseBtn" class="inline-block mt-3 px-3 py-1 bg-white border border-slate-300 rounded text-xs font-semibold text-slate-600 shadow-sm">Select Local File</span>
+          </div>
+
+          <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+            <span>Automatic processing: Trims "Edit" from tracking numbers, derives product line from Model code, calculates TAT &amp; Aging buckets.</span>
+            <button id="btnDownloadSampleExcel" class="text-blue-600 font-bold hover:underline flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Download Sample Excel
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab 2: Paste Raw TSV Area -->
+        <div id="tabContentPaste" class="space-y-3 hidden">
+          <label for="pasteDataTextarea" class="block text-xs font-bold text-slate-600">Paste Table Rows Directly from Excel (Including Headers):</label>
+          <textarea id="pasteDataTextarea" rows="8" placeholder="Tracking No&#9;Date&#9;Branch_Name&#9;ASC Ref. No&#9;Requested Date&#9;Service Type&#9;Model Code&#9;Serial No&#9;Customer Name&#9;First Anticipated Date&#9;Dealer BP&#9;Dealer Name&#9;City&#9;Phone Number&#9;Email Id&#10;Edit 4293847291&#9;11.09.2026&#9;SVC&#9;REF001&#9;11.09.2026&#9;IH&#9;AR18CY3AQUN&#9;SN98765&#9;Rajesh Kumar&#9;11.09.2026&#9;4903753&#9;Samsung Dealer&#9;Ahmedabad&#9;9876543210&#9;dealer@example.com" class="w-full text-xs font-mono p-3 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-slate-50"></textarea>
+          <div class="flex justify-end">
+            <button id="btnProcessPastedData" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow transition">
+              Process &amp; Preview
+            </button>
+          </div>
+        </div>
+
+        <!-- Parse Feedback Box -->
+        <div id="parseFeedbackBox" class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs hidden">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-700" id="parseStatusText">Found 0 records.</span>
+            <span class="text-slate-500" id="parseDetailText">Ready to apply.</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+        <button id="btnResetToDefaultData" class="text-xs font-semibold text-rose-600 hover:text-rose-800 transition">
+          Reset to Screenshot Default Data
+        </button>
+        <div class="flex gap-2">
+          <button id="btnCancelUpload" class="px-4 py-2 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 transition">
+            Close
+          </button>
+          <button id="btnApplyUpload" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow-md transition disabled:opacity-50" disabled>
+            Apply to Dashboard
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 2: Copy HTML for Mail Preview Modal -->
+  <!-- ========================================================================= -->
+  <div id="mailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-4xl overflow-hidden max-h-[92vh] flex flex-col animate-in fade-in zoom-in duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 flex items-center justify-between flex-shrink-0">
+        <div class="flex items-center space-x-3">
+          <div class="p-2 bg-slate-950/10 rounded-lg">
+            <svg class="w-6 h-6 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-base font-extrabold font-outfit text-slate-950">Executive Email HTML Table Generator</h3>
+            <p class="text-xs text-slate-900 font-medium">Ready for 1-Click Copy into Outlook, Gmail, or Apple Mail with complete inline formatting</p>
+          </div>
+        </div>
+        <button id="btnCloseMailModal" class="text-slate-950/70 hover:text-slate-950 p-1 rounded-lg hover:bg-slate-950/10 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Preview Area -->
+      <div class="p-6 overflow-y-auto flex-1 space-y-4">
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-900 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-base">📧</span>
+            <span><strong>Email Safe:</strong> Generates strict inline CSS table styles with exact column colors and ageing tints. Just click <strong>"Copy to Clipboard"</strong> and press <code>Ctrl + V</code> in your mail composer!</span>
+          </div>
+        </div>
+
+        <!-- Live Visual Preview Container -->
+        <div class="border border-slate-300 rounded-lg p-3 bg-white overflow-x-auto shadow-inner">
+          <div id="emailHtmlPreviewContainer"></div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between flex-shrink-0">
+        <button id="btnCopyRawHtmlCode" class="text-xs font-semibold text-slate-600 hover:text-slate-900 transition flex items-center gap-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+          </svg>
+          Copy Raw HTML Code
+        </button>
+
+        <div class="flex gap-2">
+          <button id="btnCloseMailModal2" class="px-4 py-2 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 transition">
+            Close
+          </button>
+          <button id="btnConfirmCopyEmailHtml" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg text-xs shadow-md transition flex items-center gap-1.5 transform active:scale-95">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            Copy Formatted Table (Ctrl+V Ready)
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 3: Raw Records Inspector Modal -->
+  <!-- ========================================================================= -->
+  <div id="rawDataModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-5xl overflow-hidden max-h-[92vh] flex flex-col animate-in fade-in zoom-in duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between flex-shrink-0">
+        <div class="flex items-center space-x-3">
+          <div class="p-2 bg-blue-500/20 rounded-lg">
+            <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-base font-bold font-outfit">Underlying Service Order Records</h3>
+            <p class="text-xs text-slate-400">Inspecting records with 10 standard GSPN columns, cleaned tracking numbers, and derived TAT</p>
+          </div>
+        </div>
+        <button id="btnCloseRawDataModal" class="text-white/70 hover:text-white p-1 rounded-lg hover:bg-white/10 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Controls & Search -->
+      <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 flex-shrink-0">
+        <div class="flex items-center gap-2 flex-1 min-w-[240px]">
+          <div class="relative w-full max-w-xs">
+            <input type="text" id="rawSearchInput" placeholder="Search Tracking No, Model, Customer..." class="w-full text-xs pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+            <svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <select id="rawServiceFilter" class="text-xs border border-slate-300 rounded-lg py-1.5 px-2 bg-white">
+            <option value="ALL">All Service Types</option>
+            <option value="IN-HOME">IN-HOME</option>
+            <option value="Initial Installation">Initial Installation</option>
+            <option value="Stock Repair">Stock Repair</option>
+            <option value="Customer Care">Customer Care</option>
+            <option value="Demonstration">Demonstration</option>
+            <option value="PICK-UP SERVICE">PICK-UP SERVICE</option>
+            <option value="Carry In">Carry In</option>
+            <option value="Return Handling">Return Handling</option>
+          </select>
+        </div>
+        <span class="text-xs text-slate-500">Showing <span id="rawFilteredCount" class="font-bold text-slate-800">0</span> records</span>
+      </div>
+
+      <!-- Records Table Container -->
+      <div class="p-4 overflow-y-auto flex-1">
+        <div class="overflow-x-auto border border-slate-200 rounded-lg shadow-sm">
+          <table class="w-full text-xs text-left border-collapse">
+            <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 uppercase tracking-wider text-[10px]">
+              <tr>
+                <th class="py-2 px-2 border-r">#</th>
+                <th class="py-2 px-2 border-r">Tracking No (Trimmed)</th>
+                <th class="py-2 px-2 border-r">CP Code</th>
+                <th class="py-2 px-2 border-r">CP Name</th>
+                <th class="py-2 px-2 border-r">Requested Date</th>
+                <th class="py-2 px-2 border-r text-center">Aging (Days)</th>
+                <th class="py-2 px-2 border-r text-center">TAT Category</th>
+                <th class="py-2 px-2 border-r">Service Type</th>
+                <th class="py-2 px-2 border-r">Model Code</th>
+                <th class="py-2 px-2 border-r text-center">Product</th>
+                <th class="py-2 px-2 border-r">Serial No</th>
+                <th class="py-2 px-2">Customer Name</th>
+              </tr>
+            </thead>
+            <tbody id="rawRecordsTableBody" class="divide-y divide-slate-200 font-mono text-[11px]">
+              <!-- Injected via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 flex justify-end flex-shrink-0">
+        <button id="btnCloseRawDataModal2" class="px-4 py-2 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 transition">
+          Done
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- SCRIPT: APPLICATION LOGIC -->
+  <!-- ========================================================================= -->
+  <script>
+    /**
+     * RC-GD Pendency & Service Operations Report Controller
+     * Implements full business logic:
+     * 1. 10 Header mapping:
+     *    [Tracking No, CP Code, CP Name, ASC Ref. No, Requested Date, Service Type, Model Code, Serial No, Customer Name, First Anticipated Date]
+     * 2. Tracking No "Edit" string trimming
+     * 3. Aging & TAT IFS calculation from Requested Date
+     * 4. Service Type normalization (IH -> IN-HOME, etc.)
+     * 5. Product categorization from Model Code (A->AC, W->WM, R->REF, Q/U->AV, M/CE->MW, HT/HW->AUD, D->DW, S->HHP, N/LH/LC/LS->IT, Other)
+     * 6. Side-by-side Matrix rendering with conditional styling matching screenshot
+     * 7. Formatted HTML email table generator with rich clipboard copy
+     * 8. Excel import/export via SheetJS
+     * 9. Interactive Chart.js visualizations
+     */
+
+    // --- STANDARD CONSTANTS & MAPPINGS ---
+    const STANDARD_SERVICE_TYPES = [
+      'IN-HOME',
+      'Initial Installation',
+      'Stock Repair',
+      'Customer Care',
+      'Demonstration',
+      'PICK-UP SERVICE',
+      'Carry In',
+      'Return Handling'
+    ];
+
+    const PRODUCT_CATEGORIES = [
+      { code: 'AC', name: 'Air Conditioner', color: '#ef4444', textClass: 'text-white' },
+      { code: 'WM', name: 'Washing Machine', color: '#22c55e', textClass: 'text-white' },
+      { code: 'REF', name: 'Refrigerator', color: '#facc15', textClass: 'text-slate-900' },
+      { code: 'AV', name: 'Audio Video / TV', color: '#0f172a', textClass: 'text-white' },
+      { code: 'MW', name: 'Microwave', color: '#22c55e', textClass: 'text-white' },
+      { code: 'AUD', name: 'Audio / Soundbar', color: '#f87171', textClass: 'text-slate-950' },
+      { code: 'DW', name: 'Dish Washer', color: '#3b82f6', textClass: 'text-white' },
+      { code: 'HHP', name: 'Handheld Phone', color: '#86efac', textClass: 'text-slate-950' },
+      { code: 'IT', name: 'IT / Monitors', color: '#f87171', textClass: 'text-slate-950' },
+      { code: 'Other', name: 'Other Appliances', color: '#fde047', textClass: 'text-slate-900' }
+    ];
+
+    const AGING_BUCKETS = [
+      '0–2 Days',
+      '3–7 Days',
+      '8–10 Days',
+      '11–14 Days',
+      '15–30 Days',
+      '30+ Days'
+    ];
+
+    const STANDARD_BRANCHES = [
+      'Gurgaon-CE',
+      'Ahmedabad-CE',
+      'Lucknow-HHP',
+      'Moradabad-HHP',
+      'Surat-CE',
+      'Lucknow-CE',
+      'Gandhinagar-CE',
+      'Ghaziabad-CE',
+      'Cochin-CE'
+    ];
+
+    // --- APPLICATION STATE ---
+    let appState = {
+      reportDate: '2026-09-11',
+      selectedBranch: 'Gurgaon-CE',
+      selectedAsc: '4903753',
+      records: [],
+      pendingUploadRecords: null,
+      charts: {
+        agingChart: null,
+        productsChart: null
+      }
+    };
+
+    /**
+     * Determines if a call is In-Warranty (IW) or Out-of-Warranty (OW).
+     * Logic: If aging <= 365 and model code is not a stock/accessory item, treat as IW.
+     * Checks the 'warranty' field from excel if available, otherwise uses aging heuristic.
+     */
+    function isInWarranty(record) {
+      // If explicit warranty field exists
+      const wf = String(record.warranty || record['Warranty'] || record['Warranty Status'] || '').trim().toUpperCase();
+      if (wf === 'IW' || wf === 'IN-WARRANTY' || wf === 'IN WARRANTY' || wf === 'YES' || wf === 'Y') return true;
+      if (wf === 'OW' || wf === 'OUT-OF-WARRANTY' || wf === 'OUT OF WARRANTY' || wf === 'NO' || wf === 'N') return false;
+      // Heuristic: if service type is Stock Repair or Return Handling → likely OW
+      const sType = String(record.serviceType || '').toUpperCase();
+      if (sType === 'STOCK REPAIR' || sType === 'RETURN HANDLING') return false;
+      // Default: In-Warranty
+      return true;
+    }
+
+    // --- CORE FORMULAS & UTILITIES (Refactored from core.js) ---
+
+    /**
+     * Trims tracking number if it includes "Edit" or redundant text
+     */
+    function cleanTrackingNumber(rawVal) {
+      if (!rawVal) return '';
+      let str = String(rawVal).trim();
+      // Remove "Edit" word (case-insensitive) anywhere in string
+      str = str.replace(/\bEdit\b/gi, '');
+      // Clean excessive spaces, tabs or newlines
+      str = str.replace(/[\r\n\t]+/g, ' ').replace(/\s+/g, ' ').trim();
+      return str;
+    }
+
+    /**
+     * Converts short service type codes to standard names
+     */
+    function convertServiceType(code) {
+      if (!code) return 'Other';
+      const c = String(code).trim().toUpperCase();
+      const map = {
+        'IH': 'IN-HOME',
+        'IN HOME': 'IN-HOME',
+        'IN-HOME': 'IN-HOME',
+        'II': 'Initial Installation',
+        'INITIAL INSTALLATION': 'Initial Installation',
+        'INSTALLATION': 'Initial Installation',
+        'SR': 'Stock Repair',
+        'STOCK REPAIR': 'Stock Repair',
+        'CC': 'Customer Care',
+        'CUSTOMER CARE': 'Customer Care',
+        'DM': 'Demonstration',
+        'DEMONSTRATION': 'Demonstration',
+        'DEMO': 'Demonstration',
+        'PS': 'PICK-UP SERVICE',
+        'PICK-UP SERVICE': 'PICK-UP SERVICE',
+        'PICKUP': 'PICK-UP SERVICE',
+        'CI': 'Carry In',
+        'CARRY IN': 'Carry In',
+        'CARRY-IN': 'Carry In',
+        'RH': 'Return Handling',
+        'RETURN HANDLING': 'Return Handling'
+      };
+      return map[c] || String(code).trim();
+    }
+
+    /**
+     * Product categorization formula based on Model Code
+     */
+    function getProductCategory(model) {
+      if (!model) return 'Other';
+      const m = String(model).toUpperCase().trim();
+      if (!m) return 'Other';
+
+      const first1 = m.substring(0, 1);
+      const first2 = m.substring(0, 2);
+
+      if (first1 === 'S') return 'HHP';
+      if (first1 === 'A') return 'AC';
+      if (first2 === 'HT' || first2 === 'HW') return 'AUD';
+      if (first1 === 'Q' || first1 === 'U') return 'AV';
+      if (first1 === 'N' || first2 === 'LH' || first2 === 'LC' || first2 === 'LS') return 'IT';
+      if (first1 === 'M' || first2 === 'CE') return 'MW';
+      if (first1 === 'R') return 'REF';
+      if (first1 === 'W') return 'WM';
+      if (first1 === 'D') return 'DW';
+
+      return 'Other';
+    }
+
+    /**
+     * Parses diverse GSPN date strings or Excel serial numbers into Date
+     */
+    function parseDate(val) {
+      if (!val) return null;
+      if (val instanceof Date && !isNaN(val.getTime())) return val;
+      
+      // Excel serial date number
+      if (typeof val === 'number') {
+        const utcDays = Math.floor(val - 25569);
+        const utcValue = utcDays * 86400;
+        const dateInfo = new Date(utcValue * 1000);
+        return dateInfo;
+      }
+
+      let str = String(val).trim();
+      if (!str) return null;
+
+      // Strip time in parentheses: "05/09/2026 (12:00:00)" -> "05/09/2026"
+      str = str.replace(/\s*\(.*?\)\s*/g, '').trim();
+      if (str.indexOf(' ') !== -1) {
+        str = str.split(/\s+/)[0];
+      }
+
+      // DD.MM.YYYY
+      let m = str.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+      if (m) return new Date(parseInt(m[3], 10), parseInt(m[2], 10) - 1, parseInt(m[1], 10));
+
+      // DD/MM/YYYY
+      m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      if (m) return new Date(parseInt(m[3], 10), parseInt(m[2], 10) - 1, parseInt(m[1], 10));
+
+      // YYYY-MM-DD
+      m = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+      if (m) return new Date(parseInt(m[1], 10), parseInt(m[2], 10) - 1, parseInt(m[3], 10));
+
+      // DD-MM-YYYY
+      m = str.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+      if (m) return new Date(parseInt(m[3], 10), parseInt(m[2], 10) - 1, parseInt(m[1], 10));
+
+      const parsed = new Date(str);
+      return isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    /**
+     * Calculates Aging in whole days: =TODAY() - REQUESTED_DATE
+     */
+    function calcAging(reqDateVal, cutoffDateVal) {
+      const reqDate = parseDate(reqDateVal);
+      if (!reqDate) return 0;
+      const cutoff = parseDate(cutoffDateVal) || new Date();
+      
+      const cMidnight = new Date(cutoff.getFullYear(), cutoff.getMonth(), cutoff.getDate());
+      const rMidnight = new Date(reqDate.getFullYear(), reqDate.getMonth(), reqDate.getDate());
+      
+      const diffDays = Math.round((cMidnight - rMidnight) / (1000 * 60 * 60 * 24));
+      return diffDays >= 0 ? diffDays : 0;
+    }
+
+    /**
+     * Returns TAT Category string based on Aging
+     */
+    function getTATBucket(agingDays) {
+      const n = parseFloat(agingDays);
+      if (isNaN(n)) return '0–2 Days';
+      if (n <= 2) return '0–2 Days';
+      if (n <= 7) return '3–7 Days';
+      if (n <= 10) return '8–10 Days';
+      if (n <= 14) return '11–14 Days';
+      if (n <= 30) return '15–30 Days';
+      return '30+ Days';
+    }
+
+    /**
+     * Formats Date to DD.MM.YYYY string
+     */
+    function formatDateToDot(dateObj) {
+      if (!dateObj) return '';
+      const d = parseDate(dateObj) || new Date();
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const yyyy = d.getFullYear();
+      return `${dd}.${mm}.${yyyy}`;
+    }
+
+    // --- SYNTHESIZE AUTHENTIC SCREENSHOT DATASET ---
+    /**
+     * Generates exact underlying calls matching the user's uploaded screenshot matrix:
+     * Total calls = 275
+     * 0-2d = 112
+     * 3-7d, 8-10d, 11-14d, 15-30d, 30+d exactly per screenshot
+     */
+    function generateDefaultDataset() {
+      const baseDate = parseDate('2026-09-11');
+      const list = [];
+      let trackingCounter = 4293847000;
+
+      // Matrix definition from user's screenshot
+      const matrixDef = [
+        { type: 'IN-HOME', buckets: { '3–7 Days': 1, '8–10 Days': 4, '11–14 Days': 6, '15–30 Days': 4, '30+ Days': 12 }, total: 27 },
+        { type: 'Initial Installation', buckets: { '3–7 Days': 4, '11–14 Days': 7, '15–30 Days': 11, '30+ Days': 9 }, total: 31 },
+        { type: 'Stock Repair', buckets: { '8–10 Days': 1, '11–14 Days': 1 }, total: 2 },
+        { type: 'Customer Care', buckets: { '11–14 Days': 1, '30+ Days': 3 }, total: 4 },
+        { type: 'Demonstration', buckets: { '11–14 Days': 2, '15–30 Days': 1, '30+ Days': 1 }, total: 4 },
+        { type: 'PICK-UP SERVICE', buckets: { '8–10 Days': 1, '30+ Days': 1 }, total: 2 },
+        { type: 'Carry In', buckets: { '11–14 Days': 2, '15–30 Days': 1, '30+ Days': 1 }, total: 4 },
+        { type: 'Return Handling', buckets: { '8–10 Days': 1, '30+ Days': 1 }, total: 2 }
+      ];
+
+      // Products pool
+      const productModels = {
+        'AC': ['AR18CY3AQUN', 'AR12CY5AMWK', 'AR18TY5QAWK'],
+        'WM': ['WA65T4262GG', 'WW80T504DAX', 'WA70A4002GS'],
+        'REF': ['RT28T3722S8', 'RS74T5001B4', 'RT34T4513S8'],
+        'AV': ['QA55Q60AAK', 'UA43AU7700K', 'QA65QN90AAK'],
+        'MW': ['MC28H5015AK', 'MS23F301TAK', 'CE73JD/XTL'],
+        'AUD': ['HW-Q600A', 'HW-T420', 'HT-E350K'],
+        'DW': ['DW60M9550FS', 'DW60M6043FS', 'DW60M5042FS'],
+        'HHP': ['SM-S928B', 'SM-A546E', 'SM-F731B'],
+        'IT': ['LF24T350FHW', 'LC27R500FHW', 'LS24A310NHW'],
+        'Other': ['VG-SCFA55TK', 'BN59-01315A', 'ACCESSORY-01']
+      };
+
+      const productKeys = Object.keys(productModels);
+
+      // Helper to compute a requested date given an aging offset
+      function getReqDateFromAging(days) {
+        const d = new Date(baseDate.getTime() - (days * 86400000));
+        return formatDateToDot(d);
+      }
+
+      // Generate the older bucket calls specified in the screenshot
+      matrixDef.forEach(row => {
+        let createdInBuckets = 0;
+        Object.entries(row.buckets).forEach(([bucketName, count]) => {
+          let days = 1;
+          if (bucketName === '3–7 Days') days = 5;
+          else if (bucketName === '8–10 Days') days = 9;
+          else if (bucketName === '11–14 Days') days = 12;
+          else if (bucketName === '15–30 Days') days = 20;
+          else if (bucketName === '30+ Days') days = 35;
+
+          for (let i = 0; i < count; i++) {
+            trackingCounter++;
+            const pKey = productKeys[(trackingCounter) % productKeys.length];
+            const models = productModels[pKey];
+            const modelCode = models[i % models.length];
+
+            list.push({
+              trackingNo: `Edit ${trackingCounter}`, // Includes "Edit" to test trim logic
+              cpCode: '4903753',
+              cpName: 'Gurgaon-CE',
+              ascRefNo: `ASC-${trackingCounter.toString().slice(-4)}`,
+              requestedDate: getReqDateFromAging(days),
+              serviceType: row.type,
+              modelCode: modelCode,
+              serialNo: `SN${trackingCounter}X`,
+              customerName: `Customer ${trackingCounter.toString().slice(-3)}`,
+              firstAnticipatedDate: getReqDateFromAging(days)
+            });
+            createdInBuckets++;
+          }
+        });
+
+        // The remaining calls for this service type to reach row.total are placed into 0-2 Days (if any)
+        const rem0to2 = Math.max(0, row.total - createdInBuckets);
+        for (let i = 0; i < rem0to2; i++) {
+          trackingCounter++;
+          const pKey = productKeys[(trackingCounter) % productKeys.length];
+          const models = productModels[pKey];
+          const modelCode = models[i % models.length];
+
+          list.push({
+            trackingNo: `${trackingCounter}`,
+            cpCode: '4903753',
+            cpName: 'Gurgaon-CE',
+            ascRefNo: `ASC-${trackingCounter.toString().slice(-4)}`,
+            requestedDate: getReqDateFromAging(1),
+            serviceType: row.type,
+            modelCode: modelCode,
+            serialNo: `SN${trackingCounter}X`,
+            customerName: `Customer ${trackingCounter.toString().slice(-3)}`,
+            firstAnticipatedDate: getReqDateFromAging(1)
+          });
+        }
+      });
+
+      // Now fill fresh calls (0-2 Days) up to the screenshot total of 275 (112 in 0-2 Days)
+      const currentTotal = list.length;
+      const targetTotal = 275;
+      const neededFresh = targetTotal - currentTotal;
+
+      for (let i = 0; i < neededFresh; i++) {
+        trackingCounter++;
+        const pKey = productKeys[(trackingCounter) % productKeys.length];
+        const models = productModels[pKey];
+        const modelCode = models[i % models.length];
+        const sType = matrixDef[i % matrixDef.length].type;
+
+        list.push({
+          trackingNo: `Edit ${trackingCounter}`,
+          cpCode: '4903753',
+          cpName: 'Gurgaon-CE',
+          ascRefNo: `ASC-${trackingCounter.toString().slice(-4)}`,
+          requestedDate: getReqDateFromAging(Math.floor(Math.random() * 2)), // 0 or 1 day aging
+          serviceType: sType,
+          modelCode: modelCode,
+          serialNo: `SN${trackingCounter}X`,
+          customerName: `Customer ${trackingCounter.toString().slice(-3)}`,
+          firstAnticipatedDate: getReqDateFromAging(1)
+        });
+      }
+
+      // Also generate sample calls for each other branch in STANDARD_BRANCHES
+      const otherBranches = STANDARD_BRANCHES.filter(b => b !== 'Gurgaon-CE');
+      otherBranches.forEach((bName, bIdx) => {
+        const bAsc = String(4903754 + bIdx);
+        for (let j = 0; j < 18; j++) {
+          trackingCounter++;
+          const pKey = productKeys[trackingCounter % productKeys.length];
+          const models = productModels[pKey];
+          const modelCode = models[j % models.length];
+          const sType = matrixDef[j % matrixDef.length].type;
+          const ageDays = (j % 5) * 4; // varied aging
+
+          list.push({
+            trackingNo: `Edit ${trackingCounter}`,
+            cpCode: bAsc,
+            cpName: bName,
+            ascRefNo: `ASC-${trackingCounter.toString().slice(-4)}`,
+            requestedDate: getReqDateFromAging(ageDays),
+            serviceType: sType,
+            modelCode: modelCode,
+            serialNo: `SN${trackingCounter}X`,
+            customerName: `Customer ${trackingCounter.toString().slice(-3)}`,
+            firstAnticipatedDate: getReqDateFromAging(ageDays)
+          });
+        }
+      });
+
+      return list;
+    }
+
+    // --- DATA AGGREGATION ENGINE ---
+
+    /**
+     * Processes raw records: trims tracking no, derives product & aging, filters by Branch/ASC.
+     * Supports both legacy and new template column names.
+     */
+    function computeProcessedRecords() {
+      const cutoffDate = appState.reportDate;
+      const branch = appState.selectedBranch;
+      const asc    = appState.selectedAsc;
+
+      return appState.records
+        .map((r, idx) => {
+          const cleanTrack  = cleanTrackingNumber(r.trackingNo  || r['Tracking No']       || '');
+          const cpCode      = String(r.cpCode      || r['Dealer BP'] || r['CP Code']   || r['ASC Code'] || '').trim();
+          const cpName      = String(r.cpName      || r['Branch_Name'] || r['Branch Name'] || r['CP Name'] || '').trim();
+          const branchName  = String(r.branchName  || r['Branch_Name'] || r['Branch Name'] || cpName || '').trim();
+          const ascRef      = String(r.ascRefNo    || r['ASC Ref. No'] || r['ASC Ref No']  || '').trim();
+          const dateColVal  = String(r.dateCol     || r['Date']        || '').trim();
+          const reqDate     = String(r.requestedDate || r['Requested Date'] || dateColVal || r.firstAnticipatedDate || '').trim();
+          const sType       = convertServiceType(r.serviceType || r['Service Type'] || '');
+          const modelCode   = String(r.modelCode   || r['Model Code']  || r['Model']       || '').trim();
+          const serialNo    = String(r.serialNo    || r['Serial No']   || r['Serial']      || '').trim();
+          const custName    = String(r.customerName || r['Customer Name'] || '').trim();
+          const firstAntDate = String(r.firstAnticipatedDate || r['First Anticipated Date'] || '').trim();
+          const dealerName  = String(r.dealerName  || r['Dealer Name']  || '').trim();
+          const city        = String(r.city        || r['City']         || '').trim();
+          const phoneNumber = String(r.phoneNumber || r['Phone Number'] || r['Phone']      || '').trim();
+          const emailId     = String(r.emailId     || r['Email Id']     || r['Email']      || '').trim();
+          const warranty    = String(r.warranty    || r['Warranty']     || r['Warranty Status'] || '').trim();
+
+          const aging     = calcAging(reqDate || firstAntDate, cutoffDate);
+          const tatBucket = getTATBucket(aging);
+          const product   = getProductCategory(modelCode);
+
+          return {
+            index:               idx + 1,
+            trackingNo:          cleanTrack,
+            cpCode:              cpCode  || 'UNKNOWN',
+            cpName:              cpName  || 'Gurgaon-CE',
+            branchName:          branchName || cpName || 'Gurgaon-CE',
+            ascRefNo:            ascRef,
+            dateCol:             dateColVal,
+            requestedDate:       reqDate,
+            aging:               aging,
+            tatBucket:           tatBucket,
+            serviceType:         sType,
+            modelCode:           modelCode,
+            product:             product,
+            serialNo:            serialNo,
+            customerName:        custName,
+            firstAnticipatedDate: firstAntDate,
+            dealerName:          dealerName,
+            city:                city,
+            phoneNumber:         phoneNumber,
+            emailId:             emailId,
+            warranty:            warranty
+          };
+        })
+        .filter(r => {
+          // Branch filter: if ALL selected, show everything
+          if (branch !== 'ALL') {
+            const rBranch = r.cpName.trim().toUpperCase();
+            const selBranch = branch.trim().toUpperCase();
+            if (rBranch !== selBranch) return false;
+          }
+          // ASC filter: if ALL selected, show everything
+          if (asc !== 'ALL') {
+            if (r.cpCode.trim() !== asc.trim()) return false;
+          }
+          return true;
+        });
+    }
+
+    /**
+     * Builds the complete Matrix (Table 1: Aging Buckets & Table 2: D+7 Products + IW/OW)
+     */
+    function buildMatrixData(processedList) {
+      // 1. Initialize matrix structure
+      const matrix = {};
+      const productSummary = {};
+      PRODUCT_CATEGORIES.forEach(p => { productSummary[p.code] = 0; });
+
+      const agingBuckets = ['0–2 Days', '3–7 Days', '8–10 Days', '11–14 Days', '15–30 Days', '30+ Days'];
+
+      // Row accumulator helper
+      function makeEmptyRow(label) {
+        const row = {
+          serviceType: label,
+          total: 0,
+          iw: 0,
+          ow: 0,
+          aging: {
+            '0–2 Days': 0,
+            '3–7 Days': 0,
+            '8–10 Days': 0,
+            '11–14 Days': 0,
+            '15–30 Days': 0,
+            '30+ Days': 0
+          },
+          productsD7: {}
+        };
+        PRODUCT_CATEGORIES.forEach(p => { row.productsD7[p.code] = 0; });
+        return row;
+      }
+
+      STANDARD_SERVICE_TYPES.forEach(st => {
+        matrix[st] = makeEmptyRow(st);
+      });
+      const totalRow = makeEmptyRow('Total');
+
+      // Track unique service center names per ASC code
+      const svcNames = {};
+
+      // 2. Aggregate records into matrix
+      processedList.forEach(r => {
+        const sType = matrix[r.serviceType] ? r.serviceType : 'IN-HOME';
+        const row = matrix[sType];
+        const bucket = r.tatBucket;
+        const prod = r.product;
+
+        // Track SVC name
+        if (r.cpCode && r.cpName) {
+          svcNames[r.cpCode] = r.cpName;
+        }
+
+        // Increment aging
+        row.total++;
+        totalRow.total++;
+        if (row.aging[bucket] !== undefined) {
+          row.aging[bucket]++;
+          totalRow.aging[bucket]++;
+        }
+
+        // IW / OW
+        if (isInWarranty(r)) {
+          row.iw++;
+          totalRow.iw++;
+        } else {
+          row.ow++;
+          totalRow.ow++;
+        }
+
+        // Check if D+7 (Aging > 7 Days)
+        if (r.aging > 7) {
+          if (row.productsD7[prod] !== undefined) {
+            row.productsD7[prod]++;
+            totalRow.productsD7[prod]++;
+            productSummary[prod]++;
+          }
+        }
+      });
+
+      return {
+        matrix: matrix,
+        totalRow: totalRow,
+        productSummary: productSummary,
+        svcNames: svcNames
+      };
+    }
+
+    // --- UI RENDERING FUNCTIONS ---
+
+    /**
+     * Renders KPI Top Bar Cards
+     */
+    function renderKPIs(matrixData, totalRecordsCount) {
+      const t = matrixData.totalRow;
+      const totalPending = t.total;
+
+      // Fresh calls (0-2 Days)
+      const freshCount = t.aging['0–2 Days'] || 0;
+      const freshPct = totalPending > 0 ? ((freshCount / totalPending) * 100).toFixed(1) : '0.0';
+
+      // In-Home Calls
+      const inHomeCount = matrixData.matrix['IN-HOME'] ? matrixData.matrix['IN-HOME'].total : 0;
+      const inHomePct = totalPending > 0 ? ((inHomeCount / totalPending) * 100).toFixed(1) : '0.0';
+
+      // Install & Demo Calls
+      const installCount = matrixData.matrix['Initial Installation'] ? matrixData.matrix['Initial Installation'].total : 0;
+      const demoCount = matrixData.matrix['Demonstration'] ? matrixData.matrix['Demonstration'].total : 0;
+      const installDemoTotal = installCount + demoCount;
+      const installDemoPct = totalPending > 0 ? ((installDemoTotal / totalPending) * 100).toFixed(1) : '0.0';
+
+      // Critical (>15 Days = 15–30 Days + 30+ Days)
+      const crit15to30 = t.aging['15–30 Days'] || 0;
+      const critGt30 = t.aging['30+ Days'] || 0;
+      const criticalTotal = crit15to30 + critGt30;
+      const criticalPct = totalPending > 0 ? ((criticalTotal / totalPending) * 100).toFixed(1) : '0.0';
+
+      // Update DOM
+      document.getElementById('kpiTotalPending').textContent = totalPending;
+      document.getElementById('kpiFreshCount').textContent = freshCount;
+      document.getElementById('kpiFreshPct').textContent = `${freshPct}%`;
+      document.getElementById('kpiFreshBar').style.width = `${Math.min(100, freshPct)}%`;
+
+      document.getElementById('kpiInHome').textContent = inHomeCount;
+      document.getElementById('kpiInHomePct').textContent = `${inHomePct}%`;
+      document.getElementById('kpiInHomeBar').style.width = `${Math.min(100, inHomePct)}%`;
+
+      document.getElementById('kpiInstallDemo').textContent = installDemoTotal;
+      document.getElementById('kpiInstallDemoPct').textContent = `${installDemoPct}%`;
+      document.getElementById('kpiInstallDemoBar').style.width = `${Math.min(100, installDemoPct)}%`;
+
+      document.getElementById('kpiCritical').textContent = criticalTotal;
+      document.getElementById('kpiCriticalPct').textContent = `${criticalPct}%`;
+      document.getElementById('kpiCriticalBar').style.width = `${Math.min(100, criticalPct)}%`;
+
+      // Update header date & badges
+      const dotDate = formatDateToDot(appState.reportDate);
+      document.getElementById('reportDateHeaderSpan').textContent = dotDate;
+      document.getElementById('excelMainHeaderDateSpan').textContent = `RC-GD Pendency dt ${dotDate}`;
+      document.getElementById('activeBranchTag').textContent = `Branch: ${appState.selectedBranch}`;
+      document.getElementById('activeAscTag').textContent = `ASC: ${appState.selectedAsc}`;
+      document.getElementById('rawRecordCountBadge').textContent = totalRecordsCount;
+    }
+
+    /**
+     * Renders Product Summary Micro-Cards Strip
+     */
+    function renderProductSummary(productSummary) {
+      const container = document.getElementById('productSummaryCardsGrid');
+      container.innerHTML = '';
+
+      let totalD7 = 0;
+      PRODUCT_CATEGORIES.forEach(p => {
+        totalD7 += (productSummary[p.code] || 0);
+      });
+      document.getElementById('totalD7Badge').textContent = totalD7;
+
+      PRODUCT_CATEGORIES.forEach(p => {
+        const count = productSummary[p.code] || 0;
+        const pct = totalD7 > 0 ? ((count / totalD7) * 100).toFixed(0) : 0;
+        
+        const card = document.createElement('div');
+        card.className = 'bg-slate-50 hover:bg-white border border-slate-200 rounded-lg p-2.5 transition shadow-xs flex flex-col items-center justify-between text-center';
+        card.innerHTML = `
+          <div class="w-full flex items-center justify-between gap-1 mb-1">
+            <span class="px-1.5 py-0.5 text-[10px] font-extrabold rounded ${p.textClass}" style="background-color: ${p.color};">${p.code}</span>
+            <span class="text-[10px] font-semibold text-slate-400">${pct}%</span>
+          </div>
+          <div class="text-xl font-extrabold text-slate-800 font-outfit tabular-nums">${count}</div>
+          <div class="text-[10px] text-slate-500 truncate max-w-full" title="${p.name}">${p.name.split('/')[0].split(' ')[0]}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    /**
+     * Renders the Core Matrix Table (Side-by-side matching screenshot)
+     * Now includes: SVC (Service Center Name) column, IW and OW warranty columns
+     */
+    function renderExecutiveTable(matrixData) {
+      const tbody = document.getElementById('matrixTableBody');
+      tbody.innerHTML = '';
+
+      // Resolve ASC Code and Branch Name from actual data records (from Excel) or fallback to appState
+      const processedList = computeProcessedRecords();
+      const ascCode = (appState.selectedAsc !== 'ALL' && appState.selectedAsc)
+        ? appState.selectedAsc
+        : (processedList.length > 0 ? processedList[0].cpCode : '4903753');
+      const branchName = (appState.selectedBranch !== 'ALL' && appState.selectedBranch)
+        ? appState.selectedBranch
+        : (processedList.length > 0 ? (processedList[0].branchName || processedList[0].cpName) : 'Gurgaon-CE');
+
+      // Resolve Service Center Name from loaded data
+      const svcNames = matrixData.svcNames || {};
+      let svcLabel = svcNames[ascCode] || Object.values(svcNames)[0] || appState.selectedBranch;
+      if (appState.selectedAsc === 'ALL') svcLabel = Object.values(svcNames).join(' / ') || 'All Centers';
+
+      // Helper to format 0 values nicely (like screenshot: blank or number)
+      function cellVal(val, isTotalRow) {
+        if (val === 0 || val === '0' || !val) {
+          return isTotalRow ? '<span class="text-slate-300">-</span>' : '';
+        }
+        return val;
+      }
+
+      // 1. Render Summary TOTAL Row at the top
+      const t = matrixData.totalRow;
+      const totalTr = document.createElement('tr');
+      totalTr.className = 'bg-blue-50/70 hover:bg-blue-100/70 font-bold border-b-2 border-slate-300 text-slate-900 transition';
+      
+      let totalHtml = `
+        <td class="py-2.5 px-2 border-r border-slate-300 text-left font-mono font-bold">${ascCode}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 text-left font-bold">${branchName}</td>
+        <td class="py-2.5 px-3 border-r border-slate-300 text-left font-bold text-blue-900">Total</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 bg-blue-100/80 text-blue-900 font-extrabold text-center tabular-nums">${t.total}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 text-center tabular-nums font-semibold">${cellVal(t.aging['0–2 Days'], true)}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 table-cell-aging text-center tabular-nums font-semibold">${cellVal(t.aging['3–7 Days'], true)}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 table-cell-aging text-center tabular-nums font-semibold">${cellVal(t.aging['8–10 Days'], true)}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 table-cell-aging text-center tabular-nums font-semibold">${cellVal(t.aging['11–14 Days'], true)}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 table-cell-aging-hot text-center tabular-nums font-bold">${cellVal(t.aging['15–30 Days'], true)}</td>
+        <td class="py-2.5 px-2 border-r-2 border-slate-400 table-cell-aging-hot text-center tabular-nums font-bold">${cellVal(t.aging['30+ Days'], true)}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 bg-[#c1f0c8] text-slate-900 font-extrabold text-center tabular-nums">${cellVal(t.iw, true)}</td>
+        <td class="py-2.5 px-2 border-r-2 border-slate-400 bg-[#c1f0c8] text-slate-900 font-extrabold text-center tabular-nums">${cellVal(t.ow, true)}</td>
+      `;
+
+      // D+7 Product columns for Total row
+      PRODUCT_CATEGORIES.forEach(p => {
+        const val = t.productsD7[p.code] || 0;
+        totalHtml += `<td class="py-2.5 px-2 border-r border-slate-200 text-center font-extrabold text-slate-800 tabular-nums">${cellVal(val, true)}</td>`;
+      });
+
+      totalTr.innerHTML = totalHtml;
+      tbody.appendChild(totalTr);
+
+      // 2. Render Each Service Type Row
+      STANDARD_SERVICE_TYPES.forEach((sType, rIdx) => {
+        const row = matrixData.matrix[sType];
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition border-b border-slate-200 text-center';
+
+        let rowHtml = `
+          <td class="py-2 px-2 border-r border-slate-200 text-left text-slate-400 text-[11px]"></td>
+          <td class="py-2 px-2 border-r border-slate-200 text-left text-slate-400 text-[11px]"></td>
+          <td class="py-2 px-3 border-r border-slate-200 text-left font-medium text-slate-800">${sType}</td>
+          <td class="py-2 px-2 border-r border-slate-200 font-bold text-slate-900 bg-slate-50 tabular-nums">${cellVal(row.total)}</td>
+          <td class="py-2 px-2 border-r border-slate-200 tabular-nums text-slate-700">${cellVal(row.aging['0–2 Days'])}</td>
+          <td class="py-2 px-2 border-r border-slate-200 table-cell-aging tabular-nums text-rose-950 font-medium">${cellVal(row.aging['3–7 Days'])}</td>
+          <td class="py-2 px-2 border-r border-slate-200 table-cell-aging tabular-nums text-rose-950 font-medium">${cellVal(row.aging['8–10 Days'])}</td>
+          <td class="py-2 px-2 border-r border-slate-200 table-cell-aging tabular-nums text-rose-950 font-medium">${cellVal(row.aging['11–14 Days'])}</td>
+          <td class="py-2 px-2 border-r border-slate-200 table-cell-aging-hot tabular-nums font-bold">${cellVal(row.aging['15–30 Days'])}</td>
+          <td class="py-2 px-2 border-r-2 border-slate-400 table-cell-aging-hot tabular-nums font-bold">${cellVal(row.aging['30+ Days'])}</td>
+          <td class="py-2 px-2 border-r border-slate-200 bg-[#c1f0c8] text-slate-900 font-semibold tabular-nums">${cellVal(row.iw)}</td>
+          <td class="py-2 px-2 border-r-2 border-slate-400 bg-[#c1f0c8] text-slate-900 font-semibold tabular-nums">${cellVal(row.ow)}</td>
+        `;
+
+        PRODUCT_CATEGORIES.forEach(p => {
+          const val = row.productsD7[p.code] || 0;
+          rowHtml += `<td class="py-2 px-2 border-r border-slate-200 text-slate-700 tabular-nums">${cellVal(val)}</td>`;
+        });
+
+        tr.innerHTML = rowHtml;
+        tbody.appendChild(tr);
+      });
+    }
+
+    /**
+     * Updates Chart.js visual charts
+     */
+    function renderCharts(matrixData) {
+      const t = matrixData.totalRow;
+
+      // 1. Aging Donut Chart
+      const ctxAging = document.getElementById('chartAging').getContext('2d');
+      const agingData = [
+        t.aging['0–2 Days'] || 0,
+        t.aging['3–7 Days'] || 0,
+        t.aging['8–10 Days'] || 0,
+        t.aging['11–14 Days'] || 0,
+        t.aging['15–30 Days'] || 0,
+        t.aging['30+ Days'] || 0
+      ];
+
+      if (appState.charts.agingChart) {
+        appState.charts.agingChart.destroy();
+      }
+
+      appState.charts.agingChart = new Chart(ctxAging, {
+        type: 'doughnut',
+        data: {
+          labels: ['0–2 Days', '3–7 Days', '8–10 Days', '11–14 Days', '15–30 Days', '30+ Days'],
+          datasets: [{
+            data: agingData,
+            backgroundColor: [
+              '#10b981', // 0-2d emerald
+              '#fbbf24', // 3-7d amber
+              '#f97316', // 8-10d orange
+              '#f43f5e', // 11-14d rose
+              '#dc2626', // 15-30d red
+              '#7f1d1d'  // 30+d dark red
+            ],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: { boxWidth: 12, font: { size: 10, family: 'Inter' } }
+            }
+          },
+          cutout: '68%'
+        }
+      });
+
+      // 2. Product D+7 Bar Chart
+      const ctxProd = document.getElementById('chartProducts').getContext('2d');
+      const prodLabels = PRODUCT_CATEGORIES.map(p => p.code);
+      const prodValues = PRODUCT_CATEGORIES.map(p => t.productsD7[p.code] || 0);
+      const prodColors = PRODUCT_CATEGORIES.map(p => p.color);
+
+      if (appState.charts.productsChart) {
+        appState.charts.productsChart.destroy();
+      }
+
+      appState.charts.productsChart = new Chart(ctxProd, {
+        type: 'bar',
+        data: {
+          labels: prodLabels,
+          datasets: [{
+            label: 'D+7 Calls (>7 Days)',
+            data: prodValues,
+            backgroundColor: prodColors,
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: '#f1f5f9' },
+              ticks: { font: { size: 10 } }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 11, weight: 'bold' } }
+            }
+          }
+        }
+      });
+    }
+
+    /**
+     * Master Refresh: Re-computes processed records and updates all UI elements
+     */
+    function refreshDashboard() {
+      const processed = computeProcessedRecords();
+      const matrixData = buildMatrixData(processed);
+
+      renderKPIs(matrixData, processed.length);
+      renderProductSummary(matrixData.productSummary);
+      renderExecutiveTable(matrixData);
+      renderCharts(matrixData);
+      renderRawRecordsTable(processed);
+    }
+
+    // --- RAW RECORDS DRAWER/MODAL RENDERING ---
+    function renderRawRecordsTable(recordsList) {
+      const search = (document.getElementById('rawSearchInput').value || '').toLowerCase().trim();
+      const serviceFilter = document.getElementById('rawServiceFilter').value;
+
+      const filtered = recordsList.filter(r => {
+        if (serviceFilter !== 'ALL' && r.serviceType !== serviceFilter) return false;
+        if (search) {
+          const match = r.trackingNo.toLowerCase().includes(search) ||
+                        r.modelCode.toLowerCase().includes(search) ||
+                        r.customerName.toLowerCase().includes(search) ||
+                        r.serialNo.toLowerCase().includes(search);
+          if (!match) return false;
+        }
+        return true;
+      });
+
+      document.getElementById('rawFilteredCount').textContent = filtered.length;
+      const tbody = document.getElementById('rawRecordsTableBody');
+      tbody.innerHTML = '';
+
+      // Render top 100 for maximum performance
+      const slice = filtered.slice(0, 100);
+      slice.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition';
+        tr.innerHTML = `
+          <td class="py-1.5 px-2 border-r text-slate-400">${r.index}</td>
+          <td class="py-1.5 px-2 border-r font-bold text-blue-700">${r.trackingNo}</td>
+          <td class="py-1.5 px-2 border-r text-slate-600">${r.cpCode}</td>
+          <td class="py-1.5 px-2 border-r text-slate-600">${r.cpName}</td>
+          <td class="py-1.5 px-2 border-r text-slate-600">${r.requestedDate}</td>
+          <td class="py-1.5 px-2 border-r text-center font-bold ${r.aging > 15 ? 'text-rose-600' : 'text-slate-800'}">${r.aging}</td>
+          <td class="py-1.5 px-2 border-r text-center"><span class="px-1.5 py-0.5 rounded text-[10px] ${r.aging > 15 ? 'bg-rose-100 text-rose-800 font-bold' : 'bg-slate-100 text-slate-700'}">${r.tatBucket}</span></td>
+          <td class="py-1.5 px-2 border-r text-slate-800">${r.serviceType}</td>
+          <td class="py-1.5 px-2 border-r text-slate-700 font-medium">${r.modelCode}</td>
+          <td class="py-1.5 px-2 border-r text-center"><span class="px-1 rounded bg-slate-200 text-slate-800 font-bold">${r.product}</span></td>
+          <td class="py-1.5 px-2 border-r text-slate-500">${r.serialNo}</td>
+          <td class="py-1.5 px-2 text-slate-700">${r.customerName}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // --- EMAIL-COMPATIBLE HTML GENERATOR (The Email Superpower) ---
+    /**
+     * Generates a bulletproof inline-styled HTML table matching the user's screenshot
+     * that can be pasted straight into Outlook, Gmail, Apple Mail, etc.
+     */
+    function generateEmailTableHtml() {
+      const processed = computeProcessedRecords();
+      const matrixData = buildMatrixData(processed);
+      const dotDate = formatDateToDot(appState.reportDate);
+      const branchName = appState.selectedBranch === 'ALL' ? 'SVC' : appState.selectedBranch;
+      const ascCode = appState.selectedAsc === 'ALL' ? '4903753' : appState.selectedAsc;
+
+      const t = matrixData.totalRow;
+
+      // Color maps for D+7 headers matching screenshot
+      const prodColors = {
+        'AC': { bg: '#ef4444', text: '#ffffff' },
+        'WM': { bg: '#22c55e', text: '#ffffff' },
+        'REF': { bg: '#facc15', text: '#000000' },
+        'AV': { bg: '#0f172a', text: '#ffffff' },
+        'MW': { bg: '#22c55e', text: '#ffffff' },
+        'AUD': { bg: '#f87171', text: '#000000' },
+        'DW': { bg: '#3b82f6', text: '#ffffff' },
+        'HHP': { bg: '#86efac', text: '#000000' },
+        'IT': { bg: '#f87171', text: '#000000' },
+        'Other': { bg: '#fde047', text: '#000000' }
+      };
+
+      // Resolve SVC name from data
+      const svcNames = matrixData.svcNames || {};
+      let svcLabel = svcNames[ascCode] || Object.values(svcNames)[0] || branchName;
+      if (appState.selectedAsc === 'ALL') svcLabel = Object.values(svcNames).join(' / ') || 'All Centers';
+
+      let html = `
+      <table cellpadding="5" cellspacing="0" border="1" style="border-collapse: collapse; font-family: Calibri, Arial, sans-serif; font-size: 11px; color: #000000; border: 1px solid #94a3b8; text-align: center; width: 100%; max-width: 1300px;">
+        <thead>
+          <!-- Super Header -->
+          <tr>
+            <th colspan="3" style="background-color: #002060; color: #ffffff; font-size: 12px; font-weight: bold; text-align: left; padding: 6px 8px; border: 1px solid #475569;">
+              RC-GD Pendency dt ${dotDate}
+            </th>
+            <th colspan="7" style="background-color: #dce6f1; color: #0f172a; font-size: 12px; font-weight: bold; text-align: center; padding: 6px 8px; border: 1px solid #475569;">
+              Aging
+            </th>
+            <th colspan="2" style="background-color: #ffffff; color: #0f172a; font-size: 12px; font-weight: bold; text-align: center; padding: 6px 8px; border: 1px solid #475569;">
+              WAR Status
+            </th>
+            <th colspan="10" style="background-color: #dce6f1; color: #991b1b; font-size: 12px; font-weight: bold; text-align: center; padding: 6px 8px; border: 1px solid #475569;">
+              D+7 Calls By Products
+            </th>
+          </tr>
+          <!-- Column Headers -->
+          <tr style="background-color: #dce6f1; font-weight: bold; border-bottom: 2px solid #64748b;">
+            <th style="padding: 5px; border: 1px solid #cbd5e1; text-align: left;">ASC_CODE</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; text-align: left;">Branch_Name</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; text-align: left; min-width: 130px;">Service Type</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #dce6f1; font-weight: bold;">Total</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1;">0–2 Days</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffc7ce; color: #991b1b;">3–7 Days</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffc7ce; color: #991b1b;">8–10 Days</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffc7ce; color: #991b1b;">11–14 Days</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffc7ce; font-weight: bold; color: #991b1b;">15–30 Days</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffc7ce; font-weight: bold; color: #991b1b;">30+ Days</th>
+            <!-- IW / OW -->
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #c1f0c8; color: #0f172a; font-weight: bold;">IW</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #c1f0c8; color: #0f172a; font-weight: bold;">OW</th>
+            <!-- Products -->
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['AC'].bg}; color: ${prodColors['AC'].text};">AC</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['WM'].bg}; color: ${prodColors['WM'].text};">WM</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['REF'].bg}; color: ${prodColors['REF'].text};">REF</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['AV'].bg}; color: ${prodColors['AV'].text};">AV</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['MW'].bg}; color: ${prodColors['MW'].text};">MW</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['AUD'].bg}; color: ${prodColors['AUD'].text};">AUD</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['DW'].bg}; color: ${prodColors['DW'].text};">DW</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['HHP'].bg}; color: ${prodColors['HHP'].text};">HHP</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['IT'].bg}; color: ${prodColors['IT'].text};">IT</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['Other'].bg}; color: ${prodColors['Other'].text};">Other</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Total Row -->
+          <tr style="background-color: #e0f2fe; font-weight: bold; border-bottom: 2px solid #0284c7;">
+            <td style="padding: 6px; border: 1px solid #94a3b8; text-align: left;">${ascCode}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; text-align: left;">${branchName}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; text-align: left; font-weight: bold; color: #0c4a6e;">Total</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #bae6fd; font-weight: bold;">${t.total}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8;">${t.aging['0–2 Days'] || '-'}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #ffe4e6;">${t.aging['3–7 Days'] || '-'}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #ffe4e6;">${t.aging['8–10 Days'] || '-'}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #ffe4e6;">${t.aging['11–14 Days'] || '-'}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #fecaca; font-weight: bold;">${t.aging['15–30 Days'] || '-'}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #fca5a5; font-weight: bold;">${t.aging['30+ Days'] || '-'}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #c1f0c8; color: #0f172a; font-weight: bold;">${t.iw || '-'}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #c1f0c8; color: #0f172a; font-weight: bold;">${t.ow || '-'}</td>
+      `;
+
+      PRODUCT_CATEGORIES.forEach(p => {
+        const val = t.productsD7[p.code] || 0;
+        html += `<td style="padding: 6px; border: 1px solid #94a3b8; font-weight: bold;">${val || '-'}</td>`;
+      });
+      html += `</tr>`;
+
+      // Service Rows
+      STANDARD_SERVICE_TYPES.forEach((sType, rIdx) => {
+        const row = matrixData.matrix[sType];
+        const isEven = rIdx % 2 === 0;
+        const bg = isEven ? '#ffffff' : '#f8fafc';
+
+        html += `
+          <tr style="background-color: ${bg};">
+            <td style="padding: 5px; border: 1px solid #cbd5e1; text-align: left; color: #64748b;"></td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; text-align: left; color: #64748b;"></td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; text-align: left; font-weight: 500;">${sType}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; font-weight: bold; background-color: #f1f5f9;">${row.total || ''}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1;">${row.aging['0–2 Days'] || ''}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffe4e6;">${row.aging['3–7 Days'] || ''}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffe4e6;">${row.aging['8–10 Days'] || ''}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffe4e6;">${row.aging['11–14 Days'] || ''}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #fecaca; font-weight: bold;">${row.aging['15–30 Days'] || ''}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #fca5a5; font-weight: bold;">${row.aging['30+ Days'] || ''}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #c1f0c8; color: #0f172a;">${row.iw || ''}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #c1f0c8; color: #0f172a;">${row.ow || ''}</td>
+        `;
+
+        PRODUCT_CATEGORIES.forEach(p => {
+          const val = row.productsD7[p.code] || '';
+          html += `<td style="padding: 5px; border: 1px solid #cbd5e1;">${val}</td>`;
+        });
+        html += `</tr>`;
+      });
+
+      html += `
+        </tbody>
+      </table>
+      <div style="font-family: Arial, sans-serif; font-size: 10px; color: #64748b; margin-top: 6px;">
+        * Report generated on ${new Date().toLocaleString()} | RC-GD Pendency &amp; Service Operations
+      </div>
+      `;
+
+      return html;
+    }
+
+    // --- TOAST NOTIFICATIONS ---
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const isSuccess = type === 'success';
+      toast.className = `px-4 py-3 rounded-xl shadow-lg text-xs font-semibold text-white flex items-center gap-2 transform transition-all duration-300 translate-y-2 opacity-0 pointer-events-auto ${isSuccess ? 'bg-emerald-600' : 'bg-rose-600'}`;
+      toast.innerHTML = `
+        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${isSuccess ? 'M5 13l4 4L19 7' : 'M6 18L18 6M6 6l12 12'}" />
+        </svg>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // --- EXCEL FILE PARSER & TSV PROCESSOR ---
+    /**
+     * Parses uploaded Excel/TSV data into normalised record objects.
+     * Supports the new template format:
+     *   Tracking No | Date | Branch_Name | ASC Ref. No | Requested Date | Service Type |
+     *   Model Code | Serial No | Customer Name | First Anticipated Date |
+     *   Dealer BP | Dealer Name | City | Phone Number | Email Id
+     * Also supports legacy column names for backward compatibility.
+     */
+    function parseUploadedData(dataArray) {
+      if (!Array.isArray(dataArray) || dataArray.length === 0) return [];
+      
+      const records = [];
+      dataArray.forEach(row => {
+        // ── Tracking Number ──────────────────────────────────────────
+        const track = row['Tracking No'] || row['trackingNo'] || row['Tracking Number']
+                   || row['SO No'] || row['Service Order No.'] || '';
+
+        // ── Date (report/service date) — new template column ─────────
+        const dateCol = row['Date'] || row['date'] || row['Report Date'] || '';
+
+        // ── Branch Name ──────────────────────────────────────────────
+        // New template uses exact 'Branch_Name' (underscore), legacy used 'Branch Name' / 'CP Name'
+        const cpName = row['Branch_Name'] || row['Branch Name'] || row['CP Name']
+                    || row['cpName'] || row['SVC'] || row['Service Center Name'] || '';
+
+        // ── ASC / Dealer BP Code ─────────────────────────────────────
+        // New template uses 'Dealer BP' for the CP/ASC code
+        const cpCode = row['Dealer BP'] || row['CP Code'] || row['cpCode']
+                    || row['ASC Code'] || row['ASC_CODE'] || '';
+
+        // ── ASC Reference Number ─────────────────────────────────────
+        const ascRef = row['ASC Ref. No'] || row['ascRefNo'] || row['ASC Ref No']
+                    || row['ASC Job No'] || '';
+
+        // ── Requested Date ───────────────────────────────────────────
+        // Prefer explicit 'Requested Date'; fall back to 'Date' column
+        const reqDate = row['Requested Date'] || row['requestedDate']
+                     || row['Created Date'] || row['Created'] || dateCol || '';
+
+        // ── Service Type ─────────────────────────────────────────────
+        const sType = row['Service Type'] || row['serviceType']
+                   || row['Service Type (Status)'] || '';
+
+        // ── Model Code ───────────────────────────────────────────────
+        const model = row['Model Code'] || row['modelCode']
+                   || row['Model Name'] || row['Model'] || '';
+
+        // ── Serial Number ────────────────────────────────────────────
+        const serial = row['Serial No'] || row['serialNo'] || row['Serial'] || '';
+
+        // ── Customer Name ────────────────────────────────────────────
+        const cust = row['Customer Name'] || row['customerName'] || '';
+
+        // ── First Anticipated Date ───────────────────────────────────
+        const firstAntDate = row['First Anticipated Date']
+                          || row['firstAnticipatedDate'] || row['App Date'] || '';
+
+        // ── Extra New Template Fields ────────────────────────────────
+        const dealerName  = row['Dealer Name']  || row['dealerName']  || '';
+        const city        = row['City']          || row['city']        || '';
+        const phoneNumber = row['Phone Number']  || row['phoneNumber'] || row['Phone'] || row['Mobile'] || '';
+        const emailId     = row['Email Id']      || row['emailId']     || row['Email'] || '';
+
+        // ── Warranty ─────────────────────────────────────────────────
+        const warranty = row['Warranty'] || row['Warranty Status']
+                      || row['warranty'] || row['IW/OW'] || '';
+
+        // Only push rows that have at least one meaningful field
+        if (track || model || reqDate || sType || cpName) {
+          records.push({
+            trackingNo:           String(track),
+            dateCol:              String(dateCol),
+            cpCode:               String(cpCode).trim() || 'UNKNOWN',
+            cpName:               String(cpName).trim() || 'Gurgaon-CE',
+            ascRefNo:             String(ascRef),
+            requestedDate:        String(reqDate),
+            serviceType:          String(sType),
+            modelCode:            String(model),
+            serialNo:             String(serial),
+            customerName:         String(cust),
+            firstAnticipatedDate: String(firstAntDate),
+            dealerName:           String(dealerName),
+            city:                 String(city),
+            phoneNumber:          String(phoneNumber),
+            emailId:              String(emailId),
+            warranty:             String(warranty)
+          });
+        }
+      });
+
+      return records;
+    }
+
+    // --- EXCEL DOWNLOAD SAMPLE CREATION (matches new template format exactly) ---
+    function downloadSampleExcel() {
+      // Column order matches the user's data template exactly
+      const sampleRows = [
+        {
+          'Tracking No':            'Edit 4293847291',
+          'Date':                   '11.09.2026',
+          'Branch_Name':            'Gurgaon-CE',
+          'ASC Ref. No':            'ASC-001',
+          'Requested Date':         '11.09.2026',
+          'Service Type':           'IN-HOME',
+          'Model Code':             'AR18CY3AQUN',
+          'Serial No':              'SN987654321',
+          'Customer Name':          'Rajesh Sharma',
+          'First Anticipated Date': '11.09.2026',
+          'Dealer BP':              '4903753',
+          'Dealer Name':            'Samsung Service Center Gurgaon',
+          'City':                   'Gurgaon',
+          'Phone Number':           '9876543210',
+          'Email Id':               'rajesh.sharma@example.com'
+        },
+        {
+          'Tracking No':            '4293847292',
+          'Date':                   '05.09.2026',
+          'Branch_Name':            'Ahmedabad-CE',
+          'ASC Ref. No':            'ASC-002',
+          'Requested Date':         '05.09.2026',
+          'Service Type':           'Initial Installation',
+          'Model Code':             'WA65T4262GG',
+          'Serial No':              'SN987654322',
+          'Customer Name':          'Anita Verma',
+          'First Anticipated Date': '05.09.2026',
+          'Dealer BP':              '4903754',
+          'Dealer Name':            'Samsung Service Center Ahmedabad',
+          'City':                   'Ahmedabad',
+          'Phone Number':           '9876543211',
+          'Email Id':               'anita.verma@example.com'
+        },
+        {
+          'Tracking No':            'Edit 4293847293',
+          'Date':                   '25.08.2026',
+          'Branch_Name':            'Surat-CE',
+          'ASC Ref. No':            'ASC-003',
+          'Requested Date':         '25.08.2026',
+          'Service Type':           'Stock Repair',
+          'Model Code':             'QA55Q60AAK',
+          'Serial No':              'SN987654323',
+          'Customer Name':          'Sunil Patel',
+          'First Anticipated Date': '25.08.2026',
+          'Dealer BP':              '9225951',
+          'Dealer Name':            'Samsung Surat Service',
+          'City':                   'Surat',
+          'Phone Number':           '9876543212',
+          'Email Id':               'sunil.patel@example.com'
+        }
+      ];
+
+      const ws = XLSX.utils.json_to_sheet(sampleRows);
+      // Set column widths for readability
+      ws['!cols'] = [
+        {wch:20},{wch:12},{wch:14},{wch:14},{wch:14},{wch:22},{wch:16},{wch:16},{wch:20},{wch:14},{wch:12},{wch:32},{wch:14},{wch:14},{wch:28}
+      ];
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'GSPN_Pending_Template');
+      XLSX.writeFile(wb, 'GSPN_OpenPending_Template.xlsx');
+      showToast('Sample Excel template downloaded! (15-column format)');
+    }
+
+    // --- INITIALIZATION & EVENT LISTENERS ---
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Load initial screenshot default dataset
+      appState.records = generateDefaultDataset();
+      refreshDashboard();
+
+      // 2. Filter Dropdowns
+      document.getElementById('branchSelect').addEventListener('change', (e) => {
+        appState.selectedBranch = e.target.value;
+        refreshDashboard();
+      });
+
+      document.getElementById('ascSelect').addEventListener('change', (e) => {
+        appState.selectedAsc = e.target.value;
+        refreshDashboard();
+      });
+
+      document.getElementById('reportDatePicker').addEventListener('change', (e) => {
+        appState.reportDate = e.target.value;
+        refreshDashboard();
+      });
+
+      // 3. Modals Opening/Closing
+      const uploadModal = document.getElementById('uploadModal');
+      const mailModal = document.getElementById('mailModal');
+      const rawDataModal = document.getElementById('rawDataModal');
+
+      // Upload Modal
+      document.getElementById('btnOpenUploadModal').addEventListener('click', () => {
+        // Reset file indicator state every time the modal is opened
+        const indicator = document.getElementById('fileSelectedIndicator');
+        const browseBtn = document.getElementById('dragDropBrowseBtn');
+        const feedbackBox = document.getElementById('parseFeedbackBox');
+        const applyBtn = document.getElementById('btnApplyUpload');
+        if (indicator)   indicator.classList.add('hidden');
+        if (browseBtn)   browseBtn.classList.remove('hidden');
+        if (feedbackBox) feedbackBox.classList.add('hidden');
+        if (applyBtn)    applyBtn.disabled = true;
+        uploadModal.classList.remove('hidden');
+      });
+      document.getElementById('btnCloseUploadModal').addEventListener('click', () => {
+        uploadModal.classList.add('hidden');
+      });
+      document.getElementById('btnCancelUpload').addEventListener('click', () => {
+        uploadModal.classList.add('hidden');
+      });
+
+      // Mail Modal
+      function openMailModal() {
+        const previewContainer = document.getElementById('emailHtmlPreviewContainer');
+        previewContainer.innerHTML = generateEmailTableHtml();
+        mailModal.classList.remove('hidden');
+      }
+      document.getElementById('btnCopyForMail').addEventListener('click', openMailModal);
+      document.getElementById('btnQuickCopyFromFooter').addEventListener('click', openMailModal);
+      document.getElementById('btnCloseMailModal').addEventListener('click', () => {
+        mailModal.classList.add('hidden');
+      });
+      document.getElementById('btnCloseMailModal2').addEventListener('click', () => {
+        mailModal.classList.add('hidden');
+      });
+
+      // Raw Data Modal
+      document.getElementById('btnOpenRawDataModal').addEventListener('click', () => {
+        renderRawRecordsTable(computeProcessedRecords());
+        rawDataModal.classList.remove('hidden');
+      });
+      document.getElementById('btnCloseRawDataModal').addEventListener('click', () => {
+        rawDataModal.classList.add('hidden');
+      });
+      document.getElementById('btnCloseRawDataModal2').addEventListener('click', () => {
+        rawDataModal.classList.add('hidden');
+      });
+
+      // Search and Filter within Raw Data modal
+      document.getElementById('rawSearchInput').addEventListener('input', () => {
+        renderRawRecordsTable(computeProcessedRecords());
+      });
+      document.getElementById('rawServiceFilter').addEventListener('change', () => {
+        renderRawRecordsTable(computeProcessedRecords());
+      });
+
+      // 4. Tab Navigation in Upload Modal
+      const tabBtnFile = document.getElementById('tabBtnFile');
+      const tabBtnPaste = document.getElementById('tabBtnPaste');
+      const tabContentFile = document.getElementById('tabContentFile');
+      const tabContentPaste = document.getElementById('tabContentPaste');
+
+      tabBtnFile.addEventListener('click', () => {
+        tabBtnFile.classList.add('border-blue-600', 'text-blue-600');
+        tabBtnFile.classList.remove('border-transparent', 'text-slate-500');
+        tabBtnPaste.classList.remove('border-blue-600', 'text-blue-600');
+        tabBtnPaste.classList.add('border-transparent', 'text-slate-500');
+        tabContentFile.classList.remove('hidden');
+        tabContentPaste.classList.add('hidden');
+      });
+
+      tabBtnPaste.addEventListener('click', () => {
+        tabBtnPaste.classList.add('border-blue-600', 'text-blue-600');
+        tabBtnPaste.classList.remove('border-transparent', 'text-slate-500');
+        tabBtnFile.classList.remove('border-blue-600', 'text-blue-600');
+        tabBtnFile.classList.add('border-transparent', 'text-slate-500');
+        tabContentPaste.classList.remove('hidden');
+        tabContentFile.classList.add('hidden');
+      });
+
+      // 5. Excel File Drag & Drop + Input
+      const dragDropArea = document.getElementById('dragDropArea');
+      const excelFileInput = document.getElementById('excelFileInput');
+
+      // CRITICAL FIX: Reset value BEFORE triggering click so the same file
+      // can be selected again and the 'change' event fires every time.
+      dragDropArea.addEventListener('click', () => {
+        excelFileInput.value = '';
+        excelFileInput.click();
+      });
+
+      dragDropArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dragDropArea.classList.add('border-blue-500', 'bg-blue-50');
+      });
+      dragDropArea.addEventListener('dragleave', () => {
+        dragDropArea.classList.remove('border-blue-500', 'bg-blue-50');
+      });
+      dragDropArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dragDropArea.classList.remove('border-blue-500', 'bg-blue-50');
+        if (e.dataTransfer.files.length > 0) {
+          handleExcelFile(e.dataTransfer.files[0]);
+        }
+      });
+
+      excelFileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+          const file = e.target.files[0];
+          // Show immediate visual feedback: file name + "Reading..." status
+          const indicator = document.getElementById('fileSelectedIndicator');
+          const nameEl    = document.getElementById('selectedFileName');
+          const statusEl  = document.getElementById('selectedFileStatus');
+          const browseBtn = document.getElementById('dragDropBrowseBtn');
+          if (indicator && nameEl && statusEl) {
+            nameEl.textContent   = file.name;
+            statusEl.textContent = `— Reading... (${(file.size / 1024).toFixed(1)} KB)`;
+            indicator.classList.remove('hidden');
+            if (browseBtn) browseBtn.classList.add('hidden');
+          }
+          handleExcelFile(file);
+        }
+      });
+
+      function handleExcelFile(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            const json = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+
+            const parsed = parseUploadedData(json);
+            // Update the file indicator to show parse result
+            const indicator = document.getElementById('fileSelectedIndicator');
+            const statusEl  = document.getElementById('selectedFileStatus');
+            if (parsed.length > 0) {
+              appState.pendingUploadRecords = parsed;
+              if (statusEl) statusEl.textContent = `— ✅ ${parsed.length} records parsed`;
+              document.getElementById('parseStatusText').textContent = `✅ Parsed ${parsed.length} service records from "${file.name}".`;
+              document.getElementById('parseDetailText').textContent = `Sheet: ${firstSheetName} · ${json.length} rows read`;
+              document.getElementById('parseFeedbackBox').classList.remove('hidden');
+              document.getElementById('btnApplyUpload').disabled = false;
+              showToast(`Loaded ${parsed.length} calls from ${file.name}`);
+            } else {
+              if (statusEl) statusEl.textContent = '— ⚠️ No recognizable records found';
+              document.getElementById('parseStatusText').textContent = '⚠️ No records recognized. Check column headers match the expected template.';
+              document.getElementById('parseDetailText').textContent = `File: ${file.name} · ${json.length} rows read`;
+              document.getElementById('parseFeedbackBox').classList.remove('hidden');
+              showToast('No records recognized. Check column headers.', 'error');
+            }
+          } catch(err) {
+            console.error(err);
+            const statusEl = document.getElementById('selectedFileStatus');
+            if (statusEl) statusEl.textContent = '— ❌ Parse error';
+            showToast('Failed to parse Excel file: ' + err.message, 'error');
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      }
+
+      // 6. Paste Data Handler
+      document.getElementById('btnProcessPastedData').addEventListener('click', () => {
+        const text = document.getElementById('pasteDataTextarea').value.trim();
+        if (!text) {
+          showToast('Please paste table data first.', 'error');
+          return;
+        }
+
+        try {
+          // Parse TSV (tab separated values)
+          const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+          if (lines.length < 2) {
+            showToast('Data must include at least 1 header line and 1 data row.', 'error');
+            return;
+          }
+
+          const headers = lines[0].split('\t').map(h => h.trim());
+          const rows = [];
+          for (let i = 1; i < lines.length; i++) {
+            const parts = lines[i].split('\t');
+            const rowObj = {};
+            headers.forEach((h, idx) => {
+              rowObj[h] = parts[idx] ? parts[idx].trim() : '';
+            });
+            rows.push(rowObj);
+          }
+
+          const parsed = parseUploadedData(rows);
+          if (parsed.length > 0) {
+            appState.pendingUploadRecords = parsed;
+            document.getElementById('parseStatusText').textContent = `Parsed ${parsed.length} pasted records successfully.`;
+            document.getElementById('parseDetailText').textContent = `${headers.length} columns detected.`;
+            document.getElementById('parseFeedbackBox').classList.remove('hidden');
+            document.getElementById('btnApplyUpload').disabled = false;
+            showToast(`Parsed ${parsed.length} records from paste!`);
+          } else {
+            showToast('Unable to parse columns. Ensure headers match expected list.', 'error');
+          }
+        } catch (err) {
+          console.error(err);
+          showToast('Error parsing text: ' + err.message, 'error');
+        }
+      });
+
+      // Apply Upload to Dashboard — with dropdown rebuild & filter reset
+      document.getElementById('btnApplyUpload').addEventListener('click', () => {
+        if (appState.pendingUploadRecords && appState.pendingUploadRecords.length > 0) {
+          appState.records = appState.pendingUploadRecords;
+          appState.pendingUploadRecords = null;
+
+          // ── Rebuild Branch & ASC dropdowns from actual uploaded data + standard branches ──
+          const uploadedBranches = appState.records.map(r => String(r.cpName || '').trim()).filter(Boolean);
+          const uniqueBranches = [...new Set([...uploadedBranches, ...STANDARD_BRANCHES])];
+          const uniqueAscs    = [...new Set(appState.records.map(r => String(r.cpCode || '').trim()).filter(Boolean))];
+
+          const branchSel = document.getElementById('branchSelect');
+          const ascSel    = document.getElementById('ascSelect');
+
+          // Rebuild branch dropdown
+          branchSel.innerHTML = '<option value="ALL">All Branches</option>';
+          uniqueBranches.forEach(b => {
+            const opt = document.createElement('option');
+            opt.value = b;
+            opt.textContent = b;
+            branchSel.appendChild(opt);
+          });
+
+          // Rebuild ASC dropdown
+          ascSel.innerHTML = '<option value="ALL">All ASC Codes</option>';
+          uniqueAscs.forEach(a => {
+            const opt = document.createElement('option');
+            opt.value = a;
+            opt.textContent = a;
+            ascSel.appendChild(opt);
+          });
+
+          // Reset filters to ALL so all uploaded data is visible immediately
+          appState.selectedBranch = 'ALL';
+          appState.selectedAsc    = 'ALL';
+          branchSel.value = 'ALL';
+          ascSel.value    = 'ALL';
+
+          // Auto-detect report date from the data if Date/Requested Date column is present
+          const dateCandidates = appState.records
+            .map(r => r.dateCol || r.requestedDate || '')
+            .filter(Boolean);
+          if (dateCandidates.length > 0) {
+            // Use the most recent date as the report cutoff
+            const parsed = dateCandidates
+              .map(d => parseDate(d))
+              .filter(d => d && !isNaN(d.getTime()));
+            if (parsed.length > 0) {
+              const maxDate = new Date(Math.max(...parsed.map(d => d.getTime())));
+              const iso = `${maxDate.getFullYear()}-${String(maxDate.getMonth()+1).padStart(2,'0')}-${String(maxDate.getDate()).padStart(2,'0')}`;
+              appState.reportDate = iso;
+              document.getElementById('reportDatePicker').value = iso;
+            }
+          }
+
+          // Reset the file input so the same file can be re-uploaded
+          document.getElementById('excelFileInput').value = '';
+          document.getElementById('parseFeedbackBox').classList.add('hidden');
+          document.getElementById('btnApplyUpload').disabled = true;
+
+          uploadModal.classList.add('hidden');
+          refreshDashboard();
+          showToast(`✅ Dashboard updated with ${appState.records.length} records from ${uniqueBranches.length} branch(es)!`);
+        }
+      });
+
+      // Reset to default
+      document.getElementById('btnResetToDefaultData').addEventListener('click', () => {
+        appState.records = generateDefaultDataset();
+        uploadModal.classList.add('hidden');
+        refreshDashboard();
+        showToast('Reset to authentic screenshot dataset.');
+      });
+
+      // Download Sample
+      document.getElementById('btnDownloadSampleExcel').addEventListener('click', downloadSampleExcel);
+
+      // 7. Clipboard Copy Logic for Mail
+      document.getElementById('btnConfirmCopyEmailHtml').addEventListener('click', async () => {
+        const html = generateEmailTableHtml();
+        
+        try {
+          if (navigator.clipboard && window.ClipboardItem) {
+            const blobHtml = new Blob([html], { type: 'text/html' });
+            const blobText = new Blob([html.replace(/<[^>]+>/g, ' ')], { type: 'text/plain' });
+            const item = new ClipboardItem({
+              'text/html': blobHtml,
+              'text/plain': blobText
+            });
+            await navigator.clipboard.write([item]);
+          } else {
+            // Fallback
+            const el = document.createElement('div');
+            el.innerHTML = html;
+            el.style.position = 'fixed';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            const range = document.createRange();
+            range.selectNodeContents(el);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+            document.execCommand('copy');
+            document.body.removeChild(el);
+          }
+
+          showToast('HTML Table Copied! Press Ctrl+V in Outlook / Gmail to paste.');
+          mailModal.classList.add('hidden');
+        } catch (err) {
+          console.error(err);
+          showToast('Could not copy directly to clipboard. You can use "Copy Raw HTML Code".', 'error');
+        }
+      });
+
+      // Copy Raw HTML Code
+      document.getElementById('btnCopyRawHtmlCode').addEventListener('click', () => {
+        const html = generateEmailTableHtml();
+        navigator.clipboard.writeText(html).then(() => {
+          showToast('Raw HTML code copied to clipboard!');
+        });
+      });
+
+      // 8. Export to Excel via SheetJS
+      document.getElementById('btnExportExcel').addEventListener('click', () => {
+        const table = document.getElementById('mainExecutiveTable');
+        const wb = XLSX.utils.table_to_book(table, { sheet: "RC-GD_Pendency" });
+        const dateStr = formatDateToDot(appState.reportDate);
+        XLSX.writeFile(wb, `RC-GD_Pendency_Report_${dateStr}.xlsx`);
+        showToast('Excel report generated and downloaded!');
+      });
+    });
+  </script>
+</body>
+</html>
