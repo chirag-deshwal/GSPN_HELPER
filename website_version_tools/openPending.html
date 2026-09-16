@@ -778,20 +778,20 @@
             <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-300 uppercase tracking-wider text-[10px] sticky top-0 z-20">
               <tr>
                 <th class="py-2 px-2.5 border-r bg-slate-200 text-center sticky left-0 z-30 shadow-sm min-w-[100px]">Check / Close</th>
+                <th class="py-2 px-2.5 border-r min-w-[95px] text-center">Date</th>
+                <th class="py-2 px-2.5 border-r min-w-[120px]">Branch Name</th>
                 <th class="py-2 px-2 border-r text-center w-12">No</th>
                 <th class="py-2 px-3 border-r font-extrabold text-blue-900 min-w-[130px]">Service Order No.</th>
-                <th class="py-2 px-2.5 border-r min-w-[120px]">Branch Name</th>
                 <th class="py-2 px-2.5 border-r min-w-[100px]">ASC Job No</th>
                 <th class="py-2 px-2.5 border-r text-center min-w-[95px]">Created</th>
+                <th class="py-2 px-2.5 border-r text-center min-w-[95px]">Assigned</th>
+                <th class="py-2 px-2.5 border-r text-center min-w-[95px]">Assigned Time</th>
                 <th class="py-2 px-2 border-r text-center font-extrabold w-16">Aging (Days)</th>
                 <th class="py-2 px-2.5 border-r text-center min-w-[90px]">TAT Category</th>
-                <th class="py-2 px-2.5 border-r min-w-[120px]">Service Type</th>
                 <th class="py-2 px-2.5 border-r min-w-[120px]">Model</th>
                 <th class="py-2 px-2 border-r text-center w-14">Product</th>
                 <th class="py-2 px-2.5 border-r min-w-[110px]">Serial</th>
                 <th class="py-2 px-2 border-r text-center min-w-[90px]">Wty Status</th>
-                <th class="py-2 px-2.5 border-r min-w-[110px]">Status</th>
-                <th class="py-2 px-3 border-r min-w-[200px]">Reason</th>
                 <th class="py-2 px-3 border-r min-w-[200px]">VOC</th>
                 <th class="py-2 px-2 border-r text-center w-14">REDO</th>
                 <th class="py-2 px-2 border-r text-center min-w-[90px]">Risk Sensing</th>
@@ -801,6 +801,9 @@
                 <th class="py-2 px-2.5 border-r min-w-[100px]">City</th>
                 <th class="py-2 px-2.5 border-r text-center min-w-[95px]">App Date</th>
                 <th class="py-2 px-2.5 border-r text-center min-w-[100px]">App Time</th>
+                <th class="py-2 px-2.5 border-r min-w-[120px]">Service Type</th>
+                <th class="py-2 px-2.5 border-r min-w-[110px]">Status</th>
+                <th class="py-2 px-3 border-r min-w-[200px]">Reason</th>
                 <th class="py-2 px-2 border-r text-center w-12">B2B</th>
                 <th class="py-2 px-3 min-w-[150px]">Risk Reason</th>
               </tr>
@@ -1038,17 +1041,21 @@
 
     /**
      * Parses diverse GSPN date strings or Excel serial numbers into Date
+     * Intelligently disambiguates between DD.MM.YYYY and MM.DD.YYYY (e.g. 09.16.2026 vs 15.09.2026)
      */
     function parseDate(val) {
-      if (!val) return null;
+      if (!val && val !== 0) return null;
       if (val instanceof Date && !isNaN(val.getTime())) return val;
       
       // Excel serial date number
       if (typeof val === 'number') {
-        const utcDays = Math.floor(val - 25569);
-        const utcValue = utcDays * 86400;
-        const dateInfo = new Date(utcValue * 1000);
-        return dateInfo;
+        if (isNaN(val) || val <= 0) return null;
+        if (val > 1000) {
+          const utcDays = Math.floor(val - 25569);
+          const utcValue = utcDays * 86400;
+          return new Date(utcValue * 1000);
+        }
+        return null;
       }
 
       let str = String(val).trim();
@@ -1060,24 +1067,44 @@
         str = str.split(/\s+/)[0];
       }
 
-      // DD.MM.YYYY
-      let m = str.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
-      if (m) return new Date(parseInt(m[3], 10), parseInt(m[2], 10) - 1, parseInt(m[1], 10));
-
-      // DD/MM/YYYY
-      m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-      if (m) return new Date(parseInt(m[3], 10), parseInt(m[2], 10) - 1, parseInt(m[1], 10));
+      // Check numeric date parts: DD.MM.YYYY or MM.DD.YYYY or DD/MM/YYYY or DD-MM-YYYY
+      let m = str.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})$/);
+      if (m) {
+        let p1 = parseInt(m[1], 10);
+        let p2 = parseInt(m[2], 10);
+        let y = parseInt(m[3], 10);
+        let day = p1, month = p2;
+        // If p1 <= 12 and p2 > 12, then p1 is month and p2 is day (e.g. 09.16.2026)
+        if (p1 <= 12 && p2 > 12) {
+          month = p1;
+          day = p2;
+        }
+        return new Date(y, month - 1, day);
+      }
 
       // YYYY-MM-DD
-      m = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+      m = str.match(/^(\d{4})[.\/-](\d{1,2})[.\/-](\d{1,2})$/);
       if (m) return new Date(parseInt(m[1], 10), parseInt(m[2], 10) - 1, parseInt(m[3], 10));
-
-      // DD-MM-YYYY
-      m = str.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
-      if (m) return new Date(parseInt(m[3], 10), parseInt(m[2], 10) - 1, parseInt(m[1], 10));
 
       const parsed = new Date(str);
       return isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    /**
+     * Formats Date to strict DD.MM.YYYY string
+     */
+    function formatDateString(val) {
+      if (!val && val !== 0) return '';
+      const d = parseDate(val);
+      if (!d) return String(val).trim();
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const yyyy = d.getFullYear();
+      return `${dd}.${mm}.${yyyy}`;
+    }
+
+    function formatDateToDot(dateObj) {
+      return formatDateString(dateObj);
     }
 
     /**
@@ -1102,6 +1129,7 @@
 
     /**
      * Formats Excel fractional day numbers (e.g. 0.541666667) into HH:mm:ss string (e.g. 13:00:00)
+     * Preserves ranges (e.g. "14:00 - 16:00") and standard time strings cleanly
      */
     function formatExcelTime(val) {
       if (val === undefined || val === null || val === '') return '';
@@ -1130,15 +1158,177 @@
     }
 
     /**
-     * Formats Date to DD.MM.YYYY string
+     * Fuzzy field lookup by searching through known column aliases
      */
-    function formatDateToDot(dateObj) {
-      if (!dateObj) return '';
-      const d = parseDate(dateObj) || new Date();
-      const dd = String(d.getDate()).padStart(2, '0');
-      const mm = String(d.getMonth() + 1).padStart(2, '0');
-      const yyyy = d.getFullYear();
-      return `${dd}.${mm}.${yyyy}`;
+    function findFieldValue(row, aliases) {
+      if (!row || typeof row !== 'object') return '';
+      const rowKeys = Object.keys(row);
+      for (const alias of aliases) {
+        const cleanAlias = alias.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        for (const k of rowKeys) {
+          const cleanK = k.toUpperCase().replace(/[^A-Z0-9]/g, '');
+          if (cleanK === cleanAlias) {
+            const val = row[k];
+            if (val !== undefined && val !== null) return val;
+          }
+        }
+      }
+      return '';
+    }
+
+    /**
+     * Dynamically maps ANY input row (array or object with arbitrary headers)
+     * to the exact standard 25 columns with strict data formatting:
+     * - Dates: DD.MM.YYYY
+     * - Times: HH:mm:ss
+     * - Model & Serial: strictly String
+     */
+    function mapRowToStandard25(row, idx) {
+      let r = row;
+      if (Array.isArray(row)) {
+        r = {
+          'Date': row[0] !== undefined ? row[0] : '',
+          'Branch Name': row[1] !== undefined ? row[1] : '',
+          'No': row[2] !== undefined ? row[2] : (idx + 1),
+          'Service Order No.': row[3] !== undefined ? row[3] : '',
+          'ASC Job No': row[4] !== undefined ? row[4] : '',
+          'Created': row[5] !== undefined ? row[5] : '',
+          'Assigned': row[6] !== undefined ? row[6] : '',
+          'Assigned Time': row[7] !== undefined ? row[7] : '',
+          'Model': row[8] !== undefined ? row[8] : '',
+          'Serial': row[9] !== undefined ? row[9] : '',
+          'Wty Status': row[10] !== undefined ? row[10] : '',
+          'VOC': row[11] !== undefined ? row[11] : '',
+          'REDO': row[12] !== undefined ? row[12] : '',
+          'Risk Sensing': row[13] !== undefined ? row[13] : '',
+          'RED': row[14] !== undefined ? row[14] : '',
+          'High Priority': row[15] !== undefined ? row[15] : '',
+          'Customer Name': row[16] !== undefined ? row[16] : '',
+          'City': row[17] !== undefined ? row[17] : '',
+          'App Date': row[18] !== undefined ? row[18] : '',
+          'App Time': row[19] !== undefined ? row[19] : '',
+          'Service Type': row[20] !== undefined ? row[20] : '',
+          'Status': row[21] !== undefined ? row[21] : '',
+          'Reason': row[22] !== undefined ? row[22] : '',
+          'B2B': row[23] !== undefined ? row[23] : '',
+          'Risk Reason': row[24] !== undefined ? row[24] : ''
+        };
+      }
+
+      // Format Date values
+      const dateVal = formatDateString(findFieldValue(r, ['DATE', 'REPORT DATE', 'CALL DATE', 'ENTRY DATE', 'REPORT_DATE']));
+      const branchVal = String(findFieldValue(r, ['BRANCH NAME', 'BRANCH_NAME', 'BRANCH', 'CP NAME', 'CP_NAME', 'SVC', 'SERVICE CENTER NAME', 'SERVICE CENTER']) || 'Gurgaon-CE').trim();
+      const noVal = findFieldValue(r, ['NO', 'NO.', 'S.NO', 'S NO', 'SL NO', 'SR NO', 'SR.NO']) || (idx + 1);
+      const soNo = cleanTrackingNumber(String(findFieldValue(r, ['SERVICE ORDER NO.', 'SERVICE ORDER NO', 'SERVICE ORDER NUMBER', 'SERVICE_ORDER_NO', 'SERVICE ORDER', 'SO NO', 'SO NO.', 'SO_NO', 'TRACKING NO', 'TRACKING NO.', 'TRACKING_NO', 'TRACKING NUMBER', 'ORDER NO'])));
+      const ascJobNo = String(findFieldValue(r, ['ASC JOB NO', 'ASC JOB NO.', 'ASC_JOB_NO', 'ASC JOB NUMBER', 'ASC REF. NO', 'ASC REF NO', 'ASC_REF_NO', 'ASC REF NUMBER', 'JOB NO', 'JOB NO.'])).trim();
+      const createdVal = formatDateString(findFieldValue(r, ['CREATED', 'CREATED DATE', 'CREATED_DATE', 'REQUESTED DATE', 'REQUESTED_DATE', 'REQUEST DATE', 'REQ DATE', 'CREATION DATE']));
+      const assignedVal = formatDateString(findFieldValue(r, ['ASSIGNED', 'ASSIGNED DATE', 'ASSIGNED_DATE', 'ASC ASSIGNED', 'ASC ASSIGNED DATE', 'ASC_ASSIGNED']));
+      const assignedTimeVal = formatExcelTime(findFieldValue(r, ['ASSIGNED TIME', 'ASSIGNED_TIME', 'ASC ASSIGNED TIME', 'ASSIGN TIME']));
+      
+      // Model & Serial: STRICTLY STRING format per user instructions
+      const modelVal = String(findFieldValue(r, ['MODEL', 'MODEL CODE', 'MODEL_CODE', 'MODEL NAME', 'MODEL_NAME', 'MODEL NO', 'MODEL NUMBER']) || '').trim();
+      const serialVal = String(findFieldValue(r, ['SERIAL', 'SERIAL NO', 'SERIAL NO.', 'SERIAL_NO', 'SERIAL NUMBER', 'SERIAL_NUMBER', 'IMEI', 'IMEI NO', 'IMEI NUMBER']) || '').trim();
+
+      let sType = convertServiceType(findFieldValue(r, ['SERVICE TYPE', 'SERVICE_TYPE', 'SERVICE TYPE (STATUS)', 'SVC TYPE', 'TYPE OF SERVICE', 'CALL TYPE']));
+      let rawWty = String(findFieldValue(r, ['WTY STATUS', 'WTY_STATUS', 'WARRANTY STATUS', 'WARRANTY_STATUS', 'WARRANTY', 'WTY', 'IW/OW', 'WTY TYPE']) || '').trim();
+      let vocVal = String(findFieldValue(r, ['VOC', 'CUSTOMER VOC', 'CUSTOMER_VOC', 'COMPLAINT', 'DEFECT', 'PROBLEM', 'CUSTOMER COMPLAINT', 'SYMPTOM']) || '').trim();
+      const redoVal = String(findFieldValue(r, ['REDO', 'RE-DO', 'RE DO', 'REPEAT', 'IS REDO']) || 'N').trim();
+      const riskSensingVal = String(findFieldValue(r, ['RISK SENSING', 'RISK_SENSING', 'RISK', 'RISK TYPE']) || 'Normal').trim();
+      const redVal = String(findFieldValue(r, ['RED', 'RED CALL', 'IS RED', 'RED ALERT']) || 'N').trim();
+      const highPriorityVal = String(findFieldValue(r, ['HIGH PRIORITY', 'HIGH_PRIORITY', 'PRIORITY', 'PRIORITY LEVEL', 'VIP']) || 'Normal').trim();
+
+      // Customer Name mapping: includes Customer Care, Care, Customer Name, etc.
+      const custName = String(findFieldValue(r, ['CUSTOMER NAME', 'CUSTOMER_NAME', 'CUSTOMER', 'CUST NAME', 'CUST_NAME', 'CUSTOMER CARE', 'CARE', 'CLIENT NAME', 'CLIENT', 'NAME']) || '').trim();
+      const cityVal = String(findFieldValue(r, ['CITY', 'LOCATION', 'DISTRICT', 'TOWN', 'PLACE']) || '').trim();
+
+      // App Date & App Time: STRICTLY DATE and TIME format
+      const appDateVal = formatDateString(findFieldValue(r, ['APP DATE', 'APP_DATE', 'APPOINTMENT DATE', 'APPOINTMENT_DATE', 'FIRST ANTICIPATED DATE', 'ANTICIPATED DATE', 'FIRST_ANTICIPATED_DATE', 'PROMISE DATE', 'APPT DATE']));
+      const appTimeVal = formatExcelTime(findFieldValue(r, ['APP TIME', 'APP_TIME', 'APPOINTMENT TIME', 'APPOINTMENT_TIME', 'APPT TIME', 'ANTICIPATED TIME', 'FIRST ANTICIPATED TIME']));
+
+      let statusVal = String(findFieldValue(r, ['STATUS', 'STATUS (GSPN)', 'CALL STATUS', 'JOB STATUS', 'CURRENT STATUS', 'PROGRESS STATUS', 'GSPN STATUS']) || '').trim();
+      let reasonVal = String(findFieldValue(r, ['REASON', 'REASON (GSPN)', 'PENDING REASON', 'DELAY REASON', 'HOLD REASON', 'STATUS REASON', 'REASON CODE']) || '').trim();
+      const b2bVal = String(findFieldValue(r, ['B2B', 'IS B2B', 'B2B CALL', 'BUSINESS']) || 'N').trim();
+      const riskReasonVal = String(findFieldValue(r, ['RISK REASON', 'RISK_REASON', 'REMARKS', 'RISK REMARKS', 'REMARK', 'NOTE', 'NOTES']) || 'None').trim();
+
+      // Disambiguation & Self-Healing:
+      if (vocVal.toUpperCase().includes('WARRANTY') || vocVal.toUpperCase() === 'IW' || vocVal.toUpperCase() === 'OW') {
+        if (!rawWty || rawWty.toUpperCase() === 'IW') rawWty = vocVal;
+        vocVal = '-';
+      }
+      const wtyStatus = normalizeWarrantyStatus(rawWty, sType);
+
+      const knownServiceTypes = ['INITIAL INSTALLATION', 'IN-HOME', 'DEMONSTRATION', 'STOCK REPAIR', 'CUSTOMER CARE', 'PICK-UP SERVICE', 'CARRY IN', 'RETURN HANDLING'];
+      if (knownServiceTypes.includes(statusVal.toUpperCase())) {
+        if (!sType || sType === 'Other') sType = convertServiceType(statusVal);
+        if (reasonVal && reasonVal !== statusVal) {
+          statusVal = reasonVal;
+          reasonVal = '-';
+        } else {
+          statusVal = 'Open';
+        }
+      }
+
+      // Pre-existing Aging or Product
+      const rawAging = findFieldValue(r, ['AGING', 'AGING (DAYS)', 'TAT']);
+      const rawProd = findFieldValue(r, ['PRODUCT', 'PRODUCT CATEGORY', 'PRODUCT_CATEGORY', 'CATEGORY', 'PRODUCT GROUP', 'DIV', 'DIVISION']);
+      const cpCode = String(findFieldValue(r, ['DEALER BP', 'CP CODE', 'CPCODE', 'ASC CODE']) || (ascJobNo ? ascJobNo.split('-')[0] : '') || '').trim();
+
+      return {
+        'Date': dateVal,
+        'Branch Name': branchVal,
+        'No': noVal,
+        'Service Order No.': soNo,
+        'ASC Job No': ascJobNo,
+        'Created': createdVal,
+        'Assigned': assignedVal,
+        'Assigned Time': assignedTimeVal,
+        'Model': modelVal,
+        'Serial': serialVal,
+        'Wty Status': wtyStatus,
+        'VOC': vocVal,
+        'REDO': redoVal,
+        'Risk Sensing': riskSensingVal,
+        'RED': redVal,
+        'High Priority': highPriorityVal,
+        'Customer Name': custName,
+        'City': cityVal,
+        'App Date': appDateVal,
+        'App Time': appTimeVal,
+        'Service Type': sType,
+        'Status': statusVal,
+        'Reason': reasonVal,
+        'B2B': b2bVal,
+        'Risk Reason': riskReasonVal,
+        'Aging': rawAging,
+        'Product': rawProd,
+        'Dealer BP': cpCode,
+
+        // Legacy keys for backward compatibility
+        aging: rawAging,
+        product: rawProd,
+        trackingNo: soNo,
+        serviceOrderNo: soNo,
+        dateCol: dateVal,
+        branchName: branchVal,
+        cpName: branchVal,
+        cpCode: cpCode || '4903753',
+        ascRefNo: ascJobNo,
+        requestedDate: createdVal,
+        createdDate: createdVal,
+        created: createdVal,
+        assigned: assignedVal,
+        assignedTime: assignedTimeVal,
+        serviceType: sType,
+        modelCode: modelVal,
+        model: modelVal,
+        serialNo: serialVal,
+        serial: serialVal,
+        customerName: custName,
+        warranty: wtyStatus,
+        wtyStatus: wtyStatus,
+        appDate: appDateVal,
+        appTime: appTimeVal
+      };
     }
 
     // --- SYNTHESIZE AUTHENTIC SCREENSHOT DATASET ---
@@ -1315,16 +1505,17 @@
           const rawSo = r['Service Order No.'] || r['Service Order No'] || r.serviceOrderNo || r['Tracking No'] || r.trackingNo || r['SO No'] || '';
           const cleanSo = cleanTrackingNumber(rawSo);
           const noVal = r['No'] || r.no || (idx + 1);
-          const dateVal = String(r['Date'] || r.date || r.dateCol || '').trim();
+          const dateVal = formatDateString(r['Date'] || r.date || r.dateCol || '');
           const branchVal = String(r['Branch Name'] || r['Branch_Name'] || r.branchName || r['CP Name'] || r.cpName || 'Gurgaon-CE').trim();
           const ascJobVal = String(r['ASC Job No'] || r['ASC Job No.'] || r.ascJobNo || r['ASC Ref. No'] || r.ascRefNo || r['ASC Ref No'] || '').trim();
           const cpCode = String(r['Dealer BP'] || r['CP Code'] || r['ASC Code'] || r.cpCode || (ascJobVal ? ascJobVal.split('-')[0] : '') || '4903753').trim();
           
           // Dates for aging calculation (Assigned date prioritized per website logic)
-          const createdVal = String(r['Created'] || r.created || r['Requested Date'] || r.requestedDate || r['Created Date'] || '').trim();
-          const assignedVal = String(r['Assigned'] || r.assigned || r['Assigned Date'] || r['ASC Assigned'] || '').trim();
-          const assignedTimeVal = String(r['Assigned Time'] || r.assignedTime || '').trim();
+          const createdVal = formatDateString(r['Created'] || r.created || r['Requested Date'] || r.requestedDate || r['Created Date'] || '');
+          const assignedVal = formatDateString(r['Assigned'] || r.assigned || r['Assigned Date'] || r['ASC Assigned'] || '');
+          const assignedTimeVal = formatExcelTime(r['Assigned Time'] || r.assignedTime || '');
           
+          // Model & Serial: Strictly strings
           const modelVal = String(r['Model'] || r.model || r['Model Code'] || r.modelCode || r['Model Name'] || r['Model_Name'] || '').trim();
           const serialVal = String(r['Serial'] || r.serial || r['Serial No'] || r.serialNo || '').trim();
           let sType = convertServiceType(r['Service Type'] || r.serviceType || r['Service Type (Status)'] || '');
@@ -1337,7 +1528,7 @@
           let highPriorityVal = String(r['High Priority'] || r.highPriority || 'Normal').trim();
           let custName = String(r['Customer Name'] || r.customerName || '').trim();
           let cityVal = String(r['City'] || r.city || '').trim();
-          let appDateVal = String(r['App Date'] || r.appDate || r['First Anticipated Date'] || r.firstAnticipatedDate || '').trim();
+          let appDateVal = formatDateString(r['App Date'] || r.appDate || r['First Anticipated Date'] || r.firstAnticipatedDate || '');
           let appTimeVal = formatExcelTime(r['App Time'] || r.appTime || '');
           let statusVal = String(r['Status'] || r.status || r['Status (GSPN)'] || r['Call Status'] || '').trim();
           let reasonVal = String(r['Reason'] || r.reason || r['Reason (GSPN)'] || '').trim();
@@ -1884,7 +2075,7 @@
       if (filtered.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="26" class="py-8 text-center text-slate-400 font-sans text-xs">
+            <td colspan="29" class="py-8 text-center text-slate-400 font-sans text-xs">
               No matching records found for the current search/filter criteria.
             </td>
           </tr>
@@ -1920,30 +2111,33 @@
             </button>
           </td>
 
-          <!-- 25 Columns Data -->
+          <!-- Standard 25-Column Format + Computed Metrics (Strict 1:1 cell alignment) -->
+          <td class="py-1.5 px-2.5 border-r text-center text-slate-600">${r.date || '-'}</td>
+          <td class="py-1.5 px-2.5 border-r text-slate-700 font-sans">${r.branchName}</td>
           <td class="py-1.5 px-2 border-r text-center text-slate-400">${r.no}</td>
           <td class="py-1.5 px-3 border-r font-extrabold text-blue-700 font-mono">${r.serviceOrderNo}</td>
-          <td class="py-1.5 px-2.5 border-r text-slate-700 font-sans">${r.branchName}</td>
-          <td class="py-1.5 px-2.5 border-r text-slate-600 font-mono">${r.ascJobNo}</td>
-          <td class="py-1.5 px-2.5 border-r text-center text-slate-600">${r.created || r.assigned}</td>
+          <td class="py-1.5 px-2.5 border-r text-slate-600 font-mono">${r.ascJobNo || '-'}</td>
+          <td class="py-1.5 px-2.5 border-r text-center text-slate-600">${r.created || '-'}</td>
+          <td class="py-1.5 px-2.5 border-r text-center text-slate-600">${r.assigned || '-'}</td>
+          <td class="py-1.5 px-2.5 border-r text-center text-slate-600 font-mono">${r.assignedTime || '-'}</td>
           <td class="py-1.5 px-2 border-r text-center font-bold ${r.aging > 15 ? 'text-rose-600 font-extrabold' : 'text-slate-800'}">${r.aging}</td>
           <td class="py-1.5 px-2.5 border-r text-center"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold border ${r.aging > 14 ? 'bg-rose-100 text-rose-800 border-rose-300 font-bold' : (r.aging > 7 ? 'bg-amber-100 text-amber-800 border-amber-200' : 'bg-slate-100 text-slate-700 border-slate-200')}">${r.tatBucket}</span></td>
-          <td class="py-1.5 px-2.5 border-r text-slate-800 font-sans">${r.serviceType}</td>
           <td class="py-1.5 px-2.5 border-r text-slate-800 font-medium">${r.model}</td>
           <td class="py-1.5 px-2 border-r text-center"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold border ${prodBadgeColors[r.product] || 'bg-slate-100 text-slate-800 border-slate-300'}">${r.product}</span></td>
           <td class="py-1.5 px-2.5 border-r text-slate-500 font-mono">${r.serial}</td>
           <td class="py-1.5 px-2 border-r text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${r.wtyStatus === 'IW' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'}">${r.wtyStatus}</span></td>
-          <td class="py-1.5 px-2.5 border-r text-slate-800 font-sans"><span class="px-1.5 py-0.5 rounded bg-blue-50 text-blue-800 font-medium">${r.status || '-'}</span></td>
-          <td class="py-1.5 px-3 border-r text-slate-700 font-sans max-w-[200px] truncate" title="${r.reason}">${r.reason || '-'}</td>
           <td class="py-1.5 px-3 border-r text-slate-600 font-sans max-w-[200px] truncate" title="${r.voc}">${r.voc || '-'}</td>
           <td class="py-1.5 px-2 border-r text-center font-bold ${r.redo === 'Y' ? 'text-rose-600' : 'text-slate-400'}">${r.redo || 'N'}</td>
           <td class="py-1.5 px-2 border-r text-center"><span class="px-1 rounded ${r.riskSensing === 'Risk' ? 'bg-rose-100 text-rose-800 font-bold' : 'text-slate-500'}">${r.riskSensing || 'Normal'}</span></td>
           <td class="py-1.5 px-2 border-r text-center font-bold ${r.red === 'Y' ? 'px-1.5 py-0.5 rounded bg-rose-600 text-white' : 'text-slate-400'}">${r.red || 'N'}</td>
           <td class="py-1.5 px-2 border-r text-center"><span class="px-1 rounded font-semibold ${r.highPriority === 'High' ? 'bg-amber-100 text-amber-900 font-bold' : 'text-slate-500'}">${r.highPriority || 'Normal'}</span></td>
-          <td class="py-1.5 px-3 border-r text-slate-800 font-sans">${r.customerName}</td>
-          <td class="py-1.5 px-2.5 border-r text-slate-600 font-sans">${r.city}</td>
-          <td class="py-1.5 px-2.5 border-r text-center text-slate-600">${r.appDate}</td>
-          <td class="py-1.5 px-2.5 border-r text-center text-slate-600 font-mono">${formatExcelTime(r.appTime)}</td>
+          <td class="py-1.5 px-3 border-r text-slate-800 font-sans">${r.customerName || '-'}</td>
+          <td class="py-1.5 px-2.5 border-r text-slate-600 font-sans">${r.city || '-'}</td>
+          <td class="py-1.5 px-2.5 border-r text-center text-slate-600">${r.appDate || '-'}</td>
+          <td class="py-1.5 px-2.5 border-r text-center text-slate-600 font-mono">${r.appTime || '-'}</td>
+          <td class="py-1.5 px-2.5 border-r text-slate-800 font-sans">${r.serviceType}</td>
+          <td class="py-1.5 px-2.5 border-r text-slate-800 font-sans"><span class="px-1.5 py-0.5 rounded bg-blue-50 text-blue-800 font-medium">${r.status || '-'}</span></td>
+          <td class="py-1.5 px-3 border-r text-slate-700 font-sans max-w-[200px] truncate" title="${r.reason}">${r.reason || '-'}</td>
           <td class="py-1.5 px-2 border-r text-center font-semibold ${r.b2b === 'Y' ? 'text-indigo-600' : 'text-slate-400'}">${r.b2b || 'N'}</td>
           <td class="py-1.5 px-3 text-slate-600 font-sans max-w-[160px] truncate" title="${r.riskReason}">${r.riskReason || 'None'}</td>
         `;
@@ -2231,200 +2425,42 @@
       ];
 
       // Handle array of arrays (e.g. SheetJS header: 1)
-      let normalizedRows = dataArray;
+      let rawRows = dataArray;
       if (Array.isArray(dataArray[0])) {
         let headerRowIdx = -1;
         for (let i = 0; i < Math.min(dataArray.length, 5); i++) {
           const r = dataArray[i].map(c => String(c || '').trim().toUpperCase());
-          if (r.some(cell => cell.includes('SERVICE ORDER') || cell.includes('SO NO') || cell.includes('ASC JOB') || cell.includes('BRANCH') || cell.includes('MODEL'))) {
+          if (r.some(cell => cell.includes('SERVICE ORDER') || cell.includes('SO NO') || cell.includes('ASC JOB') || cell.includes('BRANCH') || cell.includes('MODEL') || cell.includes('CUSTOMER') || cell.includes('DATE'))) {
             headerRowIdx = i;
             break;
           }
         }
-        let headers = standard25;
-        let dataStart = 0;
+        rawRows = [];
         if (headerRowIdx !== -1) {
-          headers = dataArray[headerRowIdx].map(c => String(c || '').trim());
-          dataStart = headerRowIdx + 1;
-        }
-        normalizedRows = [];
-        for (let r = dataStart; r < dataArray.length; r++) {
-          const arr = dataArray[r];
-          if (!arr || arr.every(cell => !cell)) continue;
-          const obj = {};
-          const targetHeaders = (arr.length === 25 && headers.length !== 25) ? standard25 : headers;
-          targetHeaders.forEach((h, idx) => {
-            obj[h] = arr[idx] !== undefined && arr[idx] !== null ? String(arr[idx]).trim() : '';
-          });
-          normalizedRows.push(obj);
+          const headers = dataArray[headerRowIdx].map(c => String(c || '').trim());
+          for (let r = headerRowIdx + 1; r < dataArray.length; r++) {
+            const arr = dataArray[r];
+            if (!arr || arr.every(cell => cell === undefined || cell === null || cell === '')) continue;
+            const obj = {};
+            headers.forEach((h, hIdx) => {
+              obj[h] = arr[hIdx] !== undefined && arr[hIdx] !== null ? arr[hIdx] : '';
+            });
+            rawRows.push(obj);
+          }
+        } else {
+          for (let r = 0; r < dataArray.length; r++) {
+            const arr = dataArray[r];
+            if (!arr || arr.every(cell => cell === undefined || cell === null || cell === '')) continue;
+            rawRows.push(arr);
+          }
         }
       }
       
       const records = [];
-      normalizedRows.forEach((row, idx) => {
-        // 1. Date
-        const dateCol = row['Date'] || row['date'] || row['Report Date'] || '';
-
-        // 2. Branch Name
-        const branchName = row['Branch Name'] || row['Branch_Name'] || row['CP Name']
-                        || row['cpName'] || row['SVC'] || row['Service Center Name'] || '';
-
-        // 3. No
-        const noVal = row['No'] || row['no'] || row['S.No'] || row['Sl No'] || (idx + 1);
-
-        // 4. Service Order No.
-        const soNo = row['Service Order No.'] || row['Service Order No'] || row['serviceOrderNo']
-                  || row['SO No'] || row['Tracking No'] || row['trackingNo'] || row['Tracking Number'] || '';
-
-        // 5. ASC Job No
-        const ascJobNo = row['ASC Job No'] || row['ASC Job No.'] || row['ascJobNo']
-                      || row['ASC Ref. No'] || row['ascRefNo'] || row['ASC Ref No'] || '';
-
-        // 6. Created (Primary date for aging fallback)
-        const created = row['Created'] || row['created'] || row['Created Date']
-                     || row['Requested Date'] || row['requestedDate'] || '';
-
-        // 7. Assigned (Prioritized date for aging per website tools.js)
-        const assigned = row['Assigned'] || row['assigned'] || row['Assigned Date']
-                      || row['ASC Assigned'] || row['ASC Assigned Date'] || '';
-
-        // 8. Assigned Time
-        const assignedTime = row['Assigned Time'] || row['assignedTime'] || row['Time'] || '';
-
-        // 9. Model
-        const model = row['Model'] || row['model'] || row['Model Code'] || row['modelCode'] || row['Model Name'] || row['Model_Name'] || '';
-
-        // 10. Serial
-        const serial = row['Serial'] || row['serial'] || row['Serial No'] || row['serialNo'] || row['Serial Number'] || '';
-
-        // 21. Service Type
-        let sType = row['Service Type'] || row['serviceType'] || row['Service Type (Status)'] || '';
-
-        // 11. Wty Status (Standardized: "In Warranty" -> "IW", "Out of Warranty" -> "OW")
-        let rawWty = row['Wty Status'] || row['wtyStatus'] || row['Warranty Status']
-                       || row['Warranty'] || row['warranty'] || row['IW/OW'] || '';
-
-        // 12. VOC
-        let voc = row['VOC'] || row['voc'] || row['Customer VOC'] || row['Complaint'] || row['Defect'] || '';
-
-        // 13. REDO
-        const redo = row['REDO'] || row['redo'] || row['Redo'] || 'N';
-
-        // 14. Risk Sensing
-        const riskSensing = row['Risk Sensing'] || row['riskSensing'] || row['Risk'] || 'Normal';
-
-        // 15. RED
-        const red = row['RED'] || row['red'] || row['Red'] || 'N';
-
-        // 16. High Priority
-        const highPriority = row['High Priority'] || row['highPriority'] || row['Priority'] || 'Normal';
-
-        // 17. Customer Name
-        const custName = row['Customer Name'] || row['customerName'] || row['Customer'] || '';
-
-        // 18. City
-        const city = row['City'] || row['city'] || row['Location'] || '';
-
-        // 19. App Date
-        const appDate = row['App Date'] || row['appDate'] || row['Appointment Date']
-                     || row['First Anticipated Date'] || row['firstAnticipatedDate'] || '';
-
-        // 20. App Time
-        const appTime = formatExcelTime(row['App Time'] || row['appTime'] || row['Appointment Time'] || '');
-
-        // 22. Status
-        let status = row['Status'] || row['status'] || row['Status (GSPN)'] || row['Call Status'] || '';
-
-        // 23. Reason
-        let reason = row['Reason'] || row['reason'] || row['Reason (GSPN)'] || row['Pending Reason'] || '';
-
-        // Disambiguation & Self-Healing:
-        if (String(voc).toUpperCase().includes('WARRANTY') || String(voc).toUpperCase() === 'IW' || String(voc).toUpperCase() === 'OW') {
-          if (!rawWty || String(rawWty).toUpperCase() === 'IW') rawWty = voc;
-          voc = '-';
-        }
-        const wtyStatus = normalizeWarrantyStatus(rawWty, sType);
-
-        const knownServiceTypes = ['INITIAL INSTALLATION', 'IN-HOME', 'DEMONSTRATION', 'STOCK REPAIR', 'CUSTOMER CARE', 'PICK-UP SERVICE', 'CARRY IN', 'RETURN HANDLING'];
-        if (knownServiceTypes.includes(String(status).trim().toUpperCase())) {
-          if (!sType || sType === 'Other') sType = status;
-          if (reason && reason !== status) {
-            status = reason;
-            reason = '-';
-          } else {
-            status = 'Open';
-          }
-        }
-
-        // 24. B2B
-        const b2b = row['B2B'] || row['b2b'] || 'N';
-
-        // 25. Risk Reason
-        const riskReason = row['Risk Reason'] || row['riskReason'] || row['Remarks'] || 'None';
-
-        // 26. Pre-existing Aging if present in file (matching website tools.js)
-        const rawAging = (row['Aging'] !== undefined && row['Aging'] !== null && row['Aging'] !== '') ? row['Aging']
-                       : ((row['aging'] !== undefined && row['aging'] !== null && row['aging'] !== '') ? row['aging']
-                       : (row['Aging (Days)'] !== undefined ? row['Aging (Days)']
-                       : (row['TAT'] !== undefined ? row['TAT'] : '')));
-
-        // 27. Pre-existing Product Category if present in file
-        const rawProd = row['Product'] || row['product'] || row['Product Category']
-                     || row['Product_Category'] || row['Category'] || row['Product Group']
-                     || row['DIV'] || row['Division'] || '';
-
-        // ASC Code fallback
-        const cpCode = row['Dealer BP'] || row['CP Code'] || row['cpCode']
-                    || row['ASC Code'] || (ascJobNo ? String(ascJobNo).split('-')[0] : '') || '';
-
-        if (soNo || model || created || assigned || sType || branchName) {
-          records.push({
-            'Date': String(dateCol),
-            'Branch Name': String(branchName).trim() || 'Gurgaon-CE',
-            'No': noVal,
-            'Service Order No.': String(soNo),
-            'ASC Job No': String(ascJobNo),
-            'Created': String(created),
-            'Assigned': String(assigned),
-            'Assigned Time': String(assignedTime),
-            'Model': String(model).trim(),
-            'Serial': String(serial).trim(),
-            'Wty Status': String(wtyStatus).trim(),
-            'VOC': String(voc).trim(),
-            'REDO': String(redo).trim(),
-            'Risk Sensing': String(riskSensing).trim(),
-            'RED': String(red).trim(),
-            'High Priority': String(highPriority).trim(),
-            'Customer Name': String(custName).trim(),
-            'City': String(city).trim(),
-            'App Date': String(appDate).trim(),
-            'App Time': String(appTime).trim(),
-            'Service Type': String(sType).trim(),
-            'Status': String(status).trim(),
-            'Reason': String(reason).trim(),
-            'B2B': String(b2b).trim(),
-            'Risk Reason': String(riskReason).trim(),
-            'Aging': rawAging,
-            'Product': rawProd,
-
-            // Legacy keys for backward compatibility
-            aging: rawAging,
-            product: rawProd,
-            trackingNo: String(soNo),
-            serviceOrderNo: String(soNo),
-            dateCol: String(dateCol),
-            branchName: String(branchName).trim() || 'Gurgaon-CE',
-            cpName: String(branchName).trim() || 'Gurgaon-CE',
-            cpCode: String(cpCode).trim() || 'UNKNOWN',
-            ascRefNo: String(ascJobNo),
-            requestedDate: String(created),
-            createdDate: String(created),
-            serviceType: String(sType),
-            modelCode: String(model),
-            serialNo: String(serial),
-            customerName: String(custName),
-            warranty: String(wtyStatus)
-          });
+      rawRows.forEach((row, idx) => {
+        const std = mapRowToStandard25(row, idx);
+        if (std['Service Order No.'] || std['Model'] || std['Created'] || std['Assigned'] || std['Branch Name']) {
+          records.push(std);
         }
       });
 
