@@ -133,7 +133,7 @@
         <!-- Quick Header Action Buttons -->
         <div class="flex items-center space-x-2">
           <!-- Home Navigation Button -->
-          <a href="index.html" class="inline-flex items-center px-3 py-1.5 border border-slate-300 rounded text-xs font-semibold bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition focus:outline-none" title="Return to GSPN Tools Home">
+          <a href="../website_version_tools/index.html" class="inline-flex items-center px-3 py-1.5 border border-slate-300 rounded text-xs font-semibold bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition focus:outline-none" title="Return to GSPN Tools Home">
             <svg class="w-3.5 h-3.5 mr-1.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
@@ -508,7 +508,7 @@
           </div>
           <div>
             <h3 class="text-base font-bold font-outfit">Upload Daily Excel or Paste Data</h3>
-            <p class="text-xs text-blue-200">Expected columns: <strong>Tracking No · Date · Branch_Name · ASC Ref. No · Requested Date · Service Type · Model Code · Serial No · Customer Name · First Anticipated Date · Dealer BP · Dealer Name · City · Phone Number · Email Id</strong></p>
+            <p class="text-xs text-blue-200">Expected 25 columns: <strong>Date · Branch Name · No · Service Order No. · ASC Job No · Created · Assigned · Assigned Time · Model · Serial · Wty Status · VOC · REDO · Risk Sensing · RED · High Priority · Customer Name · City · App Date · App Time · Service Type · Status · Reason · B2B · Risk Reason</strong></p>
           </div>
         </div>
         <button id="btnCloseUploadModal" class="text-white/70 hover:text-white p-1 rounded-lg hover:bg-white/10 transition">
@@ -560,20 +560,20 @@
           </div>
 
           <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
-            <span>Automatic processing: Trims "Edit" from tracking numbers, derives product line from Model code, calculates TAT &amp; Aging buckets.</span>
-            <button id="btnDownloadSampleExcel" class="text-blue-600 font-bold hover:underline flex items-center gap-1">
+            <span>Automatic processing: Calculates aging from Created Date, derives product line from Model, tracks IW/OW warranty.</span>
+            <button id="btnDownloadSampleExcel" class="text-blue-600 font-bold hover:underline flex items-center gap-1" title="Download sample_data.xls template with 25 standard GSPN columns">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
-              Download Sample Excel
+              Download Sample Format (sample_data.xls)
             </button>
           </div>
         </div>
 
         <!-- Tab 2: Paste Raw TSV Area -->
         <div id="tabContentPaste" class="space-y-3 hidden">
-          <label for="pasteDataTextarea" class="block text-xs font-bold text-slate-600">Paste Table Rows Directly from Excel (Including Headers):</label>
-          <textarea id="pasteDataTextarea" rows="8" placeholder="Tracking No&#9;Date&#9;Branch_Name&#9;ASC Ref. No&#9;Requested Date&#9;Service Type&#9;Model Code&#9;Serial No&#9;Customer Name&#9;First Anticipated Date&#9;Dealer BP&#9;Dealer Name&#9;City&#9;Phone Number&#9;Email Id&#10;Edit 4293847291&#9;11.09.2026&#9;SVC&#9;REF001&#9;11.09.2026&#9;IH&#9;AR18CY3AQUN&#9;SN98765&#9;Rajesh Kumar&#9;11.09.2026&#9;4903753&#9;Samsung Dealer&#9;Ahmedabad&#9;9876543210&#9;dealer@example.com" class="w-full text-xs font-mono p-3 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-slate-50"></textarea>
+          <label for="pasteDataTextarea" class="block text-xs font-bold text-slate-600">Paste Table Rows Directly from Excel (Including 25 Headers):</label>
+          <textarea id="pasteDataTextarea" rows="8" placeholder="Date&#9;Branch Name&#9;No&#9;Service Order No.&#9;ASC Job No&#9;Created&#9;Assigned&#9;Assigned Time&#9;Model&#9;Serial&#9;Wty Status&#9;VOC&#9;REDO&#9;Risk Sensing&#9;RED&#9;High Priority&#9;Customer Name&#9;City&#9;App Date&#9;App Time&#9;Service Type&#9;Status&#9;Reason&#9;B2B&#9;Risk Reason&#10;11.09.2026&#9;Gurgaon-CE&#9;1&#9;4293847291&#9;4903753-01&#9;11.09.2026&#9;11.09.2026&#9;10:15&#9;AR18CY3AQUN&#9;SN987654321&#9;In Warranty&#9;Cooling issue&#9;N&#9;Normal&#9;N&#9;High&#9;Rajesh Sharma&#9;Gurgaon&#9;11.09.2026&#9;14:00 - 16:00&#9;IH&#9;Engineer Assigned&#9;Appointment Fixed&#9;N&#9;None" class="w-full text-xs font-mono p-3 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-slate-50"></textarea>
           <div class="flex justify-end">
             <button id="btnProcessPastedData" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow transition">
               Process &amp; Preview
@@ -678,20 +678,22 @@
   <!-- ========================================================================= -->
   <!-- MODAL 3: Raw Records Inspector Modal -->
   <!-- ========================================================================= -->
-  <div id="rawDataModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-5xl overflow-hidden max-h-[92vh] flex flex-col animate-in fade-in zoom-in duration-200">
+  <!-- MODAL 2: Raw Records Inspector & Call Closure Modal -->
+  <!-- ========================================================================= -->
+  <div id="rawDataModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-[96vw] overflow-hidden max-h-[94vh] flex flex-col animate-in fade-in zoom-in duration-200">
       
       <!-- Modal Header -->
-      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between flex-shrink-0">
+      <div class="px-6 py-3.5 bg-slate-900 text-white flex items-center justify-between flex-shrink-0">
         <div class="flex items-center space-x-3">
           <div class="p-2 bg-blue-500/20 rounded-lg">
             <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
             </svg>
           </div>
           <div>
-            <h3 class="text-base font-bold font-outfit">Underlying Service Order Records</h3>
-            <p class="text-xs text-slate-400">Inspecting records with 10 standard GSPN columns, cleaned tracking numbers, and derived TAT</p>
+            <h3 class="text-base font-bold font-outfit">Service Order Call Review &amp; Closure</h3>
+            <p class="text-xs text-slate-400">Check and close calls · Full 25-column standard GSPN tracking details · Export to <code>sample_data.xls</code></p>
           </div>
         </div>
         <button id="btnCloseRawDataModal" class="text-white/70 hover:text-white p-1 rounded-lg hover:bg-white/10 transition">
@@ -701,16 +703,19 @@
         </button>
       </div>
 
-      <!-- Controls & Search -->
-      <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 flex-shrink-0">
-        <div class="flex items-center gap-2 flex-1 min-w-[240px]">
+      <!-- Controls & Actions Toolbar -->
+      <div class="p-3.5 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 flex-shrink-0">
+        
+        <!-- Search & Filters -->
+        <div class="flex flex-wrap items-center gap-2 flex-1 min-w-[280px]">
           <div class="relative w-full max-w-xs">
-            <input type="text" id="rawSearchInput" placeholder="Search Tracking No, Model, Customer..." class="w-full text-xs pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+            <input type="text" id="rawSearchInput" placeholder="Search SO No, Model, Customer, Reason..." class="w-full text-xs pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
             <svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
-          <select id="rawServiceFilter" class="text-xs border border-slate-300 rounded-lg py-1.5 px-2 bg-white">
+          
+          <select id="rawServiceFilter" class="text-xs border border-slate-300 rounded-lg py-1.5 px-2 bg-white font-medium">
             <option value="ALL">All Service Types</option>
             <option value="IN-HOME">IN-HOME</option>
             <option value="Initial Installation">Initial Installation</option>
@@ -721,28 +726,76 @@
             <option value="Carry In">Carry In</option>
             <option value="Return Handling">Return Handling</option>
           </select>
+
+          <!-- Closure Status Filter -->
+          <select id="rawClosureFilter" class="text-xs border border-slate-300 rounded-lg py-1.5 px-2 bg-white font-medium">
+            <option value="ALL">All Call Statuses</option>
+            <option value="OPEN">Open Calls Only</option>
+            <option value="CLOSED">Checked / Closed Only</option>
+            <option value="RED">RED Calls Only</option>
+            <option value="HIGH">High Priority Only</option>
+          </select>
+
+          <!-- Live Count Badges -->
+          <div class="flex items-center gap-1.5 text-xs">
+            <span class="px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 font-bold">Total: <span id="rawFilteredCount">0</span></span>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">Closed: <span id="rawClosedCount">0</span></span>
+            <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold">Open: <span id="rawOpenCount">0</span></span>
+          </div>
         </div>
-        <span class="text-xs text-slate-500">Showing <span id="rawFilteredCount" class="font-bold text-slate-800">0</span> records</span>
+
+        <!-- Call Action Buttons -->
+        <div class="flex items-center gap-2">
+          <button id="btnCheckAllFiltered" class="px-2.5 py-1.5 text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg transition flex items-center gap-1" title="Mark all filtered calls as checked/closed">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            Check Filtered
+          </button>
+          
+          <button id="btnUncheckAllFiltered" class="px-2.5 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-lg transition" title="Reopen / Reset checks on all filtered calls">
+            ↺ Reset Checks
+          </button>
+
+          <button id="btnDownloadCurrentSampleXls" class="px-3 py-1.5 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition flex items-center gap-1.5" title="Download all active calls into sample_data.xls with 25 standard GSPN columns">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Download sample_data.xls
+          </button>
+        </div>
       </div>
 
-      <!-- Records Table Container -->
-      <div class="p-4 overflow-y-auto flex-1">
+      <!-- Records Table Container (25 Columns) -->
+      <div class="p-3 overflow-y-auto flex-1">
         <div class="overflow-x-auto border border-slate-200 rounded-lg shadow-sm">
-          <table class="w-full text-xs text-left border-collapse">
-            <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 uppercase tracking-wider text-[10px]">
+          <table class="w-full text-xs text-left border-collapse whitespace-nowrap">
+            <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-300 uppercase tracking-wider text-[10px] sticky top-0 z-20">
               <tr>
-                <th class="py-2 px-2 border-r">#</th>
-                <th class="py-2 px-2 border-r">Tracking No (Trimmed)</th>
-                <th class="py-2 px-2 border-r">CP Code</th>
-                <th class="py-2 px-2 border-r">CP Name</th>
-                <th class="py-2 px-2 border-r">Requested Date</th>
-                <th class="py-2 px-2 border-r text-center">Aging (Days)</th>
-                <th class="py-2 px-2 border-r text-center">TAT Category</th>
-                <th class="py-2 px-2 border-r">Service Type</th>
-                <th class="py-2 px-2 border-r">Model Code</th>
-                <th class="py-2 px-2 border-r text-center">Product</th>
-                <th class="py-2 px-2 border-r">Serial No</th>
-                <th class="py-2 px-2">Customer Name</th>
+                <th class="py-2 px-2.5 border-r bg-slate-200 text-center sticky left-0 z-30 shadow-sm min-w-[100px]">Check / Close</th>
+                <th class="py-2 px-2 border-r text-center w-12">No</th>
+                <th class="py-2 px-3 border-r font-extrabold text-blue-900 min-w-[130px]">Service Order No.</th>
+                <th class="py-2 px-2.5 border-r min-w-[120px]">Branch Name</th>
+                <th class="py-2 px-2.5 border-r min-w-[100px]">ASC Job No</th>
+                <th class="py-2 px-2.5 border-r text-center min-w-[95px]">Created</th>
+                <th class="py-2 px-2 border-r text-center font-extrabold w-16">Aging (Days)</th>
+                <th class="py-2 px-2.5 border-r text-center min-w-[90px]">TAT Category</th>
+                <th class="py-2 px-2.5 border-r min-w-[120px]">Service Type</th>
+                <th class="py-2 px-2.5 border-r min-w-[120px]">Model</th>
+                <th class="py-2 px-2 border-r text-center w-14">Product</th>
+                <th class="py-2 px-2.5 border-r min-w-[110px]">Serial</th>
+                <th class="py-2 px-2 border-r text-center min-w-[90px]">Wty Status</th>
+                <th class="py-2 px-2.5 border-r min-w-[110px]">Status</th>
+                <th class="py-2 px-3 border-r min-w-[200px]">Reason</th>
+                <th class="py-2 px-3 border-r min-w-[200px]">VOC</th>
+                <th class="py-2 px-2 border-r text-center w-14">REDO</th>
+                <th class="py-2 px-2 border-r text-center min-w-[90px]">Risk Sensing</th>
+                <th class="py-2 px-2 border-r text-center w-12">RED</th>
+                <th class="py-2 px-2 border-r text-center min-w-[90px]">High Priority</th>
+                <th class="py-2 px-3 border-r min-w-[140px]">Customer Name</th>
+                <th class="py-2 px-2.5 border-r min-w-[100px]">City</th>
+                <th class="py-2 px-2.5 border-r text-center min-w-[95px]">App Date</th>
+                <th class="py-2 px-2.5 border-r text-center min-w-[100px]">App Time</th>
+                <th class="py-2 px-2 border-r text-center w-12">B2B</th>
+                <th class="py-2 px-3 min-w-[150px]">Risk Reason</th>
               </tr>
             </thead>
             <tbody id="rawRecordsTableBody" class="divide-y divide-slate-200 font-mono text-[11px]">
@@ -753,10 +806,13 @@
       </div>
 
       <!-- Modal Footer -->
-      <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 flex justify-end flex-shrink-0">
-        <button id="btnCloseRawDataModal2" class="px-4 py-2 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 transition">
-          Done
-        </button>
+      <div class="px-6 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between flex-shrink-0">
+        <span class="text-xs text-slate-500">Check off calls as you inspect or resolve them. Exporting preserves check notes in <code>sample_data.xls</code>.</span>
+        <div class="flex items-center gap-2">
+          <button id="btnCloseRawDataModal2" class="px-4 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 transition">
+            Close Inspector
+          </button>
+        </div>
       </div>
 
     </div>
@@ -827,6 +883,15 @@
       'Cochin-CE'
     ];
 
+    // --- STANDARD 25 COLUMNS FORMAT ---
+    const STANDARD_25_COLUMNS = [
+      'Date', 'Branch Name', 'No', 'Service Order No.', 'ASC Job No',
+      'Created', 'Assigned', 'Assigned Time', 'Model', 'Serial',
+      'Wty Status', 'VOC', 'REDO', 'Risk Sensing', 'RED',
+      'High Priority', 'Customer Name', 'City', 'App Date', 'App Time',
+      'Service Type', 'Status', 'Reason', 'B2B', 'Risk Reason'
+    ];
+
     // --- APPLICATION STATE ---
     let appState = {
       reportDate: '2026-09-11',
@@ -834,6 +899,7 @@
       selectedAsc: '4903753',
       records: [],
       pendingUploadRecords: null,
+      closedCallIds: new Set(), // tracks checked/closed calls by Service Order No.
       charts: {
         agingChart: null,
         productsChart: null
@@ -843,11 +909,11 @@
     /**
      * Determines if a call is In-Warranty (IW) or Out-of-Warranty (OW).
      * Logic: If aging <= 365 and model code is not a stock/accessory item, treat as IW.
-     * Checks the 'warranty' field from excel if available, otherwise uses aging heuristic.
+     * Checks the 'wtyStatus' / 'warranty' field from excel if available, otherwise uses aging heuristic.
      */
     function isInWarranty(record) {
       // If explicit warranty field exists
-      const wf = String(record.warranty || record['Warranty'] || record['Warranty Status'] || '').trim().toUpperCase();
+      const wf = String(record.wtyStatus || record.warranty || record['Wty Status'] || record['Warranty'] || record['Warranty Status'] || '').trim().toUpperCase();
       if (wf === 'IW' || wf === 'IN-WARRANTY' || wf === 'IN WARRANTY' || wf === 'YES' || wf === 'Y') return true;
       if (wf === 'OW' || wf === 'OUT-OF-WARRANTY' || wf === 'OUT OF WARRANTY' || wf === 'NO' || wf === 'N') return false;
       // Heuristic: if service type is Stock Repair or Return Handling → likely OW
@@ -1019,6 +1085,10 @@
      * Total calls = 275
      * 0-2d = 112
      * 3-7d, 8-10d, 11-14d, 15-30d, 30+d exactly per screenshot
+     * Fully populated with all 25 standard GSPN columns:
+     * [Date, Branch Name, No, Service Order No., ASC Job No, Created, Assigned, Assigned Time,
+     *  Model, Serial, Wty Status, VOC, REDO, Risk Sensing, RED, High Priority,
+     *  Customer Name, City, App Date, App Time, Service Type, Status, Reason, B2B, Risk Reason]
      */
     function generateDefaultDataset() {
       const baseDate = parseDate('2026-09-11');
@@ -1053,10 +1123,65 @@
 
       const productKeys = Object.keys(productModels);
 
-      // Helper to compute a requested date given an aging offset
+      // Helper to compute a date given an aging offset
       function getReqDateFromAging(days) {
         const d = new Date(baseDate.getTime() - (days * 86400000));
         return formatDateToDot(d);
+      }
+
+      function buildCallRecord(trackingId, branch, ascCode, sType, days, idx) {
+        const pKey = productKeys[trackingId % productKeys.length];
+        const models = productModels[pKey];
+        const modelCode = models[idx % models.length];
+        const createdDate = getReqDateFromAging(days);
+        const assignedDate = getReqDateFromAging(Math.max(0, days - 1));
+        const isIW = (pKey === 'AC' || pKey === 'WM' || pKey === 'REF') || (idx % 3 !== 0);
+        const isRed = days > 30;
+        const isRisk = days > 15;
+        const isHigh = days > 15 || (idx % 8 === 0);
+
+        return {
+          // 25 Standard Columns
+          'Date': formatDateToDot(baseDate),
+          'Branch Name': branch,
+          'No': idx + 1,
+          'Service Order No.': String(trackingId),
+          'ASC Job No': `${ascCode}-${String((idx % 99) + 1).padStart(2, '0')}`,
+          'Created': createdDate,
+          'Assigned': assignedDate,
+          'Assigned Time': '10:15',
+          'Model': modelCode,
+          'Serial': `SN${trackingId}X`,
+          'Wty Status': isIW ? 'In Warranty' : 'Out of Warranty',
+          'VOC': pKey === 'AC' ? 'Cooling issue / Low cooling' : (pKey === 'WM' ? 'Drain error / Spin noise' : (pKey === 'REF' ? 'Not cooling / Freezer issue' : 'Display issue')),
+          'REDO': idx % 10 === 0 ? 'Y' : 'N',
+          'Risk Sensing': isRisk ? 'Risk' : 'Normal',
+          'RED': isRed ? 'Y' : 'N',
+          'High Priority': isHigh ? 'High' : 'Normal',
+          'Customer Name': `Customer ${String(trackingId).slice(-3)}`,
+          'City': branch.split('-')[0] || 'Gurgaon',
+          'App Date': getReqDateFromAging(Math.max(0, days - 2)),
+          'App Time': '14:00 - 16:00',
+          'Service Type': sType,
+          'Status': isRisk ? 'Spare Part Pending' : (days > 7 ? 'Appointment Rescheduled' : 'Engineer Assigned'),
+          'Reason': isRisk ? 'Part Delay from Factory' : (days > 7 ? 'Customer Not Available at Home' : 'Appointment Fixed'),
+          'B2B': idx % 12 === 0 ? 'Y' : 'N',
+          'Risk Reason': isRisk ? 'TAT Exceeded > 15 Days Delay' : 'None',
+
+          // Legacy fields for backward compatibility
+          trackingNo: `Edit ${trackingId}`,
+          serviceOrderNo: String(trackingId),
+          cpCode: ascCode,
+          cpName: branch,
+          branchName: branch,
+          ascRefNo: `${ascCode}-${String((idx % 99) + 1).padStart(2, '0')}`,
+          requestedDate: createdDate,
+          modelCode: modelCode,
+          serialNo: `SN${trackingId}X`,
+          serviceType: sType,
+          warranty: isIW ? 'In Warranty' : 'Out of Warranty',
+          wtyStatus: isIW ? 'In Warranty' : 'Out of Warranty'
+        };
       }
 
       // Generate the older bucket calls specified in the screenshot
@@ -1072,99 +1197,39 @@
 
           for (let i = 0; i < count; i++) {
             trackingCounter++;
-            const pKey = productKeys[(trackingCounter) % productKeys.length];
-            const models = productModels[pKey];
-            const modelCode = models[i % models.length];
-
-            list.push({
-              trackingNo: `Edit ${trackingCounter}`, // Includes "Edit" to test trim logic
-              cpCode: '4903753',
-              cpName: 'Gurgaon-CE',
-              ascRefNo: `ASC-${trackingCounter.toString().slice(-4)}`,
-              requestedDate: getReqDateFromAging(days),
-              serviceType: row.type,
-              modelCode: modelCode,
-              serialNo: `SN${trackingCounter}X`,
-              customerName: `Customer ${trackingCounter.toString().slice(-3)}`,
-              firstAnticipatedDate: getReqDateFromAging(days)
-            });
+            list.push(buildCallRecord(trackingCounter, 'Gurgaon-CE', '4903753', row.type, days, list.length));
             createdInBuckets++;
           }
         });
 
-        // The remaining calls for this service type to reach row.total are placed into 0-2 Days (if any)
+        // Remaining calls for this service type to reach row.total are placed into 0-2 Days (if any)
         const rem0to2 = Math.max(0, row.total - createdInBuckets);
         for (let i = 0; i < rem0to2; i++) {
           trackingCounter++;
-          const pKey = productKeys[(trackingCounter) % productKeys.length];
-          const models = productModels[pKey];
-          const modelCode = models[i % models.length];
-
-          list.push({
-            trackingNo: `${trackingCounter}`,
-            cpCode: '4903753',
-            cpName: 'Gurgaon-CE',
-            ascRefNo: `ASC-${trackingCounter.toString().slice(-4)}`,
-            requestedDate: getReqDateFromAging(1),
-            serviceType: row.type,
-            modelCode: modelCode,
-            serialNo: `SN${trackingCounter}X`,
-            customerName: `Customer ${trackingCounter.toString().slice(-3)}`,
-            firstAnticipatedDate: getReqDateFromAging(1)
-          });
+          list.push(buildCallRecord(trackingCounter, 'Gurgaon-CE', '4903753', row.type, 1, list.length));
         }
       });
 
-      // Now fill fresh calls (0-2 Days) up to the screenshot total of 275 (112 in 0-2 Days)
+      // Fill fresh calls (0-2 Days) up to the screenshot total of 275 (112 in 0-2 Days)
       const currentTotal = list.length;
       const targetTotal = 275;
       const neededFresh = targetTotal - currentTotal;
 
       for (let i = 0; i < neededFresh; i++) {
         trackingCounter++;
-        const pKey = productKeys[(trackingCounter) % productKeys.length];
-        const models = productModels[pKey];
-        const modelCode = models[i % models.length];
         const sType = matrixDef[i % matrixDef.length].type;
-
-        list.push({
-          trackingNo: `Edit ${trackingCounter}`,
-          cpCode: '4903753',
-          cpName: 'Gurgaon-CE',
-          ascRefNo: `ASC-${trackingCounter.toString().slice(-4)}`,
-          requestedDate: getReqDateFromAging(Math.floor(Math.random() * 2)), // 0 or 1 day aging
-          serviceType: sType,
-          modelCode: modelCode,
-          serialNo: `SN${trackingCounter}X`,
-          customerName: `Customer ${trackingCounter.toString().slice(-3)}`,
-          firstAnticipatedDate: getReqDateFromAging(1)
-        });
+        list.push(buildCallRecord(trackingCounter, 'Gurgaon-CE', '4903753', sType, Math.floor(Math.random() * 2), list.length));
       }
 
-      // Also generate sample calls for each other branch in STANDARD_BRANCHES
+      // Generate sample calls for other branches
       const otherBranches = STANDARD_BRANCHES.filter(b => b !== 'Gurgaon-CE');
       otherBranches.forEach((bName, bIdx) => {
         const bAsc = String(4903754 + bIdx);
         for (let j = 0; j < 18; j++) {
           trackingCounter++;
-          const pKey = productKeys[trackingCounter % productKeys.length];
-          const models = productModels[pKey];
-          const modelCode = models[j % models.length];
           const sType = matrixDef[j % matrixDef.length].type;
-          const ageDays = (j % 5) * 4; // varied aging
-
-          list.push({
-            trackingNo: `Edit ${trackingCounter}`,
-            cpCode: bAsc,
-            cpName: bName,
-            ascRefNo: `ASC-${trackingCounter.toString().slice(-4)}`,
-            requestedDate: getReqDateFromAging(ageDays),
-            serviceType: sType,
-            modelCode: modelCode,
-            serialNo: `SN${trackingCounter}X`,
-            customerName: `Customer ${trackingCounter.toString().slice(-3)}`,
-            firstAnticipatedDate: getReqDateFromAging(ageDays)
-          });
+          const ageDays = (j % 5) * 4;
+          list.push(buildCallRecord(trackingCounter, bName, bAsc, sType, ageDays, list.length));
         }
       });
 
@@ -1174,8 +1239,9 @@
     // --- DATA AGGREGATION ENGINE ---
 
     /**
-     * Processes raw records: trims tracking no, derives product & aging, filters by Branch/ASC.
-     * Supports both legacy and new template column names.
+     * Processes raw records: trims tracking no, calculates aging from Created date,
+     * extracts all 25 standard columns, product & TAT buckets, filters by Branch/ASC,
+     * and maps call closure status.
      */
     function computeProcessedRecords() {
       const cutoffDate = appState.reportDate;
@@ -1184,56 +1250,90 @@
 
       return appState.records
         .map((r, idx) => {
-          const cleanTrack  = cleanTrackingNumber(r.trackingNo  || r['Tracking No']       || '');
-          const cpCode      = String(r.cpCode      || r['Dealer BP'] || r['CP Code']   || r['ASC Code'] || '').trim();
-          const cpName      = String(r.cpName      || r['Branch_Name'] || r['Branch Name'] || r['CP Name'] || '').trim();
-          const branchName  = String(r.branchName  || r['Branch_Name'] || r['Branch Name'] || cpName || '').trim();
-          const ascRef      = String(r.ascRefNo    || r['ASC Ref. No'] || r['ASC Ref No']  || '').trim();
-          const dateColVal  = String(r.dateCol     || r['Date']        || '').trim();
-          const reqDate     = String(r.requestedDate || r['Requested Date'] || dateColVal || r.firstAnticipatedDate || '').trim();
-          const sType       = convertServiceType(r.serviceType || r['Service Type'] || '');
-          const modelCode   = String(r.modelCode   || r['Model Code']  || r['Model']       || '').trim();
-          const serialNo    = String(r.serialNo    || r['Serial No']   || r['Serial']      || '').trim();
-          const custName    = String(r.customerName || r['Customer Name'] || '').trim();
-          const firstAntDate = String(r.firstAnticipatedDate || r['First Anticipated Date'] || '').trim();
-          const dealerName  = String(r.dealerName  || r['Dealer Name']  || '').trim();
-          const city        = String(r.city        || r['City']         || '').trim();
-          const phoneNumber = String(r.phoneNumber || r['Phone Number'] || r['Phone']      || '').trim();
-          const emailId     = String(r.emailId     || r['Email Id']     || r['Email']      || '').trim();
-          const warranty    = String(r.warranty    || r['Warranty']     || r['Warranty Status'] || '').trim();
+          const rawSo = r['Service Order No.'] || r['Service Order No'] || r.serviceOrderNo || r['Tracking No'] || r.trackingNo || r['SO No'] || '';
+          const cleanSo = cleanTrackingNumber(rawSo);
+          const noVal = r['No'] || r.no || (idx + 1);
+          const dateVal = String(r['Date'] || r.date || r.dateCol || '').trim();
+          const branchVal = String(r['Branch Name'] || r['Branch_Name'] || r.branchName || r['CP Name'] || r.cpName || 'Gurgaon-CE').trim();
+          const ascJobVal = String(r['ASC Job No'] || r['ASC Job No.'] || r.ascJobNo || r['ASC Ref. No'] || r.ascRefNo || r['ASC Ref No'] || '').trim();
+          const cpCode = String(r['Dealer BP'] || r['CP Code'] || r['ASC Code'] || r.cpCode || (ascJobVal ? ascJobVal.split('-')[0] : '') || '4903753').trim();
+          
+          // Created date is the primary date for aging calculation
+          const createdVal = String(r['Created'] || r.created || r['Requested Date'] || r.requestedDate || r['Created Date'] || dateVal || '').trim();
+          const assignedVal = String(r['Assigned'] || r.assigned || '').trim();
+          const assignedTimeVal = String(r['Assigned Time'] || r.assignedTime || '').trim();
+          
+          const modelVal = String(r['Model'] || r.model || r['Model Code'] || r.modelCode || '').trim();
+          const serialVal = String(r['Serial'] || r.serial || r['Serial No'] || r.serialNo || '').trim();
+          const wtyVal = String(r['Wty Status'] || r.wtyStatus || r['Warranty'] || r.warranty || r['Warranty Status'] || '').trim();
+          
+          const vocVal = String(r['VOC'] || r.voc || '').trim();
+          const redoVal = String(r['REDO'] || r.redo || 'N').trim();
+          const riskSensingVal = String(r['Risk Sensing'] || r.riskSensing || 'Normal').trim();
+          const redVal = String(r['RED'] || r.red || 'N').trim();
+          const highPriorityVal = String(r['High Priority'] || r.highPriority || 'Normal').trim();
+          const custName = String(r['Customer Name'] || r.customerName || '').trim();
+          const cityVal = String(r['City'] || r.city || '').trim();
+          const appDateVal = String(r['App Date'] || r.appDate || r['First Anticipated Date'] || r.firstAnticipatedDate || '').trim();
+          const appTimeVal = String(r['App Time'] || r.appTime || '').trim();
+          const sType = convertServiceType(r['Service Type'] || r.serviceType || '');
+          const statusVal = String(r['Status'] || r.status || '').trim();
+          const reasonVal = String(r['Reason'] || r.reason || '').trim();
+          const b2bVal = String(r['B2B'] || r.b2b || 'N').trim();
+          const riskReasonVal = String(r['Risk Reason'] || r.riskReason || 'None').trim();
 
-          const aging     = calcAging(reqDate || firstAntDate, cutoffDate);
+          const aging = calcAging(createdVal, cutoffDate);
           const tatBucket = getTATBucket(aging);
-          const product   = getProductCategory(modelCode);
+          const product = getProductCategory(modelVal);
+          const callId = cleanSo || `CALL-${idx + 1}`;
+          const isClosed = appState.closedCallIds.has(callId);
 
           return {
-            index:               idx + 1,
-            trackingNo:          cleanTrack,
-            cpCode:              cpCode  || 'UNKNOWN',
-            cpName:              cpName  || 'Gurgaon-CE',
-            branchName:          branchName || cpName || 'Gurgaon-CE',
-            ascRefNo:            ascRef,
-            dateCol:             dateColVal,
-            requestedDate:       reqDate,
-            aging:               aging,
-            tatBucket:           tatBucket,
-            serviceType:         sType,
-            modelCode:           modelCode,
-            product:             product,
-            serialNo:            serialNo,
-            customerName:        custName,
-            firstAnticipatedDate: firstAntDate,
-            dealerName:          dealerName,
-            city:                city,
-            phoneNumber:         phoneNumber,
-            emailId:             emailId,
-            warranty:            warranty
+            index: idx + 1,
+            callId: callId,
+            isClosed: isClosed,
+            date: dateVal,
+            branchName: branchVal,
+            cpName: branchVal,
+            no: noVal,
+            serviceOrderNo: cleanSo,
+            trackingNo: cleanSo,
+            ascJobNo: ascJobVal,
+            cpCode: cpCode,
+            created: createdVal,
+            requestedDate: createdVal,
+            assigned: assignedVal,
+            assignedTime: assignedTimeVal,
+            model: modelVal,
+            modelCode: modelVal,
+            serial: serialVal,
+            serialNo: serialVal,
+            wtyStatus: wtyVal,
+            warranty: wtyVal,
+            voc: vocVal,
+            redo: redoVal,
+            riskSensing: riskSensingVal,
+            red: redVal,
+            highPriority: highPriorityVal,
+            customerName: custName,
+            city: cityVal,
+            appDate: appDateVal,
+            firstAnticipatedDate: appDateVal,
+            appTime: appTimeVal,
+            serviceType: sType,
+            status: statusVal,
+            reason: reasonVal,
+            b2b: b2bVal,
+            riskReason: riskReasonVal,
+            aging: aging,
+            tatBucket: tatBucket,
+            product: product
           };
         })
         .filter(r => {
           // Branch filter: if ALL selected, show everything
           if (branch !== 'ALL') {
-            const rBranch = r.cpName.trim().toUpperCase();
+            const rBranch = r.branchName.trim().toUpperCase();
             const selBranch = branch.trim().toUpperCase();
             if (rBranch !== selBranch) return false;
           }
@@ -1617,48 +1717,201 @@
       renderRawRecordsTable(processed);
     }
 
-    // --- RAW RECORDS DRAWER/MODAL RENDERING ---
-    function renderRawRecordsTable(recordsList) {
-      const search = (document.getElementById('rawSearchInput').value || '').toLowerCase().trim();
-      const serviceFilter = document.getElementById('rawServiceFilter').value;
+    // --- RAW RECORDS DRAWER/MODAL RENDERING & CALL CLOSURE ---
+    function getFilteredRawRecords(recordsList) {
+      const search = (document.getElementById('rawSearchInput')?.value || '').toLowerCase().trim();
+      const serviceFilter = document.getElementById('rawServiceFilter')?.value || 'ALL';
+      const closureFilter = document.getElementById('rawClosureFilter')?.value || 'ALL';
 
-      const filtered = recordsList.filter(r => {
+      return recordsList.filter(r => {
+        // Service type filter
         if (serviceFilter !== 'ALL' && r.serviceType !== serviceFilter) return false;
+
+        // Closure filter
+        if (closureFilter === 'OPEN' && r.isClosed) return false;
+        if (closureFilter === 'CLOSED' && !r.isClosed) return false;
+        if (closureFilter === 'RED' && r.red !== 'Y') return false;
+        if (closureFilter === 'HIGH' && r.highPriority !== 'High' && r.highPriority !== 'Y') return false;
+
+        // Search text
         if (search) {
-          const match = r.trackingNo.toLowerCase().includes(search) ||
-                        r.modelCode.toLowerCase().includes(search) ||
-                        r.customerName.toLowerCase().includes(search) ||
-                        r.serialNo.toLowerCase().includes(search);
-          if (!match) return false;
+          const combined = [
+            r.serviceOrderNo,
+            r.ascJobNo,
+            r.model,
+            r.customerName,
+            r.serial,
+            r.reason,
+            r.voc,
+            r.branchName,
+            r.city,
+            r.status
+          ].join(' ').toLowerCase();
+          if (!combined.includes(search)) return false;
         }
+
         return true;
       });
+    }
 
-      document.getElementById('rawFilteredCount').textContent = filtered.length;
+    function renderRawRecordsTable(recordsList) {
+      const allProcessed = recordsList || computeProcessedRecords();
+      const filtered = getFilteredRawRecords(allProcessed);
+
+      const totalFiltered = filtered.length;
+      const closedCount = filtered.filter(r => r.isClosed).length;
+      const openCount = totalFiltered - closedCount;
+
+      const filteredCountEl = document.getElementById('rawFilteredCount');
+      const closedCountEl   = document.getElementById('rawClosedCount');
+      const openCountEl     = document.getElementById('rawOpenCount');
+      if (filteredCountEl) filteredCountEl.textContent = totalFiltered;
+      if (closedCountEl)   closedCountEl.textContent = closedCount;
+      if (openCountEl)     openCountEl.textContent = openCount;
+
       const tbody = document.getElementById('rawRecordsTableBody');
+      if (!tbody) return;
       tbody.innerHTML = '';
 
-      // Render top 100 for maximum performance
-      const slice = filtered.slice(0, 100);
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="26" class="py-8 text-center text-slate-400 font-sans text-xs">
+              No matching records found for the current search/filter criteria.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      // Render top 150 for responsiveness
+      const slice = filtered.slice(0, 150);
       slice.forEach(r => {
         const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-50 transition';
+        tr.className = `transition ${r.isClosed ? 'bg-emerald-50/70 text-slate-700' : 'hover:bg-slate-50'}`;
+        
         tr.innerHTML = `
-          <td class="py-1.5 px-2 border-r text-slate-400">${r.index}</td>
-          <td class="py-1.5 px-2 border-r font-bold text-blue-700">${r.trackingNo}</td>
-          <td class="py-1.5 px-2 border-r text-slate-600">${r.cpCode}</td>
-          <td class="py-1.5 px-2 border-r text-slate-600">${r.cpName}</td>
-          <td class="py-1.5 px-2 border-r text-slate-600">${r.requestedDate}</td>
-          <td class="py-1.5 px-2 border-r text-center font-bold ${r.aging > 15 ? 'text-rose-600' : 'text-slate-800'}">${r.aging}</td>
-          <td class="py-1.5 px-2 border-r text-center"><span class="px-1.5 py-0.5 rounded text-[10px] ${r.aging > 15 ? 'bg-rose-100 text-rose-800 font-bold' : 'bg-slate-100 text-slate-700'}">${r.tatBucket}</span></td>
-          <td class="py-1.5 px-2 border-r text-slate-800">${r.serviceType}</td>
-          <td class="py-1.5 px-2 border-r text-slate-700 font-medium">${r.modelCode}</td>
+          <!-- Sticky Check/Close Button -->
+          <td class="py-1.5 px-2 border-r sticky left-0 z-10 ${r.isClosed ? 'bg-emerald-100/90' : 'bg-white shadow-sm'} text-center">
+            <button onclick="toggleCallClosure('${r.callId}')" class="px-2 py-1 rounded font-bold text-[10px] flex items-center justify-center gap-1 w-full transition ${r.isClosed ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'bg-slate-100 text-slate-700 hover:bg-blue-100 hover:text-blue-900 border border-slate-300'}" title="${r.isClosed ? 'Click to Reopen Call' : 'Click to Check & Close Call'}">
+              <span>${r.isClosed ? '✓ Closed' : 'Check & Close'}</span>
+            </button>
+          </td>
+
+          <!-- 25 Columns Data -->
+          <td class="py-1.5 px-2 border-r text-center text-slate-400">${r.no}</td>
+          <td class="py-1.5 px-3 border-r font-extrabold text-blue-700 font-mono">${r.serviceOrderNo}</td>
+          <td class="py-1.5 px-2.5 border-r text-slate-700 font-sans">${r.branchName}</td>
+          <td class="py-1.5 px-2.5 border-r text-slate-600 font-mono">${r.ascJobNo}</td>
+          <td class="py-1.5 px-2.5 border-r text-center text-slate-600">${r.created}</td>
+          <td class="py-1.5 px-2 border-r text-center font-bold ${r.aging > 15 ? 'text-rose-600 font-extrabold' : 'text-slate-800'}">${r.aging}</td>
+          <td class="py-1.5 px-2.5 border-r text-center"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${r.aging > 15 ? 'bg-rose-100 text-rose-800' : 'bg-slate-100 text-slate-700'}">${r.tatBucket}</span></td>
+          <td class="py-1.5 px-2.5 border-r text-slate-800 font-sans">${r.serviceType}</td>
+          <td class="py-1.5 px-2.5 border-r text-slate-800 font-medium">${r.model}</td>
           <td class="py-1.5 px-2 border-r text-center"><span class="px-1 rounded bg-slate-200 text-slate-800 font-bold">${r.product}</span></td>
-          <td class="py-1.5 px-2 border-r text-slate-500">${r.serialNo}</td>
-          <td class="py-1.5 px-2 text-slate-700">${r.customerName}</td>
+          <td class="py-1.5 px-2.5 border-r text-slate-500 font-mono">${r.serial}</td>
+          <td class="py-1.5 px-2 border-r text-center"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${String(r.wtyStatus).toLowerCase().includes('in') ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${r.wtyStatus || 'In Warranty'}</span></td>
+          <td class="py-1.5 px-2.5 border-r text-slate-800 font-sans"><span class="px-1.5 py-0.5 rounded bg-blue-50 text-blue-800 font-medium">${r.status || '-'}</span></td>
+          <td class="py-1.5 px-3 border-r text-slate-700 font-sans max-w-[200px] truncate" title="${r.reason}">${r.reason || '-'}</td>
+          <td class="py-1.5 px-3 border-r text-slate-600 font-sans max-w-[200px] truncate" title="${r.voc}">${r.voc || '-'}</td>
+          <td class="py-1.5 px-2 border-r text-center font-bold ${r.redo === 'Y' ? 'text-rose-600' : 'text-slate-400'}">${r.redo || 'N'}</td>
+          <td class="py-1.5 px-2 border-r text-center"><span class="px-1 rounded ${r.riskSensing === 'Risk' ? 'bg-rose-100 text-rose-800 font-bold' : 'text-slate-500'}">${r.riskSensing || 'Normal'}</span></td>
+          <td class="py-1.5 px-2 border-r text-center font-bold ${r.red === 'Y' ? 'px-1.5 py-0.5 rounded bg-rose-600 text-white' : 'text-slate-400'}">${r.red || 'N'}</td>
+          <td class="py-1.5 px-2 border-r text-center"><span class="px-1 rounded font-semibold ${r.highPriority === 'High' ? 'bg-amber-100 text-amber-900 font-bold' : 'text-slate-500'}">${r.highPriority || 'Normal'}</span></td>
+          <td class="py-1.5 px-3 border-r text-slate-800 font-sans">${r.customerName}</td>
+          <td class="py-1.5 px-2.5 border-r text-slate-600 font-sans">${r.city}</td>
+          <td class="py-1.5 px-2.5 border-r text-center text-slate-600">${r.appDate}</td>
+          <td class="py-1.5 px-2.5 border-r text-center text-slate-600">${r.appTime}</td>
+          <td class="py-1.5 px-2 border-r text-center font-semibold ${r.b2b === 'Y' ? 'text-indigo-600' : 'text-slate-400'}">${r.b2b || 'N'}</td>
+          <td class="py-1.5 px-3 text-slate-600 font-sans max-w-[160px] truncate" title="${r.riskReason}">${r.riskReason || 'None'}</td>
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    function toggleCallClosure(callId) {
+      if (appState.closedCallIds.has(callId)) {
+        appState.closedCallIds.delete(callId);
+        showToast(`Call ${callId} reopened / unchecked.`);
+      } else {
+        appState.closedCallIds.add(callId);
+        showToast(`✓ Call ${callId} checked and closed.`);
+      }
+      renderRawRecordsTable(computeProcessedRecords());
+    }
+
+    function checkAllFilteredCalls() {
+      const processed = computeProcessedRecords();
+      const currentFiltered = getFilteredRawRecords(processed);
+      let markedCount = 0;
+      currentFiltered.forEach(r => {
+        if (!appState.closedCallIds.has(r.callId)) {
+          appState.closedCallIds.add(r.callId);
+          markedCount++;
+        }
+      });
+      renderRawRecordsTable(processed);
+      showToast(`✓ Marked ${markedCount} filtered calls as Checked / Closed.`);
+    }
+
+    function uncheckAllFilteredCalls() {
+      const processed = computeProcessedRecords();
+      const currentFiltered = getFilteredRawRecords(processed);
+      let resetCount = 0;
+      currentFiltered.forEach(r => {
+        if (appState.closedCallIds.has(r.callId)) {
+          appState.closedCallIds.delete(r.callId);
+          resetCount++;
+        }
+      });
+      renderRawRecordsTable(processed);
+      showToast(`↺ Reopened / reset checks on ${resetCount} calls.`);
+    }
+
+    function exportCurrentRecordsToSampleExcel() {
+      const processed = computeProcessedRecords();
+      const filtered = getFilteredRawRecords(processed);
+      if (filtered.length === 0) {
+        showToast('No calls available to export.', 'error');
+        return;
+      }
+
+      const rows = filtered.map(r => ({
+        'Date': r.date || formatDateToDot(appState.reportDate),
+        'Branch Name': r.branchName,
+        'No': r.no,
+        'Service Order No.': r.serviceOrderNo,
+        'ASC Job No': r.ascJobNo,
+        'Created': r.created,
+        'Assigned': r.assigned,
+        'Assigned Time': r.assignedTime,
+        'Model': r.model,
+        'Serial': r.serial,
+        'Wty Status': r.wtyStatus,
+        'VOC': r.voc,
+        'REDO': r.redo,
+        'Risk Sensing': r.riskSensing,
+        'RED': r.red,
+        'High Priority': r.highPriority,
+        'Customer Name': r.customerName,
+        'City': r.city,
+        'App Date': r.appDate,
+        'App Time': r.appTime,
+        'Service Type': r.serviceType,
+        'Status': r.isClosed ? `[CLOSED] ${r.status}` : r.status,
+        'Reason': r.isClosed ? `[CHECKED & CLOSED] ${r.reason}` : r.reason,
+        'B2B': r.b2b,
+        'Risk Reason': r.riskReason
+      }));
+
+      const ws = XLSX.utils.json_to_sheet(rows, { header: STANDARD_25_COLUMNS });
+      ws['!cols'] = [
+        {wch:12},{wch:16},{wch:8},{wch:18},{wch:16},{wch:12},{wch:12},{wch:14},{wch:16},{wch:16},{wch:14},{wch:24},{wch:8},{wch:14},{wch:8},{wch:14},{wch:20},{wch:14},{wch:12},{wch:16},{wch:18},{wch:22},{wch:24},{wch:8},{wch:24}
+      ];
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Open_Pending_Calls');
+      XLSX.writeFile(wb, 'sample_data.xls');
+      showToast(`Exported ${rows.length} calls to sample_data.xls!`);
     }
 
     // --- EMAIL-COMPATIBLE HTML GENERATOR (The Email Superpower) ---
@@ -1830,90 +2083,145 @@
     // --- EXCEL FILE PARSER & TSV PROCESSOR ---
     /**
      * Parses uploaded Excel/TSV data into normalised record objects.
-     * Supports the new template format:
-     *   Tracking No | Date | Branch_Name | ASC Ref. No | Requested Date | Service Type |
-     *   Model Code | Serial No | Customer Name | First Anticipated Date |
-     *   Dealer BP | Dealer Name | City | Phone Number | Email Id
-     * Also supports legacy column names for backward compatibility.
+     * Supports the exact 25-column format:
+     * [Date, Branch Name, No, Service Order No., ASC Job No, Created, Assigned, Assigned Time,
+     *  Model, Serial, Wty Status, VOC, REDO, Risk Sensing, RED, High Priority,
+     *  Customer Name, City, App Date, App Time, Service Type, Status, Reason, B2B, Risk Reason]
+     * Also supports legacy column names for full backward compatibility.
      */
     function parseUploadedData(dataArray) {
       if (!Array.isArray(dataArray) || dataArray.length === 0) return [];
       
       const records = [];
-      dataArray.forEach(row => {
-        // ── Tracking Number ──────────────────────────────────────────
-        const track = row['Tracking No'] || row['trackingNo'] || row['Tracking Number']
-                   || row['SO No'] || row['Service Order No.'] || '';
-
-        // ── Date (report/service date) — new template column ─────────
+      dataArray.forEach((row, idx) => {
+        // 1. Date
         const dateCol = row['Date'] || row['date'] || row['Report Date'] || '';
 
-        // ── Branch Name ──────────────────────────────────────────────
-        // New template uses exact 'Branch_Name' (underscore), legacy used 'Branch Name' / 'CP Name'
-        const cpName = row['Branch_Name'] || row['Branch Name'] || row['CP Name']
-                    || row['cpName'] || row['SVC'] || row['Service Center Name'] || '';
+        // 2. Branch Name
+        const branchName = row['Branch Name'] || row['Branch_Name'] || row['CP Name']
+                        || row['cpName'] || row['SVC'] || row['Service Center Name'] || '';
 
-        // ── ASC / Dealer BP Code ─────────────────────────────────────
-        // New template uses 'Dealer BP' for the CP/ASC code
+        // 3. No
+        const noVal = row['No'] || row['no'] || row['S.No'] || row['Sl No'] || (idx + 1);
+
+        // 4. Service Order No.
+        const soNo = row['Service Order No.'] || row['Service Order No'] || row['serviceOrderNo']
+                  || row['SO No'] || row['Tracking No'] || row['trackingNo'] || row['Tracking Number'] || '';
+
+        // 5. ASC Job No
+        const ascJobNo = row['ASC Job No'] || row['ASC Job No.'] || row['ascJobNo']
+                      || row['ASC Ref. No'] || row['ascRefNo'] || row['ASC Ref No'] || '';
+
+        // 6. Created (Primary date for aging)
+        const created = row['Created'] || row['created'] || row['Created Date']
+                     || row['Requested Date'] || row['requestedDate'] || dateCol || '';
+
+        // 7. Assigned
+        const assigned = row['Assigned'] || row['assigned'] || row['Assigned Date'] || '';
+
+        // 8. Assigned Time
+        const assignedTime = row['Assigned Time'] || row['assignedTime'] || row['Time'] || '';
+
+        // 9. Model
+        const model = row['Model'] || row['model'] || row['Model Code'] || row['modelCode'] || row['Model Name'] || '';
+
+        // 10. Serial
+        const serial = row['Serial'] || row['serial'] || row['Serial No'] || row['serialNo'] || row['Serial Number'] || '';
+
+        // 11. Wty Status
+        const wtyStatus = row['Wty Status'] || row['wtyStatus'] || row['Warranty Status']
+                       || row['Warranty'] || row['warranty'] || row['IW/OW'] || '';
+
+        // 12. VOC
+        const voc = row['VOC'] || row['voc'] || row['Customer VOC'] || row['Complaint'] || row['Defect'] || '';
+
+        // 13. REDO
+        const redo = row['REDO'] || row['redo'] || row['Redo'] || 'N';
+
+        // 14. Risk Sensing
+        const riskSensing = row['Risk Sensing'] || row['riskSensing'] || row['Risk'] || 'Normal';
+
+        // 15. RED
+        const red = row['RED'] || row['red'] || row['Red'] || 'N';
+
+        // 16. High Priority
+        const highPriority = row['High Priority'] || row['highPriority'] || row['Priority'] || 'Normal';
+
+        // 17. Customer Name
+        const custName = row['Customer Name'] || row['customerName'] || row['Customer'] || '';
+
+        // 18. City
+        const city = row['City'] || row['city'] || row['Location'] || '';
+
+        // 19. App Date
+        const appDate = row['App Date'] || row['appDate'] || row['Appointment Date']
+                     || row['First Anticipated Date'] || row['firstAnticipatedDate'] || '';
+
+        // 20. App Time
+        const appTime = row['App Time'] || row['appTime'] || row['Appointment Time'] || '';
+
+        // 21. Service Type
+        const sType = row['Service Type'] || row['serviceType'] || row['Service Type (Status)'] || '';
+
+        // 22. Status
+        const status = row['Status'] || row['status'] || row['Call Status'] || '';
+
+        // 23. Reason
+        const reason = row['Reason'] || row['reason'] || row['Pending Reason'] || '';
+
+        // 24. B2B
+        const b2b = row['B2B'] || row['b2b'] || 'N';
+
+        // 25. Risk Reason
+        const riskReason = row['Risk Reason'] || row['riskReason'] || row['Remarks'] || 'None';
+
+        // ASC Code fallback
         const cpCode = row['Dealer BP'] || row['CP Code'] || row['cpCode']
-                    || row['ASC Code'] || row['ASC_CODE'] || '';
+                    || row['ASC Code'] || (ascJobNo ? String(ascJobNo).split('-')[0] : '') || '';
 
-        // ── ASC Reference Number ─────────────────────────────────────
-        const ascRef = row['ASC Ref. No'] || row['ascRefNo'] || row['ASC Ref No']
-                    || row['ASC Job No'] || '';
-
-        // ── Requested Date ───────────────────────────────────────────
-        // Prefer explicit 'Requested Date'; fall back to 'Date' column
-        const reqDate = row['Requested Date'] || row['requestedDate']
-                     || row['Created Date'] || row['Created'] || dateCol || '';
-
-        // ── Service Type ─────────────────────────────────────────────
-        const sType = row['Service Type'] || row['serviceType']
-                   || row['Service Type (Status)'] || '';
-
-        // ── Model Code ───────────────────────────────────────────────
-        const model = row['Model Code'] || row['modelCode']
-                   || row['Model Name'] || row['Model'] || '';
-
-        // ── Serial Number ────────────────────────────────────────────
-        const serial = row['Serial No'] || row['serialNo'] || row['Serial'] || '';
-
-        // ── Customer Name ────────────────────────────────────────────
-        const cust = row['Customer Name'] || row['customerName'] || '';
-
-        // ── First Anticipated Date ───────────────────────────────────
-        const firstAntDate = row['First Anticipated Date']
-                          || row['firstAnticipatedDate'] || row['App Date'] || '';
-
-        // ── Extra New Template Fields ────────────────────────────────
-        const dealerName  = row['Dealer Name']  || row['dealerName']  || '';
-        const city        = row['City']          || row['city']        || '';
-        const phoneNumber = row['Phone Number']  || row['phoneNumber'] || row['Phone'] || row['Mobile'] || '';
-        const emailId     = row['Email Id']      || row['emailId']     || row['Email'] || '';
-
-        // ── Warranty ─────────────────────────────────────────────────
-        const warranty = row['Warranty'] || row['Warranty Status']
-                      || row['warranty'] || row['IW/OW'] || '';
-
-        // Only push rows that have at least one meaningful field
-        if (track || model || reqDate || sType || cpName) {
+        if (soNo || model || created || sType || branchName) {
           records.push({
-            trackingNo:           String(track),
-            dateCol:              String(dateCol),
-            cpCode:               String(cpCode).trim() || 'UNKNOWN',
-            cpName:               String(cpName).trim() || 'Gurgaon-CE',
-            ascRefNo:             String(ascRef),
-            requestedDate:        String(reqDate),
-            serviceType:          String(sType),
-            modelCode:            String(model),
-            serialNo:             String(serial),
-            customerName:         String(cust),
-            firstAnticipatedDate: String(firstAntDate),
-            dealerName:           String(dealerName),
-            city:                 String(city),
-            phoneNumber:          String(phoneNumber),
-            emailId:              String(emailId),
-            warranty:             String(warranty)
+            'Date': String(dateCol),
+            'Branch Name': String(branchName).trim() || 'Gurgaon-CE',
+            'No': noVal,
+            'Service Order No.': String(soNo),
+            'ASC Job No': String(ascJobNo),
+            'Created': String(created),
+            'Assigned': String(assigned),
+            'Assigned Time': String(assignedTime),
+            'Model': String(model).trim(),
+            'Serial': String(serial).trim(),
+            'Wty Status': String(wtyStatus).trim(),
+            'VOC': String(voc).trim(),
+            'REDO': String(redo).trim(),
+            'Risk Sensing': String(riskSensing).trim(),
+            'RED': String(red).trim(),
+            'High Priority': String(highPriority).trim(),
+            'Customer Name': String(custName).trim(),
+            'City': String(city).trim(),
+            'App Date': String(appDate).trim(),
+            'App Time': String(appTime).trim(),
+            'Service Type': String(sType).trim(),
+            'Status': String(status).trim(),
+            'Reason': String(reason).trim(),
+            'B2B': String(b2b).trim(),
+            'Risk Reason': String(riskReason).trim(),
+
+            // Legacy keys for backward compatibility
+            trackingNo: String(soNo),
+            serviceOrderNo: String(soNo),
+            dateCol: String(dateCol),
+            branchName: String(branchName).trim() || 'Gurgaon-CE',
+            cpName: String(branchName).trim() || 'Gurgaon-CE',
+            cpCode: String(cpCode).trim() || 'UNKNOWN',
+            ascRefNo: String(ascJobNo),
+            requestedDate: String(created),
+            createdDate: String(created),
+            serviceType: String(sType),
+            modelCode: String(model),
+            serialNo: String(serial),
+            customerName: String(custName),
+            warranty: String(wtyStatus)
           });
         }
       });
@@ -1921,72 +2229,155 @@
       return records;
     }
 
-    // --- EXCEL DOWNLOAD SAMPLE CREATION (matches new template format exactly) ---
+    // --- EXCEL DOWNLOAD SAMPLE CREATION (25-column sample_data.xls) ---
     function downloadSampleExcel() {
-      // Column order matches the user's data template exactly
+      // Exact 25 columns matching the user's template
       const sampleRows = [
         {
-          'Tracking No':            'Edit 4293847291',
-          'Date':                   '11.09.2026',
-          'Branch_Name':            'Gurgaon-CE',
-          'ASC Ref. No':            'ASC-001',
-          'Requested Date':         '11.09.2026',
-          'Service Type':           'IN-HOME',
-          'Model Code':             'AR18CY3AQUN',
-          'Serial No':              'SN987654321',
-          'Customer Name':          'Rajesh Sharma',
-          'First Anticipated Date': '11.09.2026',
-          'Dealer BP':              '4903753',
-          'Dealer Name':            'Samsung Service Center Gurgaon',
-          'City':                   'Gurgaon',
-          'Phone Number':           '9876543210',
-          'Email Id':               'rajesh.sharma@example.com'
+          'Date': '11.09.2026',
+          'Branch Name': 'Gurgaon-CE',
+          'No': 1,
+          'Service Order No.': '4293847291',
+          'ASC Job No': '4903753-01',
+          'Created': '11.09.2026',
+          'Assigned': '11.09.2026',
+          'Assigned Time': '10:15',
+          'Model': 'AR18CY3AQUN',
+          'Serial': 'SN987654321',
+          'Wty Status': 'In Warranty',
+          'VOC': 'Cooling issue / Low cooling',
+          'REDO': 'N',
+          'Risk Sensing': 'Normal',
+          'RED': 'N',
+          'High Priority': 'Normal',
+          'Customer Name': 'Rajesh Sharma',
+          'City': 'Gurgaon',
+          'App Date': '11.09.2026',
+          'App Time': '14:00 - 16:00',
+          'Service Type': 'IN-HOME',
+          'Status': 'Engineer Assigned',
+          'Reason': 'Appointment Fixed',
+          'B2B': 'N',
+          'Risk Reason': 'None'
         },
         {
-          'Tracking No':            '4293847292',
-          'Date':                   '05.09.2026',
-          'Branch_Name':            'Ahmedabad-CE',
-          'ASC Ref. No':            'ASC-002',
-          'Requested Date':         '05.09.2026',
-          'Service Type':           'Initial Installation',
-          'Model Code':             'WA65T4262GG',
-          'Serial No':              'SN987654322',
-          'Customer Name':          'Anita Verma',
-          'First Anticipated Date': '05.09.2026',
-          'Dealer BP':              '4903754',
-          'Dealer Name':            'Samsung Service Center Ahmedabad',
-          'City':                   'Ahmedabad',
-          'Phone Number':           '9876543211',
-          'Email Id':               'anita.verma@example.com'
+          'Date': '11.09.2026',
+          'Branch Name': 'Ahmedabad-CE',
+          'No': 2,
+          'Service Order No.': '4293847292',
+          'ASC Job No': '4903754-01',
+          'Created': '05.09.2026',
+          'Assigned': '06.09.2026',
+          'Assigned Time': '11:30',
+          'Model': 'WA65T4262GG',
+          'Serial': 'SN987654322',
+          'Wty Status': 'In Warranty',
+          'VOC': 'Drain error / Noise during spin cycle',
+          'REDO': 'N',
+          'Risk Sensing': 'Normal',
+          'RED': 'N',
+          'High Priority': 'Normal',
+          'Customer Name': 'Anita Verma',
+          'City': 'Ahmedabad',
+          'App Date': '06.09.2026',
+          'App Time': '10:00 - 12:00',
+          'Service Type': 'Initial Installation',
+          'Status': 'Appointment Rescheduled',
+          'Reason': 'Customer Not Available at Home',
+          'B2B': 'N',
+          'Risk Reason': 'None'
         },
         {
-          'Tracking No':            'Edit 4293847293',
-          'Date':                   '25.08.2026',
-          'Branch_Name':            'Surat-CE',
-          'ASC Ref. No':            'ASC-003',
-          'Requested Date':         '25.08.2026',
-          'Service Type':           'Stock Repair',
-          'Model Code':             'QA55Q60AAK',
-          'Serial No':              'SN987654323',
-          'Customer Name':          'Sunil Patel',
-          'First Anticipated Date': '25.08.2026',
-          'Dealer BP':              '9225951',
-          'Dealer Name':            'Samsung Surat Service',
-          'City':                   'Surat',
-          'Phone Number':           '9876543212',
-          'Email Id':               'sunil.patel@example.com'
+          'Date': '11.09.2026',
+          'Branch Name': 'Surat-CE',
+          'No': 3,
+          'Service Order No.': '4293847293',
+          'ASC Job No': '9225951-01',
+          'Created': '25.08.2026',
+          'Assigned': '26.08.2026',
+          'Assigned Time': '14:45',
+          'Model': 'QA55Q60AAK',
+          'Serial': 'SN987654323',
+          'Wty Status': 'Out of Warranty',
+          'VOC': 'Display flickering / Horizontal lines on screen',
+          'REDO': 'N',
+          'Risk Sensing': 'Risk',
+          'RED': 'N',
+          'High Priority': 'High',
+          'Customer Name': 'Sunil Patel',
+          'City': 'Surat',
+          'App Date': '26.08.2026',
+          'App Time': '16:00 - 18:00',
+          'Service Type': 'Stock Repair',
+          'Status': 'Spare Part Pending',
+          'Reason': 'Part Delay from Factory (Main Board)',
+          'B2B': 'N',
+          'Risk Reason': 'TAT Exceeded > 15 Days'
+        },
+        {
+          'Date': '11.09.2026',
+          'Branch Name': 'Gurgaon-CE',
+          'No': 4,
+          'Service Order No.': '4293847294',
+          'ASC Job No': '4903753-02',
+          'Created': '01.08.2026',
+          'Assigned': '02.08.2026',
+          'Assigned Time': '09:30',
+          'Model': 'RT28T3722S8',
+          'Serial': 'SN987654324',
+          'Wty Status': 'In Warranty',
+          'VOC': 'Freezer not freezing / Compressor cut-off issue',
+          'REDO': 'Y',
+          'Risk Sensing': 'Risk',
+          'RED': 'Y',
+          'High Priority': 'High',
+          'Customer Name': 'Vikas Gupta',
+          'City': 'Gurgaon',
+          'App Date': '02.08.2026',
+          'App Time': '11:00 - 13:00',
+          'Service Type': 'IN-HOME',
+          'Status': 'Escalated to HO',
+          'Reason': 'Repeat Failure / Compressor Gas Leakage',
+          'B2B': 'N',
+          'Risk Reason': 'Aging > 30 Days (RED Alert)'
+        },
+        {
+          'Date': '11.09.2026',
+          'Branch Name': 'Lucknow-CE',
+          'No': 5,
+          'Service Order No.': '4293847295',
+          'ASC Job No': '4903755-01',
+          'Created': '10.09.2026',
+          'Assigned': '10.09.2026',
+          'Assigned Time': '15:20',
+          'Model': 'MC28H5015AK',
+          'Serial': 'SN987654325',
+          'Wty Status': 'In Warranty',
+          'VOC': 'Keypad touch not responding',
+          'REDO': 'N',
+          'Risk Sensing': 'Normal',
+          'RED': 'N',
+          'High Priority': 'Normal',
+          'Customer Name': 'Pooja Tiwari',
+          'City': 'Lucknow',
+          'App Date': '11.09.2026',
+          'App Time': '12:00 - 14:00',
+          'Service Type': 'Carry In',
+          'Status': 'Under Inspection',
+          'Reason': 'Membrane switch test required',
+          'B2B': 'N',
+          'Risk Reason': 'None'
         }
       ];
 
-      const ws = XLSX.utils.json_to_sheet(sampleRows);
-      // Set column widths for readability
+      const ws = XLSX.utils.json_to_sheet(sampleRows, { header: STANDARD_25_COLUMNS });
       ws['!cols'] = [
-        {wch:20},{wch:12},{wch:14},{wch:14},{wch:14},{wch:22},{wch:16},{wch:16},{wch:20},{wch:14},{wch:12},{wch:32},{wch:14},{wch:14},{wch:28}
+        {wch:12},{wch:16},{wch:8},{wch:18},{wch:16},{wch:12},{wch:12},{wch:14},{wch:16},{wch:16},{wch:14},{wch:26},{wch:8},{wch:14},{wch:8},{wch:14},{wch:20},{wch:14},{wch:12},{wch:16},{wch:18},{wch:22},{wch:26},{wch:8},{wch:26}
       ];
       const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'GSPN_Pending_Template');
-      XLSX.writeFile(wb, 'GSPN_OpenPending_Template.xlsx');
-      showToast('Sample Excel template downloaded! (15-column format)');
+      XLSX.utils.book_append_sheet(wb, ws, 'Sample_25_Columns');
+      XLSX.writeFile(wb, 'sample_data.xls');
+      showToast('Sample template downloaded as sample_data.xls (25-column format)!');
     }
 
     // --- INITIALIZATION & EVENT LISTENERS ---
@@ -2070,6 +2461,29 @@
       document.getElementById('rawServiceFilter').addEventListener('change', () => {
         renderRawRecordsTable(computeProcessedRecords());
       });
+      const rawClosureFilter = document.getElementById('rawClosureFilter');
+      if (rawClosureFilter) {
+        rawClosureFilter.addEventListener('change', () => {
+          renderRawRecordsTable(computeProcessedRecords());
+        });
+      }
+
+      // Check / Uncheck All Filtered Calls
+      const btnCheckAllFiltered = document.getElementById('btnCheckAllFiltered');
+      if (btnCheckAllFiltered) {
+        btnCheckAllFiltered.addEventListener('click', checkAllFilteredCalls);
+      }
+
+      const btnUncheckAllFiltered = document.getElementById('btnUncheckAllFiltered');
+      if (btnUncheckAllFiltered) {
+        btnUncheckAllFiltered.addEventListener('click', uncheckAllFilteredCalls);
+      }
+
+      // Download active / filtered calls into sample_data.xls
+      const btnDownloadCurrentSampleXls = document.getElementById('btnDownloadCurrentSampleXls');
+      if (btnDownloadCurrentSampleXls) {
+        btnDownloadCurrentSampleXls.addEventListener('click', exportCurrentRecordsToSampleExcel);
+      }
 
       // 4. Tab Navigation in Upload Modal
       const tabBtnFile = document.getElementById('tabBtnFile');
