@@ -547,7 +547,7 @@
         <!-- Tab 1: File Upload Drag-Drop Area -->
         <div id="tabContentFile" class="space-y-3">
           <div id="dragDropArea" class="border-2 border-dashed border-slate-300 hover:border-blue-500 bg-slate-50 hover:bg-blue-50/50 rounded-xl p-8 text-center transition cursor-pointer flex flex-col items-center justify-center">
-            <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv,.htm,.html,.tsv" class="hidden" />
+            <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv,.htm,.html,.tsv" multiple class="hidden" />
             <div id="dragDropIconArea" class="w-14 h-14 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mb-3">
               <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -581,7 +581,13 @@
         <div id="tabContentPaste" class="space-y-3 hidden">
           <label for="pasteDataTextarea" class="block text-xs font-bold text-slate-600">Paste Table Rows Directly from Excel (Including 25 Headers):</label>
           <textarea id="pasteDataTextarea" rows="8" placeholder="Date&#9;Branch Name&#9;No&#9;Service Order No.&#9;ASC Job No&#9;Created&#9;Assigned&#9;Assigned Time&#9;Model&#9;Serial&#9;Wty Status&#9;VOC&#9;REDO&#9;Risk Sensing&#9;RED&#9;High Priority&#9;Customer Name&#9;City&#9;App Date&#9;App Time&#9;Service Type&#9;Status&#9;Reason&#9;B2B&#9;Risk Reason&#10;11.09.2026&#9;Gurgaon-CE&#9;1&#9;4293847291&#9;4903753-01&#9;11.09.2026&#9;11.09.2026&#9;10:15&#9;AR18CY3AQUN&#9;SN987654321&#9;In Warranty&#9;Cooling issue&#9;N&#9;Normal&#9;N&#9;High&#9;Rajesh Sharma&#9;Gurgaon&#9;11.09.2026&#9;14:00 - 16:00&#9;IH&#9;Engineer Assigned&#9;Appointment Fixed&#9;N&#9;None" class="w-full text-xs font-mono p-3 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-slate-50"></textarea>
-          <div class="flex justify-end">
+          <div class="flex justify-between items-center">
+            <button type="button" id="btnPasteFromClipboard" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded text-xs font-semibold text-slate-700 flex items-center gap-1.5 transition shadow-sm">
+              <svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              Paste from Clipboard
+            </button>
             <button id="btnProcessPastedData" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow transition">
               Process &amp; Preview
             </button>
@@ -915,6 +921,19 @@
         productsChart: null
       }
     };
+
+    /**
+     * Escapes HTML special characters for safe DOM insertion
+     */
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
 
     /**
      * Standardizes Warranty Status:
@@ -2518,15 +2537,37 @@
         'Status', 'Reason', 'B2B', 'Risk Reason'
       ];
 
-      // Handle array of arrays (e.g. SheetJS header: 1)
+      function isKnownHeaderCell(cell) {
+        const c = String(cell || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+        const exacts = ['NO', 'DATE', 'MODEL', 'SERIAL', 'STATUS', 'REASON', 'AGE', 'TAT', 'PRODUCT', 'VOC', 'REDO', 'RED', 'B2B', 'CITY'];
+        if (exacts.includes(c)) return true;
+        if (c.includes('SERVICEORDER') || c.includes('SONO') || c.includes('ASCJOB') || 
+            c.includes('BRANCHNAME') || c.includes('CUSTOMERNAME') || c.includes('SERVICETYPE') || 
+            c.includes('WTYSTATUS') || c.includes('WARRANTY') || c.includes('ASCREF') || 
+            c.includes('APPDATE') || c.includes('APPTIME') || c.includes('ASSIGNED')) return true;
+        return false;
+      }
+
+      // If objects have meaningless keys due to title rows, convert to array-of-arrays
+      if (dataArray.length > 0 && !Array.isArray(dataArray[0]) && typeof dataArray[0] === 'object') {
+        const sampleKeys = Object.keys(dataArray[0]);
+        const headerMatches = sampleKeys.filter(isKnownHeaderCell).length;
+        if (headerMatches < 2) {
+          dataArray = [Object.keys(dataArray[0]), ...dataArray.map(o => Object.values(o))];
+        }
+      }
+
+      // Handle array of arrays (e.g. SheetJS header: 1 or converted matrix)
       let rawRows = dataArray;
       if (Array.isArray(dataArray[0])) {
         let headerRowIdx = -1;
-        for (let i = 0; i < Math.min(dataArray.length, 5); i++) {
-          const r = dataArray[i].map(c => String(c || '').trim().toUpperCase());
-          if (r.some(cell => cell.includes('SERVICE ORDER') || cell.includes('SO NO') || cell.includes('ASC JOB') || cell.includes('BRANCH') || cell.includes('MODEL') || cell.includes('CUSTOMER') || cell.includes('DATE'))) {
+        let bestMatchCount = 0;
+        for (let i = 0; i < Math.min(dataArray.length, 30); i++) {
+          const r = Array.isArray(dataArray[i]) ? dataArray[i] : [];
+          const matches = r.filter(isKnownHeaderCell).length;
+          if (matches >= 3 && matches > bestMatchCount) {
+            bestMatchCount = matches;
             headerRowIdx = i;
-            break;
           }
         }
         rawRows = [];
@@ -2537,7 +2578,9 @@
             if (!arr || arr.every(cell => cell === undefined || cell === null || cell === '')) continue;
             const obj = {};
             headers.forEach((h, hIdx) => {
-              obj[h] = arr[hIdx] !== undefined && arr[hIdx] !== null ? arr[hIdx] : '';
+              if (h) {
+                obj[h] = arr[hIdx] !== undefined && arr[hIdx] !== null ? arr[hIdx] : '';
+              }
             });
             rawRows.push(obj);
           }
@@ -2873,28 +2916,41 @@
       dragDropArea.addEventListener('drop', (e) => {
         e.preventDefault();
         dragDropArea.classList.remove('border-blue-500', 'bg-blue-50');
-        if (e.dataTransfer.files.length > 0) {
-          handleExcelFile(e.dataTransfer.files[0]);
+        if (e.dataTransfer && e.dataTransfer.files.length > 0) {
+          handleExcelFiles(e.dataTransfer.files);
         }
       });
 
       excelFileInput.addEventListener('change', (e) => {
         if (e.target.files.length > 0) {
-          const file = e.target.files[0];
-          // Show immediate visual feedback: file name + "Reading..." status
-          const indicator = document.getElementById('fileSelectedIndicator');
-          const nameEl    = document.getElementById('selectedFileName');
-          const statusEl  = document.getElementById('selectedFileStatus');
-          const browseBtn = document.getElementById('dragDropBrowseBtn');
-          if (indicator && nameEl && statusEl) {
-            nameEl.textContent   = file.name;
-            statusEl.textContent = `— Reading... (${(file.size / 1024).toFixed(1)} KB)`;
-            indicator.classList.remove('hidden');
-            if (browseBtn) browseBtn.classList.add('hidden');
-          }
-          handleExcelFile(file);
+          handleExcelFiles(e.target.files);
         }
       });
+
+      function handleExcelFiles(fileList) {
+        if (!fileList || fileList.length === 0) return;
+        const files = Array.from(fileList);
+        // Prioritize: 1. .xlsx, 2. sheet001.htm, 3. .csv, 4. .htm/.html, 5. .xls
+        const targetFile = files.find(f => f.name.toLowerCase().endsWith('.xlsx'))
+                        || files.find(f => f.name.toLowerCase().includes('sheet001'))
+                        || files.find(f => f.name.toLowerCase().endsWith('.csv'))
+                        || files.find(f => f.name.toLowerCase().endsWith('.htm') || f.name.toLowerCase().endsWith('.html'))
+                        || files[0];
+
+        // Visual feedback
+        const indicator = document.getElementById('fileSelectedIndicator');
+        const nameEl    = document.getElementById('selectedFileName');
+        const statusEl  = document.getElementById('selectedFileStatus');
+        const browseBtn = document.getElementById('dragDropBrowseBtn');
+        if (indicator && nameEl && statusEl) {
+          nameEl.textContent   = targetFile.name;
+          statusEl.textContent = `— Reading... (${(targetFile.size / 1024).toFixed(1)} KB)`;
+          indicator.classList.remove('hidden');
+          if (browseBtn) browseBtn.classList.add('hidden');
+        }
+
+        handleExcelFile(targetFile);
+      }
 
       function handleExcelFile(file) {
         const reader = new FileReader();
@@ -2924,7 +2980,7 @@
 
             let parsed = [];
 
-            // If file is an HTML file containing a <table> directly (e.g. sheet001.htm or single-page Excel HTML)
+            // 1. If file is an HTML file containing a <table> directly (e.g. sheet001.htm or single-page Excel HTML)
             if (textPreview.includes('<table') || textPreview.includes('<TABLE')) {
               try {
                 const fullText = new TextDecoder('utf-8').decode(data);
@@ -2943,20 +2999,28 @@
               }
             }
 
-            // Standard SheetJS parse for binary xlsx, xls, csv, or sheets
+            // 2. Standard SheetJS parse for binary xlsx, xls, csv, or sheets (scan all sheets)
             if (parsed.length === 0) {
               const workbook = XLSX.read(data, { type: 'array' });
-              const firstSheetName = workbook.SheetNames[0];
-              const worksheet = workbook.Sheets[firstSheetName];
-              
-              // First attempt: standard object conversion
-              const json = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
-              parsed = parseUploadedData(json);
+              for (const sheetName of workbook.SheetNames) {
+                const worksheet = workbook.Sheets[sheetName];
+                if (!worksheet) continue;
+                
+                // First attempt: standard object conversion
+                const json = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+                let p = parseUploadedData(json);
+                if (p.length > 0) {
+                  parsed = p;
+                  break;
+                }
 
-              // Fallback attempt: if no records recognized, parse with header: 1 to find header row
-              if (parsed.length === 0) {
+                // Fallback attempt: if no records recognized, parse with header: 1 to find header row
                 const rawRows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
-                parsed = parseUploadedData(rawRows);
+                p = parseUploadedData(rawRows);
+                if (p.length > 0) {
+                  parsed = p;
+                  break;
+                }
               }
             }
 
@@ -2986,6 +3050,24 @@
           }
         };
         reader.readAsArrayBuffer(file);
+      }
+
+      // Paste from clipboard button
+      const btnPasteFromClipboard = document.getElementById('btnPasteFromClipboard');
+      if (btnPasteFromClipboard) {
+        btnPasteFromClipboard.addEventListener('click', async () => {
+          try {
+            const text = await navigator.clipboard.readText();
+            if (!text || !text.trim()) {
+              showToast('Clipboard is empty. Copy cells from Excel first.', 'error');
+              return;
+            }
+            document.getElementById('pasteDataTextarea').value = text;
+            document.getElementById('btnProcessPastedData').click();
+          } catch (err) {
+            showToast('Unable to access clipboard. Please press Ctrl+V inside the box.', 'error');
+          }
+        });
       }
 
       // 6. Paste Data Handler
