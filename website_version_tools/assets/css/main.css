@@ -385,7 +385,7 @@ body {
 /* Feature Cards */
 .feature-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 16px;
   text-align: left;
 }
@@ -409,6 +409,8 @@ body {
 .icon-purple { background: rgba(124,58,237,0.12); color: var(--secondary); }
 .icon-green  { background: rgba(5,150,105,0.12); color: var(--accent-green); }
 .icon-orange { background: rgba(217,119,6,0.12); color: var(--accent-orange); }
+.icon-rose   { background: rgba(225,29,72,0.12); color: #e11d48; }
+.icon-cyan   { background: rgba(8,145,178,0.12); color: #0891b2; }
 
 .feature-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
 .feature-desc  { font-size: 13.5px; color: var(--text-muted); line-height: 1.6; }
