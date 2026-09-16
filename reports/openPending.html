@@ -1,0 +1,3014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RC-GD Pendency & Service Operations Report</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+              950: '#082f49',
+            },
+            corporate: {
+              navy: '#0f2e59',
+              dark: '#0a192f',
+              slate: '#1e293b',
+              light: '#f8fafc',
+              border: '#e2e8f0',
+              pinkTint: '#ffe4e6',
+              pinkDeep: '#fecdd3'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            outfit: ['Outfit', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- SheetJS (XLSX) CDN for Excel Upload/Export -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    .font-outfit { font-family: 'Outfit', sans-serif; }
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+    
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* Print Optimization Stylesheet */
+    @media print {
+      body { background: white !important; padding: 0 !important; }
+      .no-print { display: none !important; }
+      .print-shadow-none { box-shadow: none !important; border: 1px solid #cbd5e1 !important; }
+      .overflow-x-auto { overflow: visible !important; }
+      @page { size: landscape; margin: 8mm; }
+    }
+
+    /* Cell Heatmap and Hover states */
+    .table-cell-aging {
+      background-color: #ffe4e6;
+      transition: all 0.15s ease;
+    }
+    .table-cell-aging:hover {
+      background-color: #fecdd3;
+    }
+    .table-cell-aging-hot {
+      background-color: #fecaca;
+      font-weight: 700;
+      color: #991b1b;
+    }
+    .table-cell-aging-hot:hover {
+      background-color: #fca5a5;
+    }
+    
+    /* Subtle pulse animation for live badge */
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.2); }
+    }
+    .live-dot {
+      animation: pulse-dot 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-16">
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Top Executive Navigation Bar -->
+  <header class="bg-white text-slate-900 shadow-sm border-b border-slate-200 sticky top-0 z-30 no-print">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-14">
+        <!-- Logo & Title -->
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-lg bg-[#0f2e59] flex items-center justify-center shadow">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h1 class="text-sm font-bold tracking-tight text-[#0f2e59] font-outfit">RC-GD Pendency &amp; Service Operations Report</h1>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-300">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 live-dot"></span>Live Daily
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400 leading-tight">Executive Daily Service Pendency · Ageing · D+7 Product Breakdown</p>
+          </div>
+        </div>
+
+        <!-- Quick Header Action Buttons -->
+        <div class="flex items-center space-x-2">
+          <!-- Home Navigation Button -->
+          <a href="../website_version_tools/index.html" class="inline-flex items-center px-3 py-1.5 border border-slate-300 rounded text-xs font-semibold bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition focus:outline-none" title="Return to GSPN Tools Home">
+            <svg class="w-3.5 h-3.5 mr-1.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            Home
+          </a>
+
+          <!-- Excel Upload Button -->
+          <button id="btnOpenUploadModal" class="inline-flex items-center px-3 py-1.5 border border-[#0f2e59] rounded text-xs font-semibold bg-[#0f2e59] hover:bg-[#163d6e] text-white shadow-sm transition focus:outline-none">
+            <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            Upload Excel
+          </button>
+
+          <!-- Copy for Mail Button -->
+          <button id="btnCopyForMail" class="inline-flex items-center px-3 py-1.5 rounded text-xs font-semibold bg-amber-500 hover:bg-amber-600 text-white shadow transition active:scale-95 focus:outline-none font-bold">
+            <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+            </svg>
+            Copy HTML for Mail
+          </button>
+
+          <!-- Export Excel Button -->
+          <button id="btnExportExcel" class="inline-flex items-center px-3 py-1.5 border border-slate-300 rounded text-xs font-medium bg-white hover:bg-slate-50 text-slate-700 transition focus:outline-none">
+            <svg class="w-3.5 h-3.5 mr-1.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Export Excel
+          </button>
+
+          <!-- Print Report Button -->
+          <button onclick="window.print()" class="inline-flex items-center px-3 py-1.5 border border-slate-300 rounded text-xs font-medium bg-white hover:bg-slate-50 text-slate-700 transition focus:outline-none" title="Print or Save as PDF">
+            <svg class="w-3.5 h-3.5 mr-1.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            Print
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-4 space-y-4">
+
+    <!-- Filter & Metadata Control Card -->
+    <section class="bg-white rounded border border-slate-300 shadow-sm p-3 print-shadow-none">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <!-- Report Meta Info -->
+        <div class="flex items-center space-x-3">
+          <div class="p-2 bg-[#0f2e59] text-white rounded flex-shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-[11px] uppercase font-bold tracking-wider text-slate-400">Target Report Matrix</span>
+              <span id="activeBranchTag" class="text-[11px] font-bold px-2 py-0.5 rounded bg-[#dbeafe] text-[#1d4ed8] border border-[#93c5fd]">Branch: Gurgaon-CE</span>
+              <span id="activeAscTag" class="text-[11px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-300">ASC: 4903753</span>
+            </div>
+            <div class="text-base font-bold text-[#0f2e59] font-outfit" id="reportTitleWithDate">
+              RC-GD Pendency dt <span id="reportDateHeaderSpan">11.09.2026</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="flex flex-wrap items-end gap-3">
+          <!-- Branch Selector -->
+          <div class="flex flex-col">
+            <label for="branchSelect" class="text-[10px] font-bold text-slate-500 uppercase mb-1">Branch Name</label>
+            <select id="branchSelect" class="bg-white border border-slate-300 text-slate-800 text-xs font-medium rounded focus:ring-blue-500 focus:border-blue-500 block p-1.5 transition">
+              <option value="ALL">All Branches</option>
+              <option value="Gurgaon-CE" selected>Gurgaon-CE</option>
+              <option value="Ahmedabad-CE">Ahmedabad-CE</option>
+              <option value="Lucknow-HHP">Lucknow-HHP</option>
+              <option value="Moradabad-HHP">Moradabad-HHP</option>
+              <option value="Surat-CE">Surat-CE</option>
+              <option value="Lucknow-CE">Lucknow-CE</option>
+              <option value="Gandhinagar-CE">Gandhinagar-CE</option>
+              <option value="Ghaziabad-CE">Ghaziabad-CE</option>
+              <option value="Cochin-CE">Cochin-CE</option>
+            </select>
+          </div>
+
+          <!-- ASC Code Selector -->
+          <div class="flex flex-col">
+            <label for="ascSelect" class="text-[10px] font-bold text-slate-500 uppercase mb-1">ASC Code</label>
+            <select id="ascSelect" class="bg-white border border-slate-300 text-slate-800 text-xs font-medium rounded focus:ring-blue-500 focus:border-blue-500 block p-1.5 transition">
+              <option value="4903753" selected>4903753 (Default)</option>
+              <option value="9225951">9225951 (Surat)</option>
+              <option value="ALL">All ASC Codes</option>
+            </select>
+          </div>
+
+          <!-- Report Date Picker -->
+          <div class="flex flex-col">
+            <label for="reportDatePicker" class="text-[10px] font-bold text-slate-500 uppercase mb-1">Report Cutoff Date</label>
+            <input type="date" id="reportDatePicker" value="2026-09-11" class="bg-white border border-slate-300 text-slate-800 text-xs font-medium rounded focus:ring-blue-500 focus:border-blue-500 block p-1.5 transition">
+          </div>
+
+          <!-- View Raw Records Button -->
+          <div class="flex flex-col justify-end">
+            <button id="btnOpenRawDataModal" class="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded transition inline-flex items-center">
+              <svg class="w-3.5 h-3.5 mr-1 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+              </svg>
+              Raw Records (<span id="rawRecordCountBadge">275</span>)
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top KPI Bar (4 Key Executive Metrics) -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <!-- Card 1: Total Pending Calls -->
+      <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-sm relative overflow-hidden transition hover:shadow-md print-shadow-none">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Total Pending Calls</span>
+          <span class="p-2 rounded-lg bg-blue-50 text-blue-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-slate-900 font-outfit tabular-nums" id="kpiTotalPending">275</span>
+          <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+            <span id="kpiFreshCount">112</span> Fresh (&le;2d)
+          </span>
+        </div>
+        <div class="mt-2 flex items-center justify-between text-xs text-slate-500">
+          <span>Fresh Calls Ratio:</span>
+          <span class="font-bold text-slate-700" id="kpiFreshPct">40.7%</span>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">
+          <div id="kpiFreshBar" class="bg-blue-600 h-1.5 rounded-full" style="width: 40.7%"></div>
+        </div>
+      </div>
+
+      <!-- Card 2: In-Home Service Calls -->
+      <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-sm relative overflow-hidden transition hover:shadow-md print-shadow-none">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">In-Home Service</span>
+          <span class="p-2 rounded-lg bg-indigo-50 text-indigo-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+          </span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-slate-900 font-outfit tabular-nums" id="kpiInHome">27</span>
+          <span class="text-xs font-medium text-slate-500">Active Field Calls</span>
+        </div>
+        <div class="mt-2 flex items-center justify-between text-xs text-slate-500">
+          <span>% of Total Pending:</span>
+          <span class="font-bold text-indigo-700" id="kpiInHomePct">9.8%</span>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">
+          <div id="kpiInHomeBar" class="bg-indigo-600 h-1.5 rounded-full" style="width: 9.8%"></div>
+        </div>
+      </div>
+
+      <!-- Card 3: Installation & Demo Calls -->
+      <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-sm relative overflow-hidden transition hover:shadow-md print-shadow-none">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Installation &amp; Demo</span>
+          <span class="p-2 rounded-lg bg-emerald-50 text-emerald-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-slate-900 font-outfit tabular-nums" id="kpiInstallDemo">35</span>
+          <span class="text-xs text-slate-500 font-medium">31 Inst + 4 Demo</span>
+        </div>
+        <div class="mt-2 flex items-center justify-between text-xs text-slate-500">
+          <span>Customer Delivery SLA:</span>
+          <span class="font-bold text-emerald-700" id="kpiInstallDemoPct">12.7%</span>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">
+          <div id="kpiInstallDemoBar" class="bg-emerald-600 h-1.5 rounded-full" style="width: 12.7%"></div>
+        </div>
+      </div>
+
+      <!-- Card 4: Critical Pending (>15 Days) -->
+      <div class="bg-white rounded-xl p-5 border border-rose-200 shadow-sm relative overflow-hidden transition hover:shadow-md print-shadow-none">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-rose-600">Critical Pending (>15d)</span>
+          <span class="p-2 rounded-lg bg-rose-50 text-rose-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-rose-700 font-outfit tabular-nums" id="kpiCritical">13</span>
+          <span class="text-xs font-bold text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full border border-rose-300">
+            Immediate Action
+          </span>
+        </div>
+        <div class="mt-2 flex items-center justify-between text-xs text-slate-500">
+          <span>Aging &gt;15d Escalation:</span>
+          <span class="font-bold text-rose-700" id="kpiCriticalPct">4.7%</span>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">
+          <div id="kpiCriticalBar" class="bg-rose-600 h-1.5 rounded-full" style="width: 4.7%"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Visual Analytics Charts (Collapsible / Responsive) -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-5 no-print">
+      <!-- Donut Chart: Ageing Buckets -->
+      <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-bold text-slate-800 font-outfit flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span> Ageing Distribution
+          </h2>
+          <span class="text-xs text-slate-400">Aging Profile</span>
+        </div>
+        <div class="h-56 relative flex items-center justify-center">
+          <canvas id="chartAging"></canvas>
+        </div>
+      </div>
+
+      <!-- Bar Chart: D+7 Product Breakdown -->
+      <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-sm lg:col-span-2">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-bold text-slate-800 font-outfit flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-rose-600"></span> D+7 Pending Calls by Product Category
+          </h2>
+          <span class="text-xs text-slate-400">Calls with Aging &gt; 7 Days</span>
+        </div>
+        <div class="h-56 relative">
+          <canvas id="chartProducts"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Line Summary Micro-Cards (Table 2 Extension) -->
+    <section class="bg-white rounded-xl border border-slate-200/80 shadow-sm p-4 print-shadow-none">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-2">
+          <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+          Table 2: D+7 Calls by Product Line (Quick Overview)
+        </h2>
+        <span class="text-xs text-slate-400">Total D+7 Calls: <strong id="totalD7Badge" class="text-rose-700 font-bold">519</strong></span>
+      </div>
+
+      <!-- 10 Product Category Badges Strip -->
+      <div id="productSummaryCardsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-10 gap-2 text-center">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- Core Combined Matrix Table (Exact Match to User Screenshot) -->
+    <section class="bg-white rounded-xl border border-slate-300 shadow-md overflow-hidden print-shadow-none">
+      
+      <!-- Table Header Bar -->
+      <div class="px-5 py-3.5 bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800">
+        <div>
+          <span class="text-xs font-semibold text-blue-300 uppercase tracking-widest">Executive Operations Matrix</span>
+          <h2 class="text-base font-bold font-outfit text-white">Table 1 &amp; Table 2: Service Type Pendency &amp; Product D+7 Breakdown</h2>
+        </div>
+        <div class="flex items-center gap-2 text-xs no-print">
+          <span class="inline-flex items-center px-2 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">
+            <span class="w-2.5 h-2.5 rounded bg-rose-200 border border-rose-300 mr-1.5"></span> Soft Tint = Ageing (&gt;3 Days)
+          </span>
+          <span class="inline-flex items-center px-2 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">
+            <span class="w-2.5 h-2.5 rounded bg-red-600 mr-1.5"></span> D+7 By Products
+          </span>
+          <button id="btnPreviewRaw" class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs shadow transition border border-blue-500 cursor-pointer" title="Preview and inspect the processed RAW Data with TAT, Product &amp; Warranty Status">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            <span>Preview RAW (<span id="previewRawBadge">0</span>)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Responsive Scroll Container -->
+      <div class="overflow-x-auto">
+        <table id="mainExecutiveTable" class="w-full text-xs text-slate-800 border-collapse">
+          <thead>
+            <!-- Top Super-Header row -->
+            <tr>
+              <!-- Left section title (covers ASC_CODE, Branch_Name, Service Type) -->
+              <th colspan="3" class="bg-[#002060] text-white font-bold py-2.5 px-3 text-left border-r border-slate-300 text-sm tracking-wide">
+                <span id="excelMainHeaderDateSpan">RC-GD Pendency dt 11.09.2026</span>
+              </th>
+              <!-- Aging header (covers Total, 0-2, 3-7, 8-10, 11-14, 15-30, 30+) -->
+              <th colspan="7" class="bg-[#dce6f1] text-slate-900 font-bold py-2.5 px-3 text-center border-r border-slate-300 text-sm tracking-wide">
+                Aging
+              </th>
+              <!-- WAR Status header (covers IW, OW) -->
+              <th colspan="2" class="bg-white text-slate-900 font-bold py-2.5 px-3 text-center border-r border-slate-300 text-sm tracking-wide">
+                WAR Status
+              </th>
+              <!-- Right section title (covers 10 products) -->
+              <th colspan="10" class="bg-[#dce6f1] text-rose-900 font-bold py-2.5 px-3 text-center text-sm tracking-wide">
+                D+7 Calls By Products
+              </th>
+            </tr>
+
+            <!-- Sub-headers row -->
+            <tr class="bg-[#dce6f1] text-slate-800 font-bold border-b-2 border-slate-300 text-center text-xs">
+              <!-- Left Columns (No separate SVC / MSC column) -->
+              <th class="py-2 px-2 border-r border-slate-300 text-left w-24">ASC_CODE</th>
+              <th class="py-2 px-2 border-r border-slate-300 text-left w-28">Branch_Name</th>
+              <th class="py-2 px-3 border-r border-slate-300 text-left min-w-[140px]">Service Type</th>
+              <th class="py-2 px-2 border-r border-slate-300 font-extrabold w-14">Total</th>
+              <th class="py-2 px-2 border-r border-slate-300 w-16">0–2 Days</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#ffc7ce] text-rose-950 font-bold w-16">3–7 Days</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#ffc7ce] text-rose-950 font-bold w-16">8–10 Days</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#ffc7ce] text-rose-950 font-bold w-16">11–14 Days</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#ffc7ce] text-rose-950 font-extrabold w-16">15–30 Days</th>
+              <th class="py-2 px-2 border-r-2 border-slate-400 bg-[#ffc7ce] text-rose-950 font-extrabold w-16">30+ Days</th>
+
+              <!-- IW / OW Warranty Columns - BOTH soft pastel green (#c1f0c8) matching user screenshot -->
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#c1f0c8] text-slate-900 font-bold w-14" title="In-Warranty Calls">IW</th>
+              <th class="py-2 px-2 border-r-2 border-slate-400 bg-[#c1f0c8] text-slate-900 font-bold w-14" title="Out-of-Warranty Calls">OW</th>
+
+              <!-- Right Columns (D+7 Product Colors) -->
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#ffff00] text-slate-900 font-bold w-12" title="Air Conditioner">AC</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#92d050] text-slate-900 font-bold w-12" title="Washing Machine">WM</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#dce6f1] text-slate-900 font-bold w-12" title="Refrigerator">REF</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#ffff00] text-slate-900 font-bold w-12" title="Audio Video / TV">AV</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#92d050] text-slate-900 font-bold w-12" title="Microwave">MW</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#dce6f1] text-slate-900 font-bold w-12" title="Audio / Soundbar">AUD</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#ffff00] text-slate-900 font-bold w-12" title="Dish Washer">DW</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#92d050] text-slate-900 font-bold w-12" title="Handheld Phones">HHP</th>
+              <th class="py-2 px-2 border-r border-slate-300 bg-[#dce6f1] text-slate-900 font-bold w-12" title="IT / Monitors">IT</th>
+              <th class="py-2 px-2 bg-[#ffff00] text-slate-900 font-bold w-12" title="Other Appliances">Other</th>
+            </tr>
+          </thead>
+          <tbody id="matrixTableBody" class="divide-y divide-slate-200">
+            <!-- Populated dynamically via JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Table Footer Note -->
+      <div class="px-4 py-2.5 bg-slate-50 border-t border-slate-200 text-[11px] text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-2">
+        <div>
+          <span>&bull; Data logic synced: Tracking numbers trimmed of "Edit". Aging calculated as <code>Report Date &minus; Requested Date</code>.</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span>Generated for executive operations dispatch</span>
+          <button id="btnQuickCopyFromFooter" class="text-blue-700 font-bold hover:underline">Copy HTML for Mail &rarr;</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 1: Upload Daily Excel / TSV Modal -->
+  <!-- ========================================================================= -->
+  <div id="uploadModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-3xl overflow-hidden animate-in fade-in zoom-in duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 bg-gradient-to-r from-[#0f2e59] to-[#1e3a8a] text-white flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="p-2 bg-blue-500/20 rounded-lg">
+            <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-base font-bold font-outfit">Upload Daily Excel or Paste Data</h3>
+            <p class="text-xs text-blue-200">Expected 25 columns: <strong>Date · Branch Name · No · Service Order No. · ASC Job No · Created · Assigned · Assigned Time · Model · Serial · Wty Status · VOC · REDO · Risk Sensing · RED · High Priority · Customer Name · City · App Date · App Time · Service Type · Status · Reason · B2B · Risk Reason</strong></p>
+          </div>
+        </div>
+        <button id="btnCloseUploadModal" class="text-white/70 hover:text-white p-1 rounded-lg hover:bg-white/10 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Body Tabs -->
+      <div class="p-6 space-y-4">
+        
+        <!-- Tab Buttons -->
+        <div class="flex border-b border-slate-200">
+          <button id="tabBtnFile" class="py-2 px-4 text-xs font-bold border-b-2 border-blue-600 text-blue-600 focus:outline-none flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Upload .xlsx / .xls / .csv
+          </button>
+          <button id="tabBtnPaste" class="py-2 px-4 text-xs font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 focus:outline-none flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            Paste Excel / Tab-Separated Text
+          </button>
+        </div>
+
+        <!-- Tab 1: File Upload Drag-Drop Area -->
+        <div id="tabContentFile" class="space-y-3">
+          <div id="dragDropArea" class="border-2 border-dashed border-slate-300 hover:border-blue-500 bg-slate-50 hover:bg-blue-50/50 rounded-xl p-8 text-center transition cursor-pointer flex flex-col items-center justify-center">
+            <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv" class="hidden" />
+            <div id="dragDropIconArea" class="w-14 h-14 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mb-3">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+            </div>
+            <p id="dragDropMainText" class="text-sm font-bold text-slate-700">Click to browse or Drag &amp; Drop Excel file here</p>
+            <p id="dragDropSubText" class="text-xs text-slate-500 mt-1">Supports GSPN Excel export (<code>.xlsx</code>, <code>.xls</code>, <code>.csv</code>)</p>
+            <!-- File selected indicator (hidden until file is picked) -->
+            <div id="fileSelectedIndicator" class="hidden mt-3 px-4 py-2 bg-emerald-50 border border-emerald-300 rounded-lg flex items-center gap-2">
+              <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span id="selectedFileName" class="text-xs font-semibold text-emerald-800 truncate max-w-[260px]">No file selected</span>
+              <span id="selectedFileStatus" class="text-xs text-emerald-600">— Reading...</span>
+            </div>
+            <span id="dragDropBrowseBtn" class="inline-block mt-3 px-3 py-1 bg-white border border-slate-300 rounded text-xs font-semibold text-slate-600 shadow-sm">Select Local File</span>
+          </div>
+
+          <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+            <span>Automatic processing: Calculates aging from Created Date, derives product line from Model, tracks IW/OW warranty.</span>
+            <button id="btnDownloadSampleExcel" class="text-blue-600 font-bold hover:underline flex items-center gap-1" title="Download sample_data.xls template with 25 standard GSPN columns">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Download Sample Format (sample_data.xls)
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab 2: Paste Raw TSV Area -->
+        <div id="tabContentPaste" class="space-y-3 hidden">
+          <label for="pasteDataTextarea" class="block text-xs font-bold text-slate-600">Paste Table Rows Directly from Excel (Including 25 Headers):</label>
+          <textarea id="pasteDataTextarea" rows="8" placeholder="Date&#9;Branch Name&#9;No&#9;Service Order No.&#9;ASC Job No&#9;Created&#9;Assigned&#9;Assigned Time&#9;Model&#9;Serial&#9;Wty Status&#9;VOC&#9;REDO&#9;Risk Sensing&#9;RED&#9;High Priority&#9;Customer Name&#9;City&#9;App Date&#9;App Time&#9;Service Type&#9;Status&#9;Reason&#9;B2B&#9;Risk Reason&#10;11.09.2026&#9;Gurgaon-CE&#9;1&#9;4293847291&#9;4903753-01&#9;11.09.2026&#9;11.09.2026&#9;10:15&#9;AR18CY3AQUN&#9;SN987654321&#9;In Warranty&#9;Cooling issue&#9;N&#9;Normal&#9;N&#9;High&#9;Rajesh Sharma&#9;Gurgaon&#9;11.09.2026&#9;14:00 - 16:00&#9;IH&#9;Engineer Assigned&#9;Appointment Fixed&#9;N&#9;None" class="w-full text-xs font-mono p-3 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-slate-50"></textarea>
+          <div class="flex justify-end">
+            <button id="btnProcessPastedData" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow transition">
+              Process &amp; Preview
+            </button>
+          </div>
+        </div>
+
+        <!-- Parse Feedback Box -->
+        <div id="parseFeedbackBox" class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs hidden">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-700" id="parseStatusText">Found 0 records.</span>
+            <span class="text-slate-500" id="parseDetailText">Ready to apply.</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+        <button id="btnResetToDefaultData" class="text-xs font-semibold text-rose-600 hover:text-rose-800 transition">
+          Reset to Screenshot Default Data
+        </button>
+        <div class="flex gap-2">
+          <button id="btnCancelUpload" class="px-4 py-2 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 transition">
+            Close
+          </button>
+          <button id="btnApplyUpload" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow-md transition disabled:opacity-50" disabled>
+            Apply to Dashboard
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 2: Copy HTML for Mail Preview Modal -->
+  <!-- ========================================================================= -->
+  <div id="mailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-4xl overflow-hidden max-h-[92vh] flex flex-col animate-in fade-in zoom-in duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 flex items-center justify-between flex-shrink-0">
+        <div class="flex items-center space-x-3">
+          <div class="p-2 bg-slate-950/10 rounded-lg">
+            <svg class="w-6 h-6 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-base font-extrabold font-outfit text-slate-950">Executive Email HTML Table Generator</h3>
+            <p class="text-xs text-slate-900 font-medium">Ready for 1-Click Copy into Outlook, Gmail, or Apple Mail with complete inline formatting</p>
+          </div>
+        </div>
+        <button id="btnCloseMailModal" class="text-slate-950/70 hover:text-slate-950 p-1 rounded-lg hover:bg-slate-950/10 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Preview Area -->
+      <div class="p-6 overflow-y-auto flex-1 space-y-4">
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-900 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-base">📧</span>
+            <span><strong>Email Safe:</strong> Generates strict inline CSS table styles with exact column colors and ageing tints. Just click <strong>"Copy to Clipboard"</strong> and press <code>Ctrl + V</code> in your mail composer!</span>
+          </div>
+        </div>
+
+        <!-- Live Visual Preview Container -->
+        <div class="border border-slate-300 rounded-lg p-3 bg-white overflow-x-auto shadow-inner">
+          <div id="emailHtmlPreviewContainer"></div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between flex-shrink-0">
+        <button id="btnCopyRawHtmlCode" class="text-xs font-semibold text-slate-600 hover:text-slate-900 transition flex items-center gap-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+          </svg>
+          Copy Raw HTML Code
+        </button>
+
+        <div class="flex gap-2">
+          <button id="btnCloseMailModal2" class="px-4 py-2 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 transition">
+            Close
+          </button>
+          <button id="btnConfirmCopyEmailHtml" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg text-xs shadow-md transition flex items-center gap-1.5 transform active:scale-95">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            Copy Formatted Table (Ctrl+V Ready)
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 3: Raw Records Inspector Modal -->
+  <!-- ========================================================================= -->
+  <!-- MODAL 2: Raw Records Inspector & Call Closure Modal -->
+  <!-- ========================================================================= -->
+  <div id="rawDataModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-[96vw] overflow-hidden max-h-[94vh] flex flex-col animate-in fade-in zoom-in duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-3.5 bg-slate-900 text-white flex items-center justify-between flex-shrink-0">
+        <div class="flex items-center space-x-3">
+          <div class="p-2 bg-blue-500/20 rounded-lg">
+            <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-base font-bold font-outfit">Service Order Call Review &amp; Closure</h3>
+            <p class="text-xs text-slate-400">Check and close calls · Full 25-column standard GSPN tracking details · Export to <code>sample_data.xls</code></p>
+          </div>
+        </div>
+        <button id="btnCloseRawDataModal" class="text-white/70 hover:text-white p-1 rounded-lg hover:bg-white/10 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Controls & Actions Toolbar -->
+      <div class="p-3.5 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 flex-shrink-0">
+        
+        <!-- Search & Filters -->
+        <div class="flex flex-wrap items-center gap-2 flex-1 min-w-[280px]">
+          <div class="relative w-full max-w-xs">
+            <input type="text" id="rawSearchInput" placeholder="Search SO No, Model, Customer, Reason..." class="w-full text-xs pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+            <svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          
+          <select id="rawServiceFilter" class="text-xs border border-slate-300 rounded-lg py-1.5 px-2 bg-white font-medium">
+            <option value="ALL">All Service Types</option>
+            <option value="IN-HOME">IN-HOME</option>
+            <option value="Initial Installation">Initial Installation</option>
+            <option value="Stock Repair">Stock Repair</option>
+            <option value="Customer Care">Customer Care</option>
+            <option value="Demonstration">Demonstration</option>
+            <option value="PICK-UP SERVICE">PICK-UP SERVICE</option>
+            <option value="Carry In">Carry In</option>
+            <option value="Return Handling">Return Handling</option>
+          </select>
+
+          <!-- Closure Status Filter -->
+          <select id="rawClosureFilter" class="text-xs border border-slate-300 rounded-lg py-1.5 px-2 bg-white font-medium">
+            <option value="ALL">All Call Statuses</option>
+            <option value="OPEN">Open Calls Only</option>
+            <option value="CLOSED">Checked / Closed Only</option>
+            <option value="RED">RED Calls Only</option>
+            <option value="HIGH">High Priority Only</option>
+          </select>
+
+          <!-- Live Count Badges -->
+          <div class="flex items-center gap-1.5 text-xs">
+            <span class="px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 font-bold">Total: <span id="rawFilteredCount">0</span></span>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">Closed: <span id="rawClosedCount">0</span></span>
+            <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold">Open: <span id="rawOpenCount">0</span></span>
+          </div>
+        </div>
+
+        <!-- Call Action Buttons -->
+        <div class="flex items-center gap-2">
+          <button id="btnCheckAllFiltered" class="px-2.5 py-1.5 text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg transition flex items-center gap-1" title="Mark all filtered calls as checked/closed">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            Check Filtered
+          </button>
+          
+          <button id="btnUncheckAllFiltered" class="px-2.5 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-lg transition" title="Reopen / Reset checks on all filtered calls">
+            ↺ Reset Checks
+          </button>
+
+          <button id="btnDownloadCurrentSampleXls" class="px-3 py-1.5 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition flex items-center gap-1.5" title="Download all active calls into sample_data.xls with 25 standard GSPN columns">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Download sample_data.xls
+          </button>
+        </div>
+      </div>
+
+      <!-- Records Table Container (25 Columns) -->
+      <div class="p-3 overflow-y-auto flex-1">
+        <div class="overflow-x-auto border border-slate-200 rounded-lg shadow-sm">
+          <table class="w-full text-xs text-left border-collapse whitespace-nowrap">
+            <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-300 uppercase tracking-wider text-[10px] sticky top-0 z-20">
+              <tr>
+                <th class="py-2 px-2.5 border-r bg-slate-200 text-center sticky left-0 z-30 shadow-sm min-w-[100px]">Check / Close</th>
+                <th class="py-2 px-2 border-r text-center w-12">No</th>
+                <th class="py-2 px-3 border-r font-extrabold text-blue-900 min-w-[130px]">Service Order No.</th>
+                <th class="py-2 px-2.5 border-r min-w-[120px]">Branch Name</th>
+                <th class="py-2 px-2.5 border-r min-w-[100px]">ASC Job No</th>
+                <th class="py-2 px-2.5 border-r text-center min-w-[95px]">Created</th>
+                <th class="py-2 px-2 border-r text-center font-extrabold w-16">Aging (Days)</th>
+                <th class="py-2 px-2.5 border-r text-center min-w-[90px]">TAT Category</th>
+                <th class="py-2 px-2.5 border-r min-w-[120px]">Service Type</th>
+                <th class="py-2 px-2.5 border-r min-w-[120px]">Model</th>
+                <th class="py-2 px-2 border-r text-center w-14">Product</th>
+                <th class="py-2 px-2.5 border-r min-w-[110px]">Serial</th>
+                <th class="py-2 px-2 border-r text-center min-w-[90px]">Wty Status</th>
+                <th class="py-2 px-2.5 border-r min-w-[110px]">Status</th>
+                <th class="py-2 px-3 border-r min-w-[200px]">Reason</th>
+                <th class="py-2 px-3 border-r min-w-[200px]">VOC</th>
+                <th class="py-2 px-2 border-r text-center w-14">REDO</th>
+                <th class="py-2 px-2 border-r text-center min-w-[90px]">Risk Sensing</th>
+                <th class="py-2 px-2 border-r text-center w-12">RED</th>
+                <th class="py-2 px-2 border-r text-center min-w-[90px]">High Priority</th>
+                <th class="py-2 px-3 border-r min-w-[140px]">Customer Name</th>
+                <th class="py-2 px-2.5 border-r min-w-[100px]">City</th>
+                <th class="py-2 px-2.5 border-r text-center min-w-[95px]">App Date</th>
+                <th class="py-2 px-2.5 border-r text-center min-w-[100px]">App Time</th>
+                <th class="py-2 px-2 border-r text-center w-12">B2B</th>
+                <th class="py-2 px-3 min-w-[150px]">Risk Reason</th>
+              </tr>
+            </thead>
+            <tbody id="rawRecordsTableBody" class="divide-y divide-slate-200 font-mono text-[11px]">
+              <!-- Injected via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between flex-shrink-0">
+        <span class="text-xs text-slate-500">Check off calls as you inspect or resolve them. Exporting preserves check notes in <code>sample_data.xls</code>.</span>
+        <div class="flex items-center gap-2">
+          <button id="btnCloseRawDataModal2" class="px-4 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 transition">
+            Close Inspector
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- SCRIPT: APPLICATION LOGIC -->
+  <!-- ========================================================================= -->
+  <script>
+    /**
+     * RC-GD Pendency & Service Operations Report Controller
+     * Implements full business logic:
+     * 1. 10 Header mapping:
+     *    [Tracking No, CP Code, CP Name, ASC Ref. No, Requested Date, Service Type, Model Code, Serial No, Customer Name, First Anticipated Date]
+     * 2. Tracking No "Edit" string trimming
+     * 3. Aging & TAT IFS calculation from Requested Date
+     * 4. Service Type normalization (IH -> IN-HOME, etc.)
+     * 5. Product categorization from Model Code (A->AC, W->WM, R->REF, Q/U->AV, M/CE->MW, HT/HW->AUD, D->DW, S->HHP, N/LH/LC/LS->IT, Other)
+     * 6. Side-by-side Matrix rendering with conditional styling matching screenshot
+     * 7. Formatted HTML email table generator with rich clipboard copy
+     * 8. Excel import/export via SheetJS
+     * 9. Interactive Chart.js visualizations
+     */
+
+    // --- STANDARD CONSTANTS & MAPPINGS ---
+    const STANDARD_SERVICE_TYPES = [
+      'IN-HOME',
+      'Initial Installation',
+      'Stock Repair',
+      'Customer Care',
+      'Demonstration',
+      'PICK-UP SERVICE',
+      'Carry In',
+      'Return Handling'
+    ];
+
+    const PRODUCT_CATEGORIES = [
+      { code: 'AC', name: 'Air Conditioner', color: '#ef4444', textClass: 'text-white' },
+      { code: 'WM', name: 'Washing Machine', color: '#22c55e', textClass: 'text-white' },
+      { code: 'REF', name: 'Refrigerator', color: '#facc15', textClass: 'text-slate-900' },
+      { code: 'AV', name: 'Audio Video / TV', color: '#0f172a', textClass: 'text-white' },
+      { code: 'MW', name: 'Microwave', color: '#22c55e', textClass: 'text-white' },
+      { code: 'AUD', name: 'Audio / Soundbar', color: '#f87171', textClass: 'text-slate-950' },
+      { code: 'DW', name: 'Dish Washer', color: '#3b82f6', textClass: 'text-white' },
+      { code: 'HHP', name: 'Handheld Phone', color: '#86efac', textClass: 'text-slate-950' },
+      { code: 'IT', name: 'IT / Monitors', color: '#f87171', textClass: 'text-slate-950' },
+      { code: 'Other', name: 'Other Appliances', color: '#fde047', textClass: 'text-slate-900' }
+    ];
+
+    const AGING_BUCKETS = [
+      '0–2 Days',
+      '3–7 Days',
+      '8–10 Days',
+      '11–14 Days',
+      '15–30 Days',
+      '30+ Days'
+    ];
+
+    const STANDARD_BRANCHES = [
+      'Gurgaon-CE',
+      'Ahmedabad-CE',
+      'Lucknow-HHP',
+      'Moradabad-HHP',
+      'Surat-CE',
+      'Lucknow-CE',
+      'Gandhinagar-CE',
+      'Ghaziabad-CE',
+      'Cochin-CE'
+    ];
+
+    // --- STANDARD 25 COLUMNS FORMAT ---
+    const STANDARD_25_COLUMNS = [
+      'Date', 'Branch Name', 'No', 'Service Order No.', 'ASC Job No',
+      'Created', 'Assigned', 'Assigned Time', 'Model', 'Serial',
+      'Wty Status', 'VOC', 'REDO', 'Risk Sensing', 'RED',
+      'High Priority', 'Customer Name', 'City', 'App Date', 'App Time',
+      'Service Type', 'Status', 'Reason', 'B2B', 'Risk Reason'
+    ];
+
+    // --- APPLICATION STATE ---
+    let appState = {
+      reportDate: new Date().toISOString().split('T')[0],
+      selectedBranch: 'Gurgaon-CE',
+      selectedAsc: '4903753',
+      records: [],
+      pendingUploadRecords: null,
+      closedCallIds: new Set(), // tracks checked/closed calls by Service Order No.
+      charts: {
+        agingChart: null,
+        productsChart: null
+      }
+    };
+
+    /**
+     * Standardizes Warranty Status:
+     * "In Warranty" / "In-Warranty" / "IW" / "YES" / "Y" -> "IW"
+     * "Out of Warranty" / "Out-of-Warranty" / "OW" / "NO" / "N" -> "OW"
+     */
+    function normalizeWarrantyStatus(wtyVal, sType) {
+      const wf = String(wtyVal || '').trim().toUpperCase();
+      if (wf === 'IW' || wf === 'IN-WARRANTY' || wf === 'IN WARRANTY' || wf === 'IN_WARRANTY' || wf === 'YES' || wf === 'Y' || wf === 'I.W.') {
+        return 'IW';
+      }
+      if (wf === 'OW' || wf === 'OUT-OF-WARRANTY' || wf === 'OUT OF WARRANTY' || wf === 'OUT_OF_WARRANTY' || wf === 'NO' || wf === 'N' || wf === 'O.W.') {
+        return 'OW';
+      }
+      // Heuristic fallback: if service type is Stock Repair or Return Handling → OW, else IW
+      const st = String(sType || '').trim().toUpperCase();
+      if (st === 'STOCK REPAIR' || st === 'RETURN HANDLING') {
+        return 'OW';
+      }
+      return 'IW';
+    }
+
+    /**
+     * Determines if a call is In-Warranty (IW) or Out-of-Warranty (OW).
+     */
+    function isInWarranty(record) {
+      const wf = record.wtyStatus || record.warranty || record['Wty Status'] || record['Warranty'] || record['Warranty Status'];
+      return normalizeWarrantyStatus(wf, record.serviceType) === 'IW';
+    }
+
+    // --- CORE FORMULAS & UTILITIES (Refactored from core.js) ---
+
+    /**
+     * Trims tracking number if it includes "Edit" or redundant text
+     */
+    function cleanTrackingNumber(rawVal) {
+      if (!rawVal) return '';
+      let str = String(rawVal).trim();
+      // Remove "Edit" word (case-insensitive) anywhere in string
+      str = str.replace(/\bEdit\b/gi, '');
+      // Clean excessive spaces, tabs or newlines
+      str = str.replace(/[\r\n\t]+/g, ' ').replace(/\s+/g, ' ').trim();
+      return str;
+    }
+
+    /**
+     * Converts short service type codes to standard names
+     */
+    function convertServiceType(code) {
+      if (!code) return 'Other';
+      const c = String(code).trim().toUpperCase();
+      const map = {
+        'IH': 'IN-HOME',
+        'IN HOME': 'IN-HOME',
+        'IN-HOME': 'IN-HOME',
+        'II': 'Initial Installation',
+        'INITIAL INSTALLATION': 'Initial Installation',
+        'INSTALLATION': 'Initial Installation',
+        'SR': 'Stock Repair',
+        'STOCK REPAIR': 'Stock Repair',
+        'CC': 'Customer Care',
+        'CUSTOMER CARE': 'Customer Care',
+        'DM': 'Demonstration',
+        'DEMONSTRATION': 'Demonstration',
+        'DEMO': 'Demonstration',
+        'PS': 'PICK-UP SERVICE',
+        'PICK-UP SERVICE': 'PICK-UP SERVICE',
+        'PICKUP': 'PICK-UP SERVICE',
+        'CI': 'Carry In',
+        'CARRY IN': 'Carry In',
+        'CARRY-IN': 'Carry In',
+        'RH': 'Return Handling',
+        'RETURN HANDLING': 'Return Handling'
+      };
+      return map[c] || String(code).trim();
+    }
+
+    /**
+     * Product categorization formula based on Model Code
+     */
+    function getProductCategory(model) {
+      if (!model) return 'Other';
+      const m = String(model).toUpperCase().trim();
+      if (!m) return 'Other';
+
+      const first1 = m.substring(0, 1);
+      const first2 = m.substring(0, 2);
+
+      if (first1 === 'S') return 'HHP';
+      if (first1 === 'A') return 'AC';
+      if (first2 === 'HT' || first2 === 'HW') return 'AUD';
+      if (first1 === 'Q' || first1 === 'U') return 'AV';
+      if (first1 === 'N' || first2 === 'LH' || first2 === 'LC' || first2 === 'LS') return 'IT';
+      if (first1 === 'M' || first2 === 'CE') return 'MW';
+      if (first1 === 'R') return 'REF';
+      if (first1 === 'W') return 'WM';
+      if (first1 === 'D') return 'DW';
+
+      return 'Other';
+    }
+
+    /**
+     * Normalizes product strings or detects product from category/model (matching website core.js)
+     */
+    function normalizeProductCategory(val, model) {
+      if (val) {
+        const s = String(val).trim().toUpperCase();
+        const directCodes = ['AC', 'WM', 'REF', 'AV', 'MW', 'AUD', 'DW', 'HHP', 'IT'];
+        if (directCodes.includes(s)) return s;
+        if (s === 'OTHER' || s === 'OTHERS') return 'Other';
+
+        if (s.includes('AIR') || s.includes('A/C') || s.startsWith('AC')) return 'AC';
+        if (s.includes('WASH') || s.startsWith('WM')) return 'WM';
+        if (s.includes('REF') || s.includes('FRIDGE') || s.startsWith('REF')) return 'REF';
+        if (s.includes('TV') || s.includes('PANEL') || s.startsWith('AV')) return 'AV';
+        if (s.includes('MICRO') || s.startsWith('MW')) return 'MW';
+        if (s.includes('AUDIO') || s.includes('SOUND') || s.startsWith('AUD')) return 'AUD';
+        if (s.includes('DISH') || s.startsWith('DW')) return 'DW';
+        if (s.includes('PHONE') || s.includes('MOBILE') || s.startsWith('HHP') || s.startsWith('SM-')) return 'HHP';
+        if (s.includes('MONITOR') || s.startsWith('IT')) return 'IT';
+      }
+      return getProductCategory(model || val);
+    }
+
+    /**
+     * Parses diverse GSPN date strings or Excel serial numbers into Date
+     */
+    function parseDate(val) {
+      if (!val) return null;
+      if (val instanceof Date && !isNaN(val.getTime())) return val;
+      
+      // Excel serial date number
+      if (typeof val === 'number') {
+        const utcDays = Math.floor(val - 25569);
+        const utcValue = utcDays * 86400;
+        const dateInfo = new Date(utcValue * 1000);
+        return dateInfo;
+      }
+
+      let str = String(val).trim();
+      if (!str) return null;
+
+      // Strip time in parentheses: "05/09/2026 (12:00:00)" -> "05/09/2026"
+      str = str.replace(/\s*\(.*?\)\s*/g, '').trim();
+      if (str.indexOf(' ') !== -1) {
+        str = str.split(/\s+/)[0];
+      }
+
+      // DD.MM.YYYY
+      let m = str.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+      if (m) return new Date(parseInt(m[3], 10), parseInt(m[2], 10) - 1, parseInt(m[1], 10));
+
+      // DD/MM/YYYY
+      m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      if (m) return new Date(parseInt(m[3], 10), parseInt(m[2], 10) - 1, parseInt(m[1], 10));
+
+      // YYYY-MM-DD
+      m = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+      if (m) return new Date(parseInt(m[1], 10), parseInt(m[2], 10) - 1, parseInt(m[3], 10));
+
+      // DD-MM-YYYY
+      m = str.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+      if (m) return new Date(parseInt(m[3], 10), parseInt(m[2], 10) - 1, parseInt(m[1], 10));
+
+      const parsed = new Date(str);
+      return isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    /**
+     * Calculates Aging in whole days: =TODAY() - REQUESTED_DATE
+     * If cutoffDate is null/invalid or earlier than reqDate (e.g. stale report cutoff), defaults to today's date
+     */
+    function calcAging(reqDateVal, cutoffDateVal) {
+      const reqDate = parseDate(reqDateVal);
+      if (!reqDate) return 0;
+      let cutoff = parseDate(cutoffDateVal);
+      const today = new Date();
+      if (!cutoff || cutoff < reqDate) {
+        cutoff = today;
+      }
+      
+      const cMidnight = new Date(cutoff.getFullYear(), cutoff.getMonth(), cutoff.getDate());
+      const rMidnight = new Date(reqDate.getFullYear(), reqDate.getMonth(), reqDate.getDate());
+      
+      const diffDays = Math.round((cMidnight - rMidnight) / (1000 * 60 * 60 * 24));
+      return diffDays >= 0 ? diffDays : 0;
+    }
+
+    /**
+     * Formats Excel fractional day numbers (e.g. 0.541666667) into HH:mm:ss string (e.g. 13:00:00)
+     */
+    function formatExcelTime(val) {
+      if (val === undefined || val === null || val === '') return '';
+      const num = parseFloat(val);
+      if (!isNaN(num) && num > 0 && num < 1 && (typeof val === 'number' || String(val).startsWith('0.'))) {
+        const totalMinutes = Math.round(num * 24 * 60);
+        const hours = Math.floor(totalMinutes / 60);
+        const mins = totalMinutes % 60;
+        return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:00`;
+      }
+      return String(val).trim();
+    }
+
+    /**
+     * Returns TAT Category string based on Aging
+     */
+    function getTATBucket(agingDays) {
+      const n = parseFloat(agingDays);
+      if (isNaN(n)) return '0–2 Days';
+      if (n <= 2) return '0–2 Days';
+      if (n <= 7) return '3–7 Days';
+      if (n <= 10) return '8–10 Days';
+      if (n <= 14) return '11–14 Days';
+      if (n <= 30) return '15–30 Days';
+      return '30+ Days';
+    }
+
+    /**
+     * Formats Date to DD.MM.YYYY string
+     */
+    function formatDateToDot(dateObj) {
+      if (!dateObj) return '';
+      const d = parseDate(dateObj) || new Date();
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const yyyy = d.getFullYear();
+      return `${dd}.${mm}.${yyyy}`;
+    }
+
+    // --- SYNTHESIZE AUTHENTIC SCREENSHOT DATASET ---
+    /**
+     * Generates exact underlying calls matching the user's uploaded screenshot matrix:
+     * Total calls = 275
+     * 0-2d = 112
+     * 3-7d, 8-10d, 11-14d, 15-30d, 30+d exactly per screenshot
+     * Fully populated with all 25 standard GSPN columns:
+     * [Date, Branch Name, No, Service Order No., ASC Job No, Created, Assigned, Assigned Time,
+     *  Model, Serial, Wty Status, VOC, REDO, Risk Sensing, RED, High Priority,
+     *  Customer Name, City, App Date, App Time, Service Type, Status, Reason, B2B, Risk Reason]
+     */
+    function generateDefaultDataset() {
+      const baseDate = parseDate('2026-09-11');
+      const list = [];
+      let trackingCounter = 4293847000;
+
+      // Matrix definition from user's screenshot
+      const matrixDef = [
+        { type: 'IN-HOME', buckets: { '3–7 Days': 1, '8–10 Days': 4, '11–14 Days': 6, '15–30 Days': 4, '30+ Days': 12 }, total: 27 },
+        { type: 'Initial Installation', buckets: { '3–7 Days': 4, '11–14 Days': 7, '15–30 Days': 11, '30+ Days': 9 }, total: 31 },
+        { type: 'Stock Repair', buckets: { '8–10 Days': 1, '11–14 Days': 1 }, total: 2 },
+        { type: 'Customer Care', buckets: { '11–14 Days': 1, '30+ Days': 3 }, total: 4 },
+        { type: 'Demonstration', buckets: { '11–14 Days': 2, '15–30 Days': 1, '30+ Days': 1 }, total: 4 },
+        { type: 'PICK-UP SERVICE', buckets: { '8–10 Days': 1, '30+ Days': 1 }, total: 2 },
+        { type: 'Carry In', buckets: { '11–14 Days': 2, '15–30 Days': 1, '30+ Days': 1 }, total: 4 },
+        { type: 'Return Handling', buckets: { '8–10 Days': 1, '30+ Days': 1 }, total: 2 }
+      ];
+
+      // Products pool
+      const productModels = {
+        'AC': ['AR18CY3AQUN', 'AR12CY5AMWK', 'AR18TY5QAWK'],
+        'WM': ['WA65T4262GG', 'WW80T504DAX', 'WA70A4002GS'],
+        'REF': ['RT28T3722S8', 'RS74T5001B4', 'RT34T4513S8'],
+        'AV': ['QA55Q60AAK', 'UA43AU7700K', 'QA65QN90AAK'],
+        'MW': ['MC28H5015AK', 'MS23F301TAK', 'CE73JD/XTL'],
+        'AUD': ['HW-Q600A', 'HW-T420', 'HT-E350K'],
+        'DW': ['DW60M9550FS', 'DW60M6043FS', 'DW60M5042FS'],
+        'HHP': ['SM-S928B', 'SM-A546E', 'SM-F731B'],
+        'IT': ['LF24T350FHW', 'LC27R500FHW', 'LS24A310NHW'],
+        'Other': ['VG-SCFA55TK', 'BN59-01315A', 'ACCESSORY-01']
+      };
+
+      const productKeys = Object.keys(productModels);
+
+      // Helper to compute a date given an aging offset
+      function getReqDateFromAging(days) {
+        const d = new Date(baseDate.getTime() - (days * 86400000));
+        return formatDateToDot(d);
+      }
+
+      function buildCallRecord(trackingId, branch, ascCode, sType, days, idx) {
+        const pKey = productKeys[trackingId % productKeys.length];
+        const models = productModels[pKey];
+        const modelCode = models[idx % models.length];
+        const createdDate = getReqDateFromAging(days);
+        const assignedDate = getReqDateFromAging(Math.max(0, days - 1));
+        const isIW = (pKey === 'AC' || pKey === 'WM' || pKey === 'REF') || (idx % 3 !== 0);
+        const isRed = days > 30;
+        const isRisk = days > 15;
+        const isHigh = days > 15 || (idx % 8 === 0);
+
+        return {
+          // 25 Standard Columns
+          'Date': formatDateToDot(baseDate),
+          'Branch Name': branch,
+          'No': idx + 1,
+          'Service Order No.': String(trackingId),
+          'ASC Job No': `${ascCode}-${String((idx % 99) + 1).padStart(2, '0')}`,
+          'Created': createdDate,
+          'Assigned': assignedDate,
+          'Assigned Time': '10:15',
+          'Model': modelCode,
+          'Serial': `SN${trackingId}X`,
+          'Wty Status': isIW ? 'In Warranty' : 'Out of Warranty',
+          'VOC': pKey === 'AC' ? 'Cooling issue / Low cooling' : (pKey === 'WM' ? 'Drain error / Spin noise' : (pKey === 'REF' ? 'Not cooling / Freezer issue' : 'Display issue')),
+          'REDO': idx % 10 === 0 ? 'Y' : 'N',
+          'Risk Sensing': isRisk ? 'Risk' : 'Normal',
+          'RED': isRed ? 'Y' : 'N',
+          'High Priority': isHigh ? 'High' : 'Normal',
+          'Customer Name': `Customer ${String(trackingId).slice(-3)}`,
+          'City': branch.split('-')[0] || 'Gurgaon',
+          'App Date': getReqDateFromAging(Math.max(0, days - 2)),
+          'App Time': '14:00 - 16:00',
+          'Service Type': sType,
+          'Status': isRisk ? 'Spare Part Pending' : (days > 7 ? 'Appointment Rescheduled' : 'Engineer Assigned'),
+          'Reason': isRisk ? 'Part Delay from Factory' : (days > 7 ? 'Customer Not Available at Home' : 'Appointment Fixed'),
+          'B2B': idx % 12 === 0 ? 'Y' : 'N',
+          'Risk Reason': isRisk ? 'TAT Exceeded > 15 Days Delay' : 'None',
+
+          // Legacy fields for backward compatibility
+          trackingNo: `Edit ${trackingId}`,
+          serviceOrderNo: String(trackingId),
+          cpCode: ascCode,
+          cpName: branch,
+          branchName: branch,
+          ascRefNo: `${ascCode}-${String((idx % 99) + 1).padStart(2, '0')}`,
+          requestedDate: createdDate,
+          modelCode: modelCode,
+          serialNo: `SN${trackingId}X`,
+          serviceType: sType,
+          warranty: isIW ? 'IW' : 'OW',
+          wtyStatus: isIW ? 'IW' : 'OW'
+        };
+      }
+
+      // Generate the older bucket calls specified in the screenshot
+      matrixDef.forEach(row => {
+        let createdInBuckets = 0;
+        Object.entries(row.buckets).forEach(([bucketName, count]) => {
+          let days = 1;
+          if (bucketName === '3–7 Days') days = 5;
+          else if (bucketName === '8–10 Days') days = 9;
+          else if (bucketName === '11–14 Days') days = 12;
+          else if (bucketName === '15–30 Days') days = 20;
+          else if (bucketName === '30+ Days') days = 35;
+
+          for (let i = 0; i < count; i++) {
+            trackingCounter++;
+            list.push(buildCallRecord(trackingCounter, 'Gurgaon-CE', '4903753', row.type, days, list.length));
+            createdInBuckets++;
+          }
+        });
+
+        // Remaining calls for this service type to reach row.total are placed into 0-2 Days (if any)
+        const rem0to2 = Math.max(0, row.total - createdInBuckets);
+        for (let i = 0; i < rem0to2; i++) {
+          trackingCounter++;
+          list.push(buildCallRecord(trackingCounter, 'Gurgaon-CE', '4903753', row.type, 1, list.length));
+        }
+      });
+
+      // Fill fresh calls (0-2 Days) up to the screenshot total of 275 (112 in 0-2 Days)
+      const currentTotal = list.length;
+      const targetTotal = 275;
+      const neededFresh = targetTotal - currentTotal;
+
+      for (let i = 0; i < neededFresh; i++) {
+        trackingCounter++;
+        const sType = matrixDef[i % matrixDef.length].type;
+        list.push(buildCallRecord(trackingCounter, 'Gurgaon-CE', '4903753', sType, Math.floor(Math.random() * 2), list.length));
+      }
+
+      // Generate sample calls for other branches
+      const otherBranches = STANDARD_BRANCHES.filter(b => b !== 'Gurgaon-CE');
+      otherBranches.forEach((bName, bIdx) => {
+        const bAsc = String(4903754 + bIdx);
+        for (let j = 0; j < 18; j++) {
+          trackingCounter++;
+          const sType = matrixDef[j % matrixDef.length].type;
+          const ageDays = (j % 5) * 4;
+          list.push(buildCallRecord(trackingCounter, bName, bAsc, sType, ageDays, list.length));
+        }
+      });
+
+      return list;
+    }
+
+    // --- DATA AGGREGATION ENGINE ---
+
+    /**
+     * Processes raw records: trims tracking no, calculates aging from Created date,
+     * extracts all 25 standard columns, product & TAT buckets, filters by Branch/ASC,
+     * and maps call closure status.
+     */
+    function computeProcessedRecords() {
+      const cutoffDate = appState.reportDate;
+      const branch = appState.selectedBranch;
+      const asc    = appState.selectedAsc;
+
+      return appState.records
+        .map((r, idx) => {
+          const rawSo = r['Service Order No.'] || r['Service Order No'] || r.serviceOrderNo || r['Tracking No'] || r.trackingNo || r['SO No'] || '';
+          const cleanSo = cleanTrackingNumber(rawSo);
+          const noVal = r['No'] || r.no || (idx + 1);
+          const dateVal = String(r['Date'] || r.date || r.dateCol || '').trim();
+          const branchVal = String(r['Branch Name'] || r['Branch_Name'] || r.branchName || r['CP Name'] || r.cpName || 'Gurgaon-CE').trim();
+          const ascJobVal = String(r['ASC Job No'] || r['ASC Job No.'] || r.ascJobNo || r['ASC Ref. No'] || r.ascRefNo || r['ASC Ref No'] || '').trim();
+          const cpCode = String(r['Dealer BP'] || r['CP Code'] || r['ASC Code'] || r.cpCode || (ascJobVal ? ascJobVal.split('-')[0] : '') || '4903753').trim();
+          
+          // Dates for aging calculation (Assigned date prioritized per website logic)
+          const createdVal = String(r['Created'] || r.created || r['Requested Date'] || r.requestedDate || r['Created Date'] || '').trim();
+          const assignedVal = String(r['Assigned'] || r.assigned || r['Assigned Date'] || r['ASC Assigned'] || '').trim();
+          const assignedTimeVal = String(r['Assigned Time'] || r.assignedTime || '').trim();
+          
+          const modelVal = String(r['Model'] || r.model || r['Model Code'] || r.modelCode || r['Model Name'] || r['Model_Name'] || '').trim();
+          const serialVal = String(r['Serial'] || r.serial || r['Serial No'] || r.serialNo || '').trim();
+          let sType = convertServiceType(r['Service Type'] || r.serviceType || r['Service Type (Status)'] || '');
+          let rawWty = String(r['Wty Status'] || r.wtyStatus || r['Warranty'] || r.warranty || r['Warranty Status'] || '').trim();
+          
+          let vocVal = String(r['VOC'] || r.voc || r['Customer VOC'] || '').trim();
+          let redoVal = String(r['REDO'] || r.redo || 'N').trim();
+          let riskSensingVal = String(r['Risk Sensing'] || r.riskSensing || 'Normal').trim();
+          let redVal = String(r['RED'] || r.red || 'N').trim();
+          let highPriorityVal = String(r['High Priority'] || r.highPriority || 'Normal').trim();
+          let custName = String(r['Customer Name'] || r.customerName || '').trim();
+          let cityVal = String(r['City'] || r.city || '').trim();
+          let appDateVal = String(r['App Date'] || r.appDate || r['First Anticipated Date'] || r.firstAnticipatedDate || '').trim();
+          let appTimeVal = formatExcelTime(r['App Time'] || r.appTime || '');
+          let statusVal = String(r['Status'] || r.status || r['Status (GSPN)'] || r['Call Status'] || '').trim();
+          let reasonVal = String(r['Reason'] || r.reason || r['Reason (GSPN)'] || '').trim();
+          let b2bVal = String(r['B2B'] || r.b2b || 'N').trim();
+          let riskReasonVal = String(r['Risk Reason'] || r.riskReason || 'None').trim();
+
+          // Intelligent Disambiguation & Self-Healing:
+          // 1. If VOC contains warranty keyword ("In Warranty" / "Out of Warranty" / "IW" / "OW")
+          if (vocVal.toUpperCase().includes('WARRANTY') || vocVal.toUpperCase() === 'IW' || vocVal.toUpperCase() === 'OW') {
+            if (!rawWty || rawWty.toUpperCase() === 'IW') {
+              rawWty = vocVal;
+            }
+            vocVal = '-';
+          }
+          let wtyVal = normalizeWarrantyStatus(rawWty, sType);
+
+          // 2. If Status contains Service Type name (e.g. "Initial Installation")
+          const knownServiceTypes = ['INITIAL INSTALLATION', 'IN-HOME', 'DEMONSTRATION', 'STOCK REPAIR', 'CUSTOMER CARE', 'PICK-UP SERVICE', 'CARRY IN', 'RETURN HANDLING'];
+          if (knownServiceTypes.includes(statusVal.toUpperCase())) {
+            if (!sType || sType === 'Other') {
+              sType = convertServiceType(statusVal);
+            }
+            if (reasonVal && reasonVal !== statusVal) {
+              statusVal = reasonVal;
+              reasonVal = '-';
+            } else {
+              statusVal = 'Open';
+            }
+          }
+
+          // Aging calculation matching website tools.js & core.js:
+          // 1. If Aging is already present as a numeric value in raw data, preserve it!
+          const rawAging = (r['Aging'] !== undefined && r['Aging'] !== null && r['Aging'] !== '') ? r['Aging']
+                         : ((r.aging !== undefined && r.aging !== null && r.aging !== '') ? r.aging
+                         : (r['Aging (Days)'] !== undefined ? r['Aging (Days)']
+                         : (r['TAT'] !== undefined ? r['TAT'] : '')));
+          let aging = 0;
+          if (rawAging !== '' && rawAging !== null && rawAging !== undefined && !isNaN(parseFloat(rawAging))) {
+            aging = Math.max(0, Math.round(parseFloat(rawAging)));
+          } else {
+            // Formula =TODAY() - ASSIGNED_DATE (fallback to Created / Requested Date)
+            const dateForAging = assignedVal || createdVal;
+            aging = calcAging(dateForAging, cutoffDate);
+          }
+          const tatBucket = getTATBucket(aging);
+
+          // Product category matching website core.js getProductCategory & normalizeProductCategory
+          const rawProd = r['Product'] || r.product || r['Product Category'] || r['Product_Category'] || '';
+          const product = normalizeProductCategory(rawProd, modelVal);
+          const callId = cleanSo || `CALL-${idx + 1}`;
+          const isClosed = appState.closedCallIds.has(callId);
+
+          return {
+            index: idx + 1,
+            callId: callId,
+            isClosed: isClosed,
+            date: dateVal,
+            branchName: branchVal,
+            cpName: branchVal,
+            no: noVal,
+            serviceOrderNo: cleanSo,
+            trackingNo: cleanSo,
+            ascJobNo: ascJobVal,
+            cpCode: cpCode,
+            created: createdVal,
+            requestedDate: createdVal,
+            assigned: assignedVal,
+            assignedTime: assignedTimeVal,
+            model: modelVal,
+            modelCode: modelVal,
+            serial: serialVal,
+            serialNo: serialVal,
+            wtyStatus: wtyVal,
+            warranty: wtyVal,
+            voc: vocVal,
+            redo: redoVal,
+            riskSensing: riskSensingVal,
+            red: redVal,
+            highPriority: highPriorityVal,
+            customerName: custName,
+            city: cityVal,
+            appDate: appDateVal,
+            firstAnticipatedDate: appDateVal,
+            appTime: appTimeVal,
+            serviceType: sType,
+            status: statusVal,
+            reason: reasonVal,
+            b2b: b2bVal,
+            riskReason: riskReasonVal,
+            aging: aging,
+            tatBucket: tatBucket,
+            product: product
+          };
+        })
+        .filter(r => {
+          // Branch filter: if ALL selected, show everything
+          if (branch !== 'ALL') {
+            const rBranch = r.branchName.trim().toUpperCase();
+            const selBranch = branch.trim().toUpperCase();
+            if (rBranch !== selBranch) return false;
+          }
+          // ASC filter: if ALL selected, show everything
+          if (asc !== 'ALL') {
+            if (r.cpCode.trim() !== asc.trim()) return false;
+          }
+          return true;
+        });
+    }
+
+    /**
+     * Builds the complete Matrix (Table 1: Aging Buckets & Table 2: D+7 Products + IW/OW)
+     */
+    function buildMatrixData(processedList) {
+      // 1. Initialize matrix structure
+      const matrix = {};
+      const productSummary = {};
+      PRODUCT_CATEGORIES.forEach(p => { productSummary[p.code] = 0; });
+
+      const agingBuckets = ['0–2 Days', '3–7 Days', '8–10 Days', '11–14 Days', '15–30 Days', '30+ Days'];
+
+      // Row accumulator helper
+      function makeEmptyRow(label) {
+        const row = {
+          serviceType: label,
+          total: 0,
+          iw: 0,
+          ow: 0,
+          aging: {
+            '0–2 Days': 0,
+            '3–7 Days': 0,
+            '8–10 Days': 0,
+            '11–14 Days': 0,
+            '15–30 Days': 0,
+            '30+ Days': 0
+          },
+          productsD7: {}
+        };
+        PRODUCT_CATEGORIES.forEach(p => { row.productsD7[p.code] = 0; });
+        return row;
+      }
+
+      STANDARD_SERVICE_TYPES.forEach(st => {
+        matrix[st] = makeEmptyRow(st);
+      });
+      const totalRow = makeEmptyRow('Total');
+
+      // Track unique service center names per ASC code
+      const svcNames = {};
+
+      // 2. Aggregate records into matrix
+      processedList.forEach(r => {
+        const sType = matrix[r.serviceType] ? r.serviceType : 'IN-HOME';
+        const row = matrix[sType];
+        const bucket = r.tatBucket;
+        const prod = r.product;
+
+        // Track SVC name
+        if (r.cpCode && r.cpName) {
+          svcNames[r.cpCode] = r.cpName;
+        }
+
+        // Increment aging
+        row.total++;
+        totalRow.total++;
+        if (row.aging[bucket] !== undefined) {
+          row.aging[bucket]++;
+          totalRow.aging[bucket]++;
+        }
+
+        // IW / OW
+        if (isInWarranty(r)) {
+          row.iw++;
+          totalRow.iw++;
+        } else {
+          row.ow++;
+          totalRow.ow++;
+        }
+
+        // Check if D+7 (Aging > 7 Days)
+        if (r.aging > 7) {
+          if (row.productsD7[prod] !== undefined) {
+            row.productsD7[prod]++;
+            totalRow.productsD7[prod]++;
+            productSummary[prod]++;
+          }
+        }
+      });
+
+      return {
+        matrix: matrix,
+        totalRow: totalRow,
+        productSummary: productSummary,
+        svcNames: svcNames
+      };
+    }
+
+    // --- UI RENDERING FUNCTIONS ---
+
+    /**
+     * Renders KPI Top Bar Cards
+     */
+    function renderKPIs(matrixData, totalRecordsCount) {
+      const t = matrixData.totalRow;
+      const totalPending = t.total;
+
+      // Fresh calls (0-2 Days)
+      const freshCount = t.aging['0–2 Days'] || 0;
+      const freshPct = totalPending > 0 ? ((freshCount / totalPending) * 100).toFixed(1) : '0.0';
+
+      // In-Home Calls
+      const inHomeCount = matrixData.matrix['IN-HOME'] ? matrixData.matrix['IN-HOME'].total : 0;
+      const inHomePct = totalPending > 0 ? ((inHomeCount / totalPending) * 100).toFixed(1) : '0.0';
+
+      // Install & Demo Calls
+      const installCount = matrixData.matrix['Initial Installation'] ? matrixData.matrix['Initial Installation'].total : 0;
+      const demoCount = matrixData.matrix['Demonstration'] ? matrixData.matrix['Demonstration'].total : 0;
+      const installDemoTotal = installCount + demoCount;
+      const installDemoPct = totalPending > 0 ? ((installDemoTotal / totalPending) * 100).toFixed(1) : '0.0';
+
+      // Critical (>15 Days = 15–30 Days + 30+ Days)
+      const crit15to30 = t.aging['15–30 Days'] || 0;
+      const critGt30 = t.aging['30+ Days'] || 0;
+      const criticalTotal = crit15to30 + critGt30;
+      const criticalPct = totalPending > 0 ? ((criticalTotal / totalPending) * 100).toFixed(1) : '0.0';
+
+      // Update DOM
+      document.getElementById('kpiTotalPending').textContent = totalPending;
+      document.getElementById('kpiFreshCount').textContent = freshCount;
+      document.getElementById('kpiFreshPct').textContent = `${freshPct}%`;
+      document.getElementById('kpiFreshBar').style.width = `${Math.min(100, freshPct)}%`;
+
+      document.getElementById('kpiInHome').textContent = inHomeCount;
+      document.getElementById('kpiInHomePct').textContent = `${inHomePct}%`;
+      document.getElementById('kpiInHomeBar').style.width = `${Math.min(100, inHomePct)}%`;
+
+      document.getElementById('kpiInstallDemo').textContent = installDemoTotal;
+      document.getElementById('kpiInstallDemoPct').textContent = `${installDemoPct}%`;
+      document.getElementById('kpiInstallDemoBar').style.width = `${Math.min(100, installDemoPct)}%`;
+
+      document.getElementById('kpiCritical').textContent = criticalTotal;
+      document.getElementById('kpiCriticalPct').textContent = `${criticalPct}%`;
+      document.getElementById('kpiCriticalBar').style.width = `${Math.min(100, criticalPct)}%`;
+
+      // Update header date & badges
+      const dotDate = formatDateToDot(appState.reportDate);
+      document.getElementById('reportDateHeaderSpan').textContent = dotDate;
+      document.getElementById('excelMainHeaderDateSpan').textContent = `RC-GD Pendency dt ${dotDate}`;
+      document.getElementById('activeBranchTag').textContent = `Branch: ${appState.selectedBranch}`;
+      document.getElementById('activeAscTag').textContent = `ASC: ${appState.selectedAsc}`;
+      document.getElementById('rawRecordCountBadge').textContent = totalRecordsCount;
+    }
+
+    /**
+     * Renders Product Summary Micro-Cards Strip
+     */
+    function renderProductSummary(productSummary) {
+      const container = document.getElementById('productSummaryCardsGrid');
+      container.innerHTML = '';
+
+      let totalD7 = 0;
+      PRODUCT_CATEGORIES.forEach(p => {
+        totalD7 += (productSummary[p.code] || 0);
+      });
+      document.getElementById('totalD7Badge').textContent = totalD7;
+
+      PRODUCT_CATEGORIES.forEach(p => {
+        const count = productSummary[p.code] || 0;
+        const pct = totalD7 > 0 ? ((count / totalD7) * 100).toFixed(0) : 0;
+        
+        const card = document.createElement('div');
+        card.className = 'bg-slate-50 hover:bg-white border border-slate-200 rounded-lg p-2.5 transition shadow-xs flex flex-col items-center justify-between text-center';
+        card.innerHTML = `
+          <div class="w-full flex items-center justify-between gap-1 mb-1">
+            <span class="px-1.5 py-0.5 text-[10px] font-extrabold rounded ${p.textClass}" style="background-color: ${p.color};">${p.code}</span>
+            <span class="text-[10px] font-semibold text-slate-400">${pct}%</span>
+          </div>
+          <div class="text-xl font-extrabold text-slate-800 font-outfit tabular-nums">${count}</div>
+          <div class="text-[10px] text-slate-500 truncate max-w-full" title="${p.name}">${p.name.split('/')[0].split(' ')[0]}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    /**
+     * Renders the Core Matrix Table (Side-by-side matching screenshot)
+     * Now includes: SVC (Service Center Name) column, IW and OW warranty columns
+     */
+    function renderExecutiveTable(matrixData) {
+      const tbody = document.getElementById('matrixTableBody');
+      tbody.innerHTML = '';
+
+      // Resolve ASC Code and Branch Name from actual data records (from Excel) or fallback to appState
+      const processedList = computeProcessedRecords();
+      const ascCode = (appState.selectedAsc !== 'ALL' && appState.selectedAsc)
+        ? appState.selectedAsc
+        : (processedList.length > 0 ? processedList[0].cpCode : '4903753');
+      const branchName = (appState.selectedBranch !== 'ALL' && appState.selectedBranch)
+        ? appState.selectedBranch
+        : (processedList.length > 0 ? (processedList[0].branchName || processedList[0].cpName) : 'Gurgaon-CE');
+
+      // Resolve Service Center Name from loaded data
+      const svcNames = matrixData.svcNames || {};
+      let svcLabel = svcNames[ascCode] || Object.values(svcNames)[0] || appState.selectedBranch;
+      if (appState.selectedAsc === 'ALL') svcLabel = Object.values(svcNames).join(' / ') || 'All Centers';
+
+      // Helper to format 0 values: strictly show 0 for any 0/Blank/NA value (never blank, never '-')
+      function cellVal(val) {
+        if (val === undefined || val === null || val === '' || val === 'NA' || val === 'N/A' || isNaN(Number(val))) {
+          return 0;
+        }
+        return Number(val);
+      }
+
+      // 1. Render Summary TOTAL Row at the top
+      const t = matrixData.totalRow;
+      const totalTr = document.createElement('tr');
+      totalTr.className = 'bg-blue-50/70 hover:bg-blue-100/70 font-bold border-b-2 border-slate-300 text-slate-900 transition';
+      
+      let totalHtml = `
+        <td class="py-2.5 px-2 border-r border-slate-300 text-left font-mono font-bold">${ascCode}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 text-left font-bold">${branchName}</td>
+        <td class="py-2.5 px-3 border-r border-slate-300 text-left font-bold text-blue-900">Total</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 bg-blue-100/80 text-blue-900 font-extrabold text-center tabular-nums">${cellVal(t.total)}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 text-center tabular-nums font-semibold">${cellVal(t.aging['0–2 Days'])}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 table-cell-aging text-center tabular-nums font-semibold">${cellVal(t.aging['3–7 Days'])}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 table-cell-aging text-center tabular-nums font-semibold">${cellVal(t.aging['8–10 Days'])}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 table-cell-aging text-center tabular-nums font-semibold">${cellVal(t.aging['11–14 Days'])}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 table-cell-aging-hot text-center tabular-nums font-bold">${cellVal(t.aging['15–30 Days'])}</td>
+        <td class="py-2.5 px-2 border-r-2 border-slate-400 table-cell-aging-hot text-center tabular-nums font-bold">${cellVal(t.aging['30+ Days'])}</td>
+        <td class="py-2.5 px-2 border-r border-slate-300 bg-[#c1f0c8] text-slate-900 font-extrabold text-center tabular-nums">${cellVal(t.iw)}</td>
+        <td class="py-2.5 px-2 border-r-2 border-slate-400 bg-[#c1f0c8] text-slate-900 font-extrabold text-center tabular-nums">${cellVal(t.ow)}</td>
+      `;
+
+      // D+7 Product columns for Total row
+      PRODUCT_CATEGORIES.forEach(p => {
+        const val = t.productsD7[p.code];
+        totalHtml += `<td class="py-2.5 px-2 border-r border-slate-200 text-center font-extrabold text-slate-800 tabular-nums">${cellVal(val)}</td>`;
+      });
+
+      totalTr.innerHTML = totalHtml;
+      tbody.appendChild(totalTr);
+
+      // 2. Render Each Service Type Row
+      STANDARD_SERVICE_TYPES.forEach((sType, rIdx) => {
+        const row = matrixData.matrix[sType];
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition border-b border-slate-200 text-center';
+
+        let rowHtml = `
+          <td class="py-2 px-2 border-r border-slate-200 text-left text-slate-400 text-[11px] font-mono">${ascCode}</td>
+          <td class="py-2 px-2 border-r border-slate-200 text-left text-slate-400 text-[11px]">${branchName}</td>
+          <td class="py-2 px-3 border-r border-slate-200 text-left font-medium text-slate-800">${sType}</td>
+          <td class="py-2 px-2 border-r border-slate-200 font-bold text-slate-900 bg-slate-50 tabular-nums">${cellVal(row.total)}</td>
+          <td class="py-2 px-2 border-r border-slate-200 tabular-nums text-slate-700">${cellVal(row.aging['0–2 Days'])}</td>
+          <td class="py-2 px-2 border-r border-slate-200 table-cell-aging tabular-nums text-rose-950 font-medium">${cellVal(row.aging['3–7 Days'])}</td>
+          <td class="py-2 px-2 border-r border-slate-200 table-cell-aging tabular-nums text-rose-950 font-medium">${cellVal(row.aging['8–10 Days'])}</td>
+          <td class="py-2 px-2 border-r border-slate-200 table-cell-aging tabular-nums text-rose-950 font-medium">${cellVal(row.aging['11–14 Days'])}</td>
+          <td class="py-2 px-2 border-r border-slate-200 table-cell-aging-hot tabular-nums font-bold">${cellVal(row.aging['15–30 Days'])}</td>
+          <td class="py-2 px-2 border-r-2 border-slate-400 table-cell-aging-hot tabular-nums font-bold">${cellVal(row.aging['30+ Days'])}</td>
+          <td class="py-2 px-2 border-r border-slate-200 bg-[#c1f0c8] text-slate-900 font-semibold tabular-nums">${cellVal(row.iw)}</td>
+          <td class="py-2 px-2 border-r-2 border-slate-400 bg-[#c1f0c8] text-slate-900 font-semibold tabular-nums">${cellVal(row.ow)}</td>
+        `;
+
+        PRODUCT_CATEGORIES.forEach(p => {
+          const val = row.productsD7[p.code];
+          rowHtml += `<td class="py-2 px-2 border-r border-slate-200 text-slate-700 tabular-nums">${cellVal(val)}</td>`;
+        });
+
+        tr.innerHTML = rowHtml;
+        tbody.appendChild(tr);
+      });
+    }
+
+    /**
+     * Updates Chart.js visual charts
+     */
+    function renderCharts(matrixData) {
+      const t = matrixData.totalRow;
+
+      // 1. Aging Donut Chart
+      const ctxAging = document.getElementById('chartAging').getContext('2d');
+      const agingData = [
+        t.aging['0–2 Days'] || 0,
+        t.aging['3–7 Days'] || 0,
+        t.aging['8–10 Days'] || 0,
+        t.aging['11–14 Days'] || 0,
+        t.aging['15–30 Days'] || 0,
+        t.aging['30+ Days'] || 0
+      ];
+
+      if (appState.charts.agingChart) {
+        appState.charts.agingChart.destroy();
+      }
+
+      appState.charts.agingChart = new Chart(ctxAging, {
+        type: 'doughnut',
+        data: {
+          labels: ['0–2 Days', '3–7 Days', '8–10 Days', '11–14 Days', '15–30 Days', '30+ Days'],
+          datasets: [{
+            data: agingData,
+            backgroundColor: [
+              '#10b981', // 0-2d emerald
+              '#fbbf24', // 3-7d amber
+              '#f97316', // 8-10d orange
+              '#f43f5e', // 11-14d rose
+              '#dc2626', // 15-30d red
+              '#7f1d1d'  // 30+d dark red
+            ],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: { boxWidth: 12, font: { size: 10, family: 'Inter' } }
+            }
+          },
+          cutout: '68%'
+        }
+      });
+
+      // 2. Product D+7 Bar Chart
+      const ctxProd = document.getElementById('chartProducts').getContext('2d');
+      const prodLabels = PRODUCT_CATEGORIES.map(p => p.code);
+      const prodValues = PRODUCT_CATEGORIES.map(p => t.productsD7[p.code] || 0);
+      const prodColors = PRODUCT_CATEGORIES.map(p => p.color);
+
+      if (appState.charts.productsChart) {
+        appState.charts.productsChart.destroy();
+      }
+
+      appState.charts.productsChart = new Chart(ctxProd, {
+        type: 'bar',
+        data: {
+          labels: prodLabels,
+          datasets: [{
+            label: 'D+7 Calls (>7 Days)',
+            data: prodValues,
+            backgroundColor: prodColors,
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: '#f1f5f9' },
+              ticks: { font: { size: 10 } }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 11, weight: 'bold' } }
+            }
+          }
+        }
+      });
+    }
+
+    /**
+     * Master Refresh: Re-computes processed records and updates all UI elements
+     */
+    function refreshDashboard() {
+      const processed = computeProcessedRecords();
+      const matrixData = buildMatrixData(processed);
+
+      renderKPIs(matrixData, processed.length);
+      renderProductSummary(matrixData.productSummary);
+      renderExecutiveTable(matrixData);
+      renderCharts(matrixData);
+      renderRawRecordsTable(processed);
+
+      // Update count badges
+      const rawBadge = document.getElementById('rawRecordCountBadge');
+      if (rawBadge) rawBadge.textContent = processed.length;
+      const previewBadge = document.getElementById('previewRawBadge');
+      if (previewBadge) previewBadge.textContent = processed.length;
+    }
+
+    // --- RAW RECORDS DRAWER/MODAL RENDERING & CALL CLOSURE ---
+    function getFilteredRawRecords(recordsList) {
+      const search = (document.getElementById('rawSearchInput')?.value || '').toLowerCase().trim();
+      const serviceFilter = document.getElementById('rawServiceFilter')?.value || 'ALL';
+      const closureFilter = document.getElementById('rawClosureFilter')?.value || 'ALL';
+
+      return recordsList.filter(r => {
+        // Service type filter
+        if (serviceFilter !== 'ALL' && r.serviceType !== serviceFilter) return false;
+
+        // Closure filter
+        if (closureFilter === 'OPEN' && r.isClosed) return false;
+        if (closureFilter === 'CLOSED' && !r.isClosed) return false;
+        if (closureFilter === 'RED' && r.red !== 'Y') return false;
+        if (closureFilter === 'HIGH' && r.highPriority !== 'High' && r.highPriority !== 'Y') return false;
+
+        // Search text
+        if (search) {
+          const combined = [
+            r.serviceOrderNo,
+            r.ascJobNo,
+            r.model,
+            r.customerName,
+            r.serial,
+            r.reason,
+            r.voc,
+            r.branchName,
+            r.city,
+            r.status
+          ].join(' ').toLowerCase();
+          if (!combined.includes(search)) return false;
+        }
+
+        return true;
+      });
+    }
+
+    function renderRawRecordsTable(recordsList) {
+      const allProcessed = recordsList || computeProcessedRecords();
+      const filtered = getFilteredRawRecords(allProcessed);
+
+      const totalFiltered = filtered.length;
+      const closedCount = filtered.filter(r => r.isClosed).length;
+      const openCount = totalFiltered - closedCount;
+
+      const filteredCountEl = document.getElementById('rawFilteredCount');
+      const closedCountEl   = document.getElementById('rawClosedCount');
+      const openCountEl     = document.getElementById('rawOpenCount');
+      if (filteredCountEl) filteredCountEl.textContent = totalFiltered;
+      if (closedCountEl)   closedCountEl.textContent = closedCount;
+      if (openCountEl)     openCountEl.textContent = openCount;
+
+      const tbody = document.getElementById('rawRecordsTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="26" class="py-8 text-center text-slate-400 font-sans text-xs">
+              No matching records found for the current search/filter criteria.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      // Product badge color mapping matching the matrix table
+      const prodBadgeColors = {
+        'AC': 'bg-red-100 text-red-800 border-red-300',
+        'WM': 'bg-green-100 text-green-800 border-green-300',
+        'REF': 'bg-yellow-100 text-yellow-800 border-yellow-300',
+        'AV': 'bg-slate-800 text-white border-slate-900',
+        'MW': 'bg-emerald-100 text-emerald-800 border-emerald-300',
+        'AUD': 'bg-rose-100 text-rose-800 border-rose-300',
+        'DW': 'bg-blue-100 text-blue-800 border-blue-300',
+        'HHP': 'bg-teal-100 text-teal-800 border-teal-300',
+        'IT': 'bg-red-100 text-red-700 border-red-200',
+        'Other': 'bg-amber-100 text-amber-800 border-amber-300'
+      };
+
+      // Render all or up to 1000 records so user sees their full dataset (e.g. 408 calls)
+      const slice = filtered.slice(0, 1000);
+      slice.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.className = `transition ${r.isClosed ? 'bg-emerald-50/70 text-slate-700' : 'hover:bg-slate-50'}`;
+        
+        tr.innerHTML = `
+          <!-- Sticky Check/Close Button -->
+          <td class="py-1.5 px-2 border-r sticky left-0 z-10 ${r.isClosed ? 'bg-emerald-100/90' : 'bg-white shadow-sm'} text-center">
+            <button onclick="toggleCallClosure('${r.callId}')" class="px-2 py-1 rounded font-bold text-[10px] flex items-center justify-center gap-1 w-full transition ${r.isClosed ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'bg-slate-100 text-slate-700 hover:bg-blue-100 hover:text-blue-900 border border-slate-300'}" title="${r.isClosed ? 'Click to Reopen Call' : 'Click to Check & Close Call'}">
+              <span>${r.isClosed ? '✓ Closed' : 'Check & Close'}</span>
+            </button>
+          </td>
+
+          <!-- 25 Columns Data -->
+          <td class="py-1.5 px-2 border-r text-center text-slate-400">${r.no}</td>
+          <td class="py-1.5 px-3 border-r font-extrabold text-blue-700 font-mono">${r.serviceOrderNo}</td>
+          <td class="py-1.5 px-2.5 border-r text-slate-700 font-sans">${r.branchName}</td>
+          <td class="py-1.5 px-2.5 border-r text-slate-600 font-mono">${r.ascJobNo}</td>
+          <td class="py-1.5 px-2.5 border-r text-center text-slate-600">${r.created || r.assigned}</td>
+          <td class="py-1.5 px-2 border-r text-center font-bold ${r.aging > 15 ? 'text-rose-600 font-extrabold' : 'text-slate-800'}">${r.aging}</td>
+          <td class="py-1.5 px-2.5 border-r text-center"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold border ${r.aging > 14 ? 'bg-rose-100 text-rose-800 border-rose-300 font-bold' : (r.aging > 7 ? 'bg-amber-100 text-amber-800 border-amber-200' : 'bg-slate-100 text-slate-700 border-slate-200')}">${r.tatBucket}</span></td>
+          <td class="py-1.5 px-2.5 border-r text-slate-800 font-sans">${r.serviceType}</td>
+          <td class="py-1.5 px-2.5 border-r text-slate-800 font-medium">${r.model}</td>
+          <td class="py-1.5 px-2 border-r text-center"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold border ${prodBadgeColors[r.product] || 'bg-slate-100 text-slate-800 border-slate-300'}">${r.product}</span></td>
+          <td class="py-1.5 px-2.5 border-r text-slate-500 font-mono">${r.serial}</td>
+          <td class="py-1.5 px-2 border-r text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${r.wtyStatus === 'IW' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'}">${r.wtyStatus}</span></td>
+          <td class="py-1.5 px-2.5 border-r text-slate-800 font-sans"><span class="px-1.5 py-0.5 rounded bg-blue-50 text-blue-800 font-medium">${r.status || '-'}</span></td>
+          <td class="py-1.5 px-3 border-r text-slate-700 font-sans max-w-[200px] truncate" title="${r.reason}">${r.reason || '-'}</td>
+          <td class="py-1.5 px-3 border-r text-slate-600 font-sans max-w-[200px] truncate" title="${r.voc}">${r.voc || '-'}</td>
+          <td class="py-1.5 px-2 border-r text-center font-bold ${r.redo === 'Y' ? 'text-rose-600' : 'text-slate-400'}">${r.redo || 'N'}</td>
+          <td class="py-1.5 px-2 border-r text-center"><span class="px-1 rounded ${r.riskSensing === 'Risk' ? 'bg-rose-100 text-rose-800 font-bold' : 'text-slate-500'}">${r.riskSensing || 'Normal'}</span></td>
+          <td class="py-1.5 px-2 border-r text-center font-bold ${r.red === 'Y' ? 'px-1.5 py-0.5 rounded bg-rose-600 text-white' : 'text-slate-400'}">${r.red || 'N'}</td>
+          <td class="py-1.5 px-2 border-r text-center"><span class="px-1 rounded font-semibold ${r.highPriority === 'High' ? 'bg-amber-100 text-amber-900 font-bold' : 'text-slate-500'}">${r.highPriority || 'Normal'}</span></td>
+          <td class="py-1.5 px-3 border-r text-slate-800 font-sans">${r.customerName}</td>
+          <td class="py-1.5 px-2.5 border-r text-slate-600 font-sans">${r.city}</td>
+          <td class="py-1.5 px-2.5 border-r text-center text-slate-600">${r.appDate}</td>
+          <td class="py-1.5 px-2.5 border-r text-center text-slate-600 font-mono">${formatExcelTime(r.appTime)}</td>
+          <td class="py-1.5 px-2 border-r text-center font-semibold ${r.b2b === 'Y' ? 'text-indigo-600' : 'text-slate-400'}">${r.b2b || 'N'}</td>
+          <td class="py-1.5 px-3 text-slate-600 font-sans max-w-[160px] truncate" title="${r.riskReason}">${r.riskReason || 'None'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function toggleCallClosure(callId) {
+      if (appState.closedCallIds.has(callId)) {
+        appState.closedCallIds.delete(callId);
+        showToast(`Call ${callId} reopened / unchecked.`);
+      } else {
+        appState.closedCallIds.add(callId);
+        showToast(`✓ Call ${callId} checked and closed.`);
+      }
+      renderRawRecordsTable(computeProcessedRecords());
+    }
+
+    function checkAllFilteredCalls() {
+      const processed = computeProcessedRecords();
+      const currentFiltered = getFilteredRawRecords(processed);
+      let markedCount = 0;
+      currentFiltered.forEach(r => {
+        if (!appState.closedCallIds.has(r.callId)) {
+          appState.closedCallIds.add(r.callId);
+          markedCount++;
+        }
+      });
+      renderRawRecordsTable(processed);
+      showToast(`✓ Marked ${markedCount} filtered calls as Checked / Closed.`);
+    }
+
+    function uncheckAllFilteredCalls() {
+      const processed = computeProcessedRecords();
+      const currentFiltered = getFilteredRawRecords(processed);
+      let resetCount = 0;
+      currentFiltered.forEach(r => {
+        if (appState.closedCallIds.has(r.callId)) {
+          appState.closedCallIds.delete(r.callId);
+          resetCount++;
+        }
+      });
+      renderRawRecordsTable(processed);
+      showToast(`↺ Reopened / reset checks on ${resetCount} calls.`);
+    }
+
+    function exportCurrentRecordsToSampleExcel() {
+      const processed = computeProcessedRecords();
+      const filtered = getFilteredRawRecords(processed);
+      if (filtered.length === 0) {
+        showToast('No calls available to export.', 'error');
+        return;
+      }
+
+      const rows = filtered.map(r => ({
+        'Date': r.date || formatDateToDot(appState.reportDate),
+        'Branch Name': r.branchName,
+        'No': r.no,
+        'Service Order No.': r.serviceOrderNo,
+        'ASC Job No': r.ascJobNo,
+        'Created': r.created,
+        'Assigned': r.assigned,
+        'Assigned Time': r.assignedTime,
+        'Model': r.model,
+        'Serial': r.serial,
+        'Wty Status': r.wtyStatus,
+        'VOC': r.voc,
+        'REDO': r.redo,
+        'Risk Sensing': r.riskSensing,
+        'RED': r.red,
+        'High Priority': r.highPriority,
+        'Customer Name': r.customerName,
+        'City': r.city,
+        'App Date': r.appDate,
+        'App Time': r.appTime,
+        'Service Type': r.serviceType,
+        'Status': r.isClosed ? `[CLOSED] ${r.status}` : r.status,
+        'Reason': r.isClosed ? `[CHECKED & CLOSED] ${r.reason}` : r.reason,
+        'B2B': r.b2b,
+        'Risk Reason': r.riskReason
+      }));
+
+      const ws = XLSX.utils.json_to_sheet(rows, { header: STANDARD_25_COLUMNS });
+      ws['!cols'] = [
+        {wch:12},{wch:16},{wch:8},{wch:18},{wch:16},{wch:12},{wch:12},{wch:14},{wch:16},{wch:16},{wch:14},{wch:24},{wch:8},{wch:14},{wch:8},{wch:14},{wch:20},{wch:14},{wch:12},{wch:16},{wch:18},{wch:22},{wch:24},{wch:8},{wch:24}
+      ];
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Open_Pending_Calls');
+      XLSX.writeFile(wb, 'sample_data.xls');
+      showToast(`Exported ${rows.length} calls to sample_data.xls!`);
+    }
+
+    // --- EMAIL-COMPATIBLE HTML GENERATOR (The Email Superpower) ---
+    /**
+     * Generates a bulletproof inline-styled HTML table matching the user's screenshot
+     * that can be pasted straight into Outlook, Gmail, Apple Mail, etc.
+     */
+    function generateEmailTableHtml() {
+      const processed = computeProcessedRecords();
+      const matrixData = buildMatrixData(processed);
+      const dotDate = formatDateToDot(appState.reportDate);
+      const branchName = appState.selectedBranch === 'ALL' ? 'SVC' : appState.selectedBranch;
+      const ascCode = appState.selectedAsc === 'ALL' ? '4903753' : appState.selectedAsc;
+
+      const t = matrixData.totalRow;
+
+      // Helper to strictly format 0 values (never blank, never '-')
+      function fmtVal(v) {
+        if (v === undefined || v === null || v === '' || v === 'NA' || v === 'N/A' || isNaN(Number(v))) {
+          return 0;
+        }
+        return Number(v);
+      }
+
+      // Color maps for D+7 headers matching screenshot
+      const prodColors = {
+        'AC': { bg: '#ef4444', text: '#ffffff' },
+        'WM': { bg: '#22c55e', text: '#ffffff' },
+        'REF': { bg: '#facc15', text: '#000000' },
+        'AV': { bg: '#0f172a', text: '#ffffff' },
+        'MW': { bg: '#22c55e', text: '#ffffff' },
+        'AUD': { bg: '#f87171', text: '#000000' },
+        'DW': { bg: '#3b82f6', text: '#ffffff' },
+        'HHP': { bg: '#86efac', text: '#000000' },
+        'IT': { bg: '#f87171', text: '#000000' },
+        'Other': { bg: '#fde047', text: '#000000' }
+      };
+
+      // Resolve SVC name from data
+      const svcNames = matrixData.svcNames || {};
+      let svcLabel = svcNames[ascCode] || Object.values(svcNames)[0] || branchName;
+      if (appState.selectedAsc === 'ALL') svcLabel = Object.values(svcNames).join(' / ') || 'All Centers';
+
+      let html = `
+      <table cellpadding="5" cellspacing="0" border="1" style="border-collapse: collapse; font-family: Calibri, Arial, sans-serif; font-size: 11px; color: #000000; border: 1px solid #94a3b8; text-align: center; width: 100%; max-width: 1300px;">
+        <thead>
+          <!-- Super Header -->
+          <tr>
+            <th colspan="3" style="background-color: #002060; color: #ffffff; font-size: 12px; font-weight: bold; text-align: left; padding: 6px 8px; border: 1px solid #475569;">
+              RC-GD Pendency dt ${dotDate}
+            </th>
+            <th colspan="7" style="background-color: #dce6f1; color: #0f172a; font-size: 12px; font-weight: bold; text-align: center; padding: 6px 8px; border: 1px solid #475569;">
+              Aging
+            </th>
+            <th colspan="2" style="background-color: #ffffff; color: #0f172a; font-size: 12px; font-weight: bold; text-align: center; padding: 6px 8px; border: 1px solid #475569;">
+              WAR Status
+            </th>
+            <th colspan="10" style="background-color: #dce6f1; color: #991b1b; font-size: 12px; font-weight: bold; text-align: center; padding: 6px 8px; border: 1px solid #475569;">
+              D+7 Calls By Products
+            </th>
+          </tr>
+          <!-- Column Headers -->
+          <tr style="background-color: #dce6f1; font-weight: bold; border-bottom: 2px solid #64748b;">
+            <th style="padding: 5px; border: 1px solid #cbd5e1; text-align: left;">ASC_CODE</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; text-align: left;">Branch_Name</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; text-align: left;">Service Type</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #cbd5e1;">Total</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1;">0–2 Days</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffe4e6; color: #991b1b;">3–7 Days</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffe4e6; color: #991b1b;">8–10 Days</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffc7ce; color: #991b1b;">11–14 Days</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffc7ce; font-weight: bold; color: #991b1b;">15–30 Days</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffc7ce; font-weight: bold; color: #991b1b;">30+ Days</th>
+            <!-- IW / OW -->
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #c1f0c8; color: #0f172a; font-weight: bold;">IW</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: #c1f0c8; color: #0f172a; font-weight: bold;">OW</th>
+            <!-- Products -->
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['AC'].bg}; color: ${prodColors['AC'].text};">AC</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['WM'].bg}; color: ${prodColors['WM'].text};">WM</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['REF'].bg}; color: ${prodColors['REF'].text};">REF</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['AV'].bg}; color: ${prodColors['AV'].text};">AV</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['MW'].bg}; color: ${prodColors['MW'].text};">MW</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['AUD'].bg}; color: ${prodColors['AUD'].text};">AUD</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['DW'].bg}; color: ${prodColors['DW'].text};">DW</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['HHP'].bg}; color: ${prodColors['HHP'].text};">HHP</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['IT'].bg}; color: ${prodColors['IT'].text};">IT</th>
+            <th style="padding: 5px; border: 1px solid #cbd5e1; background-color: ${prodColors['Other'].bg}; color: ${prodColors['Other'].text};">Other</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Total Row -->
+          <tr style="background-color: #e0f2fe; font-weight: bold; border-bottom: 2px solid #0284c7;">
+            <td style="padding: 6px; border: 1px solid #94a3b8; text-align: left;">${ascCode}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; text-align: left;">${branchName}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; text-align: left; font-weight: bold; color: #0c4a6e;">Total</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #bae6fd; font-weight: bold;">${fmtVal(t.total)}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8;">${fmtVal(t.aging['0–2 Days'])}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #ffe4e6;">${fmtVal(t.aging['3–7 Days'])}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #ffe4e6;">${fmtVal(t.aging['8–10 Days'])}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #ffe4e6;">${fmtVal(t.aging['11–14 Days'])}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #fecaca; font-weight: bold;">${fmtVal(t.aging['15–30 Days'])}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #fca5a5; font-weight: bold;">${fmtVal(t.aging['30+ Days'])}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #c1f0c8; color: #0f172a; font-weight: bold;">${fmtVal(t.iw)}</td>
+            <td style="padding: 6px; border: 1px solid #94a3b8; background-color: #c1f0c8; color: #0f172a; font-weight: bold;">${fmtVal(t.ow)}</td>
+      `;
+
+      PRODUCT_CATEGORIES.forEach(p => {
+        const val = t.productsD7[p.code];
+        html += `<td style="padding: 6px; border: 1px solid #94a3b8; font-weight: bold;">${fmtVal(val)}</td>`;
+      });
+      html += `</tr>`;
+
+      // Service Rows
+      STANDARD_SERVICE_TYPES.forEach((sType, rIdx) => {
+        const row = matrixData.matrix[sType];
+        const isEven = rIdx % 2 === 0;
+        const bg = isEven ? '#ffffff' : '#f8fafc';
+
+        html += `
+          <tr style="background-color: ${bg};">
+            <td style="padding: 5px; border: 1px solid #cbd5e1; text-align: left; color: #64748b; font-family: monospace;">${ascCode}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; text-align: left; color: #64748b;">${branchName}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; text-align: left; font-weight: 500;">${sType}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; font-weight: bold; background-color: #f1f5f9;">${fmtVal(row.total)}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1;">${fmtVal(row.aging['0–2 Days'])}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffe4e6;">${fmtVal(row.aging['3–7 Days'])}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffe4e6;">${fmtVal(row.aging['8–10 Days'])}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #ffe4e6;">${fmtVal(row.aging['11–14 Days'])}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #fecaca; font-weight: bold;">${fmtVal(row.aging['15–30 Days'])}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #fca5a5; font-weight: bold;">${fmtVal(row.aging['30+ Days'])}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #c1f0c8; color: #0f172a;">${fmtVal(row.iw)}</td>
+            <td style="padding: 5px; border: 1px solid #cbd5e1; background-color: #c1f0c8; color: #0f172a;">${fmtVal(row.ow)}</td>
+        `;
+
+        PRODUCT_CATEGORIES.forEach(p => {
+          const val = row.productsD7[p.code];
+          html += `<td style="padding: 5px; border: 1px solid #cbd5e1;">${fmtVal(val)}</td>`;
+        });
+        html += `</tr>`;
+      });
+
+      html += `
+        </tbody>
+      </table>
+      <div style="font-family: Arial, sans-serif; font-size: 10px; color: #64748b; margin-top: 6px;">
+        * Report generated on ${new Date().toLocaleString()} | RC-GD Pendency &amp; Service Operations
+      </div>
+      `;
+
+      return html;
+    }
+
+    // --- TOAST NOTIFICATIONS ---
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const isSuccess = type === 'success';
+      toast.className = `px-4 py-3 rounded-xl shadow-lg text-xs font-semibold text-white flex items-center gap-2 transform transition-all duration-300 translate-y-2 opacity-0 pointer-events-auto ${isSuccess ? 'bg-emerald-600' : 'bg-rose-600'}`;
+      toast.innerHTML = `
+        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${isSuccess ? 'M5 13l4 4L19 7' : 'M6 18L18 6M6 6l12 12'}" />
+        </svg>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // --- EXCEL FILE PARSER & TSV PROCESSOR ---
+    /**
+     * Parses uploaded Excel/TSV data into normalised record objects.
+     * Supports the exact 25-column format:
+     * [Date, Branch Name, No, Service Order No., ASC Job No, Created, Assigned, Assigned Time,
+     *  Model, Serial, Wty Status, VOC, REDO, Risk Sensing, RED, High Priority,
+     *  Customer Name, City, App Date, App Time, Service Type, Status, Reason, B2B, Risk Reason]
+     * Also supports legacy column names for full backward compatibility.
+     */
+    function parseUploadedData(dataArray) {
+      if (!Array.isArray(dataArray) || dataArray.length === 0) return [];
+
+      const standard25 = [
+        'Date', 'Branch Name', 'No', 'Service Order No.', 'ASC Job No',
+        'Created', 'Assigned', 'Assigned Time', 'Model', 'Serial',
+        'Wty Status', 'VOC', 'REDO', 'Risk Sensing', 'RED', 'High Priority',
+        'Customer Name', 'City', 'App Date', 'App Time', 'Service Type',
+        'Status', 'Reason', 'B2B', 'Risk Reason'
+      ];
+
+      // Handle array of arrays (e.g. SheetJS header: 1)
+      let normalizedRows = dataArray;
+      if (Array.isArray(dataArray[0])) {
+        let headerRowIdx = -1;
+        for (let i = 0; i < Math.min(dataArray.length, 5); i++) {
+          const r = dataArray[i].map(c => String(c || '').trim().toUpperCase());
+          if (r.some(cell => cell.includes('SERVICE ORDER') || cell.includes('SO NO') || cell.includes('ASC JOB') || cell.includes('BRANCH') || cell.includes('MODEL'))) {
+            headerRowIdx = i;
+            break;
+          }
+        }
+        let headers = standard25;
+        let dataStart = 0;
+        if (headerRowIdx !== -1) {
+          headers = dataArray[headerRowIdx].map(c => String(c || '').trim());
+          dataStart = headerRowIdx + 1;
+        }
+        normalizedRows = [];
+        for (let r = dataStart; r < dataArray.length; r++) {
+          const arr = dataArray[r];
+          if (!arr || arr.every(cell => !cell)) continue;
+          const obj = {};
+          const targetHeaders = (arr.length === 25 && headers.length !== 25) ? standard25 : headers;
+          targetHeaders.forEach((h, idx) => {
+            obj[h] = arr[idx] !== undefined && arr[idx] !== null ? String(arr[idx]).trim() : '';
+          });
+          normalizedRows.push(obj);
+        }
+      }
+      
+      const records = [];
+      normalizedRows.forEach((row, idx) => {
+        // 1. Date
+        const dateCol = row['Date'] || row['date'] || row['Report Date'] || '';
+
+        // 2. Branch Name
+        const branchName = row['Branch Name'] || row['Branch_Name'] || row['CP Name']
+                        || row['cpName'] || row['SVC'] || row['Service Center Name'] || '';
+
+        // 3. No
+        const noVal = row['No'] || row['no'] || row['S.No'] || row['Sl No'] || (idx + 1);
+
+        // 4. Service Order No.
+        const soNo = row['Service Order No.'] || row['Service Order No'] || row['serviceOrderNo']
+                  || row['SO No'] || row['Tracking No'] || row['trackingNo'] || row['Tracking Number'] || '';
+
+        // 5. ASC Job No
+        const ascJobNo = row['ASC Job No'] || row['ASC Job No.'] || row['ascJobNo']
+                      || row['ASC Ref. No'] || row['ascRefNo'] || row['ASC Ref No'] || '';
+
+        // 6. Created (Primary date for aging fallback)
+        const created = row['Created'] || row['created'] || row['Created Date']
+                     || row['Requested Date'] || row['requestedDate'] || '';
+
+        // 7. Assigned (Prioritized date for aging per website tools.js)
+        const assigned = row['Assigned'] || row['assigned'] || row['Assigned Date']
+                      || row['ASC Assigned'] || row['ASC Assigned Date'] || '';
+
+        // 8. Assigned Time
+        const assignedTime = row['Assigned Time'] || row['assignedTime'] || row['Time'] || '';
+
+        // 9. Model
+        const model = row['Model'] || row['model'] || row['Model Code'] || row['modelCode'] || row['Model Name'] || row['Model_Name'] || '';
+
+        // 10. Serial
+        const serial = row['Serial'] || row['serial'] || row['Serial No'] || row['serialNo'] || row['Serial Number'] || '';
+
+        // 21. Service Type
+        let sType = row['Service Type'] || row['serviceType'] || row['Service Type (Status)'] || '';
+
+        // 11. Wty Status (Standardized: "In Warranty" -> "IW", "Out of Warranty" -> "OW")
+        let rawWty = row['Wty Status'] || row['wtyStatus'] || row['Warranty Status']
+                       || row['Warranty'] || row['warranty'] || row['IW/OW'] || '';
+
+        // 12. VOC
+        let voc = row['VOC'] || row['voc'] || row['Customer VOC'] || row['Complaint'] || row['Defect'] || '';
+
+        // 13. REDO
+        const redo = row['REDO'] || row['redo'] || row['Redo'] || 'N';
+
+        // 14. Risk Sensing
+        const riskSensing = row['Risk Sensing'] || row['riskSensing'] || row['Risk'] || 'Normal';
+
+        // 15. RED
+        const red = row['RED'] || row['red'] || row['Red'] || 'N';
+
+        // 16. High Priority
+        const highPriority = row['High Priority'] || row['highPriority'] || row['Priority'] || 'Normal';
+
+        // 17. Customer Name
+        const custName = row['Customer Name'] || row['customerName'] || row['Customer'] || '';
+
+        // 18. City
+        const city = row['City'] || row['city'] || row['Location'] || '';
+
+        // 19. App Date
+        const appDate = row['App Date'] || row['appDate'] || row['Appointment Date']
+                     || row['First Anticipated Date'] || row['firstAnticipatedDate'] || '';
+
+        // 20. App Time
+        const appTime = formatExcelTime(row['App Time'] || row['appTime'] || row['Appointment Time'] || '');
+
+        // 22. Status
+        let status = row['Status'] || row['status'] || row['Status (GSPN)'] || row['Call Status'] || '';
+
+        // 23. Reason
+        let reason = row['Reason'] || row['reason'] || row['Reason (GSPN)'] || row['Pending Reason'] || '';
+
+        // Disambiguation & Self-Healing:
+        if (String(voc).toUpperCase().includes('WARRANTY') || String(voc).toUpperCase() === 'IW' || String(voc).toUpperCase() === 'OW') {
+          if (!rawWty || String(rawWty).toUpperCase() === 'IW') rawWty = voc;
+          voc = '-';
+        }
+        const wtyStatus = normalizeWarrantyStatus(rawWty, sType);
+
+        const knownServiceTypes = ['INITIAL INSTALLATION', 'IN-HOME', 'DEMONSTRATION', 'STOCK REPAIR', 'CUSTOMER CARE', 'PICK-UP SERVICE', 'CARRY IN', 'RETURN HANDLING'];
+        if (knownServiceTypes.includes(String(status).trim().toUpperCase())) {
+          if (!sType || sType === 'Other') sType = status;
+          if (reason && reason !== status) {
+            status = reason;
+            reason = '-';
+          } else {
+            status = 'Open';
+          }
+        }
+
+        // 24. B2B
+        const b2b = row['B2B'] || row['b2b'] || 'N';
+
+        // 25. Risk Reason
+        const riskReason = row['Risk Reason'] || row['riskReason'] || row['Remarks'] || 'None';
+
+        // 26. Pre-existing Aging if present in file (matching website tools.js)
+        const rawAging = (row['Aging'] !== undefined && row['Aging'] !== null && row['Aging'] !== '') ? row['Aging']
+                       : ((row['aging'] !== undefined && row['aging'] !== null && row['aging'] !== '') ? row['aging']
+                       : (row['Aging (Days)'] !== undefined ? row['Aging (Days)']
+                       : (row['TAT'] !== undefined ? row['TAT'] : '')));
+
+        // 27. Pre-existing Product Category if present in file
+        const rawProd = row['Product'] || row['product'] || row['Product Category']
+                     || row['Product_Category'] || row['Category'] || row['Product Group']
+                     || row['DIV'] || row['Division'] || '';
+
+        // ASC Code fallback
+        const cpCode = row['Dealer BP'] || row['CP Code'] || row['cpCode']
+                    || row['ASC Code'] || (ascJobNo ? String(ascJobNo).split('-')[0] : '') || '';
+
+        if (soNo || model || created || assigned || sType || branchName) {
+          records.push({
+            'Date': String(dateCol),
+            'Branch Name': String(branchName).trim() || 'Gurgaon-CE',
+            'No': noVal,
+            'Service Order No.': String(soNo),
+            'ASC Job No': String(ascJobNo),
+            'Created': String(created),
+            'Assigned': String(assigned),
+            'Assigned Time': String(assignedTime),
+            'Model': String(model).trim(),
+            'Serial': String(serial).trim(),
+            'Wty Status': String(wtyStatus).trim(),
+            'VOC': String(voc).trim(),
+            'REDO': String(redo).trim(),
+            'Risk Sensing': String(riskSensing).trim(),
+            'RED': String(red).trim(),
+            'High Priority': String(highPriority).trim(),
+            'Customer Name': String(custName).trim(),
+            'City': String(city).trim(),
+            'App Date': String(appDate).trim(),
+            'App Time': String(appTime).trim(),
+            'Service Type': String(sType).trim(),
+            'Status': String(status).trim(),
+            'Reason': String(reason).trim(),
+            'B2B': String(b2b).trim(),
+            'Risk Reason': String(riskReason).trim(),
+            'Aging': rawAging,
+            'Product': rawProd,
+
+            // Legacy keys for backward compatibility
+            aging: rawAging,
+            product: rawProd,
+            trackingNo: String(soNo),
+            serviceOrderNo: String(soNo),
+            dateCol: String(dateCol),
+            branchName: String(branchName).trim() || 'Gurgaon-CE',
+            cpName: String(branchName).trim() || 'Gurgaon-CE',
+            cpCode: String(cpCode).trim() || 'UNKNOWN',
+            ascRefNo: String(ascJobNo),
+            requestedDate: String(created),
+            createdDate: String(created),
+            serviceType: String(sType),
+            modelCode: String(model),
+            serialNo: String(serial),
+            customerName: String(custName),
+            warranty: String(wtyStatus)
+          });
+        }
+      });
+
+      return records;
+    }
+
+    // --- EXCEL DOWNLOAD SAMPLE CREATION (25-column sample_data.xls) ---
+    function downloadSampleExcel() {
+      // Exact 25 columns matching the user's template
+      const sampleRows = [
+        {
+          'Date': '11.09.2026',
+          'Branch Name': 'Gurgaon-CE',
+          'No': 1,
+          'Service Order No.': '4293847291',
+          'ASC Job No': '4903753-01',
+          'Created': '11.09.2026',
+          'Assigned': '11.09.2026',
+          'Assigned Time': '10:15',
+          'Model': 'AR18CY3AQUN',
+          'Serial': 'SN987654321',
+          'Wty Status': 'In Warranty',
+          'VOC': 'Cooling issue / Low cooling',
+          'REDO': 'N',
+          'Risk Sensing': 'Normal',
+          'RED': 'N',
+          'High Priority': 'Normal',
+          'Customer Name': 'Rajesh Sharma',
+          'City': 'Gurgaon',
+          'App Date': '11.09.2026',
+          'App Time': '14:00 - 16:00',
+          'Service Type': 'IN-HOME',
+          'Status': 'Engineer Assigned',
+          'Reason': 'Appointment Fixed',
+          'B2B': 'N',
+          'Risk Reason': 'None'
+        },
+        {
+          'Date': '11.09.2026',
+          'Branch Name': 'Ahmedabad-CE',
+          'No': 2,
+          'Service Order No.': '4293847292',
+          'ASC Job No': '4903754-01',
+          'Created': '05.09.2026',
+          'Assigned': '06.09.2026',
+          'Assigned Time': '11:30',
+          'Model': 'WA65T4262GG',
+          'Serial': 'SN987654322',
+          'Wty Status': 'In Warranty',
+          'VOC': 'Drain error / Noise during spin cycle',
+          'REDO': 'N',
+          'Risk Sensing': 'Normal',
+          'RED': 'N',
+          'High Priority': 'Normal',
+          'Customer Name': 'Anita Verma',
+          'City': 'Ahmedabad',
+          'App Date': '06.09.2026',
+          'App Time': '10:00 - 12:00',
+          'Service Type': 'Initial Installation',
+          'Status': 'Appointment Rescheduled',
+          'Reason': 'Customer Not Available at Home',
+          'B2B': 'N',
+          'Risk Reason': 'None'
+        },
+        {
+          'Date': '11.09.2026',
+          'Branch Name': 'Surat-CE',
+          'No': 3,
+          'Service Order No.': '4293847293',
+          'ASC Job No': '9225951-01',
+          'Created': '25.08.2026',
+          'Assigned': '26.08.2026',
+          'Assigned Time': '14:45',
+          'Model': 'QA55Q60AAK',
+          'Serial': 'SN987654323',
+          'Wty Status': 'Out of Warranty',
+          'VOC': 'Display flickering / Horizontal lines on screen',
+          'REDO': 'N',
+          'Risk Sensing': 'Risk',
+          'RED': 'N',
+          'High Priority': 'High',
+          'Customer Name': 'Sunil Patel',
+          'City': 'Surat',
+          'App Date': '26.08.2026',
+          'App Time': '16:00 - 18:00',
+          'Service Type': 'Stock Repair',
+          'Status': 'Spare Part Pending',
+          'Reason': 'Part Delay from Factory (Main Board)',
+          'B2B': 'N',
+          'Risk Reason': 'TAT Exceeded > 15 Days'
+        },
+        {
+          'Date': '11.09.2026',
+          'Branch Name': 'Gurgaon-CE',
+          'No': 4,
+          'Service Order No.': '4293847294',
+          'ASC Job No': '4903753-02',
+          'Created': '01.08.2026',
+          'Assigned': '02.08.2026',
+          'Assigned Time': '09:30',
+          'Model': 'RT28T3722S8',
+          'Serial': 'SN987654324',
+          'Wty Status': 'In Warranty',
+          'VOC': 'Freezer not freezing / Compressor cut-off issue',
+          'REDO': 'Y',
+          'Risk Sensing': 'Risk',
+          'RED': 'Y',
+          'High Priority': 'High',
+          'Customer Name': 'Vikas Gupta',
+          'City': 'Gurgaon',
+          'App Date': '02.08.2026',
+          'App Time': '11:00 - 13:00',
+          'Service Type': 'IN-HOME',
+          'Status': 'Escalated to HO',
+          'Reason': 'Repeat Failure / Compressor Gas Leakage',
+          'B2B': 'N',
+          'Risk Reason': 'Aging > 30 Days (RED Alert)'
+        },
+        {
+          'Date': '11.09.2026',
+          'Branch Name': 'Lucknow-CE',
+          'No': 5,
+          'Service Order No.': '4293847295',
+          'ASC Job No': '4903755-01',
+          'Created': '10.09.2026',
+          'Assigned': '10.09.2026',
+          'Assigned Time': '15:20',
+          'Model': 'MC28H5015AK',
+          'Serial': 'SN987654325',
+          'Wty Status': 'In Warranty',
+          'VOC': 'Keypad touch not responding',
+          'REDO': 'N',
+          'Risk Sensing': 'Normal',
+          'RED': 'N',
+          'High Priority': 'Normal',
+          'Customer Name': 'Pooja Tiwari',
+          'City': 'Lucknow',
+          'App Date': '11.09.2026',
+          'App Time': '12:00 - 14:00',
+          'Service Type': 'Carry In',
+          'Status': 'Under Inspection',
+          'Reason': 'Membrane switch test required',
+          'B2B': 'N',
+          'Risk Reason': 'None'
+        }
+      ];
+
+      const ws = XLSX.utils.json_to_sheet(sampleRows, { header: STANDARD_25_COLUMNS });
+      ws['!cols'] = [
+        {wch:12},{wch:16},{wch:8},{wch:18},{wch:16},{wch:12},{wch:12},{wch:14},{wch:16},{wch:16},{wch:14},{wch:26},{wch:8},{wch:14},{wch:8},{wch:14},{wch:20},{wch:14},{wch:12},{wch:16},{wch:18},{wch:22},{wch:26},{wch:8},{wch:26}
+      ];
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Sample_25_Columns');
+      XLSX.writeFile(wb, 'sample_data.xls');
+      showToast('Sample template downloaded as sample_data.xls (25-column format)!');
+    }
+
+    // --- INITIALIZATION & EVENT LISTENERS ---
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Load initial screenshot default dataset
+      appState.records = generateDefaultDataset();
+      refreshDashboard();
+
+      // 2. Filter Dropdowns
+      document.getElementById('branchSelect').addEventListener('change', (e) => {
+        appState.selectedBranch = e.target.value;
+        refreshDashboard();
+      });
+
+      document.getElementById('ascSelect').addEventListener('change', (e) => {
+        appState.selectedAsc = e.target.value;
+        refreshDashboard();
+      });
+
+      document.getElementById('reportDatePicker').addEventListener('change', (e) => {
+        appState.reportDate = e.target.value;
+        refreshDashboard();
+      });
+
+      // 3. Modals Opening/Closing
+      const uploadModal = document.getElementById('uploadModal');
+      const mailModal = document.getElementById('mailModal');
+      const rawDataModal = document.getElementById('rawDataModal');
+
+      // Upload Modal
+      document.getElementById('btnOpenUploadModal').addEventListener('click', () => {
+        // Reset file indicator state every time the modal is opened
+        const indicator = document.getElementById('fileSelectedIndicator');
+        const browseBtn = document.getElementById('dragDropBrowseBtn');
+        const feedbackBox = document.getElementById('parseFeedbackBox');
+        const applyBtn = document.getElementById('btnApplyUpload');
+        if (indicator)   indicator.classList.add('hidden');
+        if (browseBtn)   browseBtn.classList.remove('hidden');
+        if (feedbackBox) feedbackBox.classList.add('hidden');
+        if (applyBtn)    applyBtn.disabled = true;
+        uploadModal.classList.remove('hidden');
+      });
+      document.getElementById('btnCloseUploadModal').addEventListener('click', () => {
+        uploadModal.classList.add('hidden');
+      });
+      document.getElementById('btnCancelUpload').addEventListener('click', () => {
+        uploadModal.classList.add('hidden');
+      });
+
+      // Mail Modal
+      function openMailModal() {
+        const previewContainer = document.getElementById('emailHtmlPreviewContainer');
+        previewContainer.innerHTML = generateEmailTableHtml();
+        mailModal.classList.remove('hidden');
+      }
+      document.getElementById('btnCopyForMail').addEventListener('click', openMailModal);
+      document.getElementById('btnQuickCopyFromFooter').addEventListener('click', openMailModal);
+      document.getElementById('btnCloseMailModal').addEventListener('click', () => {
+        mailModal.classList.add('hidden');
+      });
+      document.getElementById('btnCloseMailModal2').addEventListener('click', () => {
+        mailModal.classList.add('hidden');
+      });
+
+      // Raw Data Modal & Preview RAW
+      function openRawDataInspector() {
+        renderRawRecordsTable(computeProcessedRecords());
+        rawDataModal.classList.remove('hidden');
+      }
+
+      const btnOpenRawDataModal = document.getElementById('btnOpenRawDataModal');
+      if (btnOpenRawDataModal) btnOpenRawDataModal.addEventListener('click', openRawDataInspector);
+
+      const btnPreviewRaw = document.getElementById('btnPreviewRaw');
+      if (btnPreviewRaw) btnPreviewRaw.addEventListener('click', openRawDataInspector);
+      document.getElementById('btnCloseRawDataModal').addEventListener('click', () => {
+        rawDataModal.classList.add('hidden');
+      });
+      document.getElementById('btnCloseRawDataModal2').addEventListener('click', () => {
+        rawDataModal.classList.add('hidden');
+      });
+
+      // Search and Filter within Raw Data modal
+      document.getElementById('rawSearchInput').addEventListener('input', () => {
+        renderRawRecordsTable(computeProcessedRecords());
+      });
+      document.getElementById('rawServiceFilter').addEventListener('change', () => {
+        renderRawRecordsTable(computeProcessedRecords());
+      });
+      const rawClosureFilter = document.getElementById('rawClosureFilter');
+      if (rawClosureFilter) {
+        rawClosureFilter.addEventListener('change', () => {
+          renderRawRecordsTable(computeProcessedRecords());
+        });
+      }
+
+      // Check / Uncheck All Filtered Calls
+      const btnCheckAllFiltered = document.getElementById('btnCheckAllFiltered');
+      if (btnCheckAllFiltered) {
+        btnCheckAllFiltered.addEventListener('click', checkAllFilteredCalls);
+      }
+
+      const btnUncheckAllFiltered = document.getElementById('btnUncheckAllFiltered');
+      if (btnUncheckAllFiltered) {
+        btnUncheckAllFiltered.addEventListener('click', uncheckAllFilteredCalls);
+      }
+
+      // Download active / filtered calls into sample_data.xls
+      const btnDownloadCurrentSampleXls = document.getElementById('btnDownloadCurrentSampleXls');
+      if (btnDownloadCurrentSampleXls) {
+        btnDownloadCurrentSampleXls.addEventListener('click', exportCurrentRecordsToSampleExcel);
+      }
+
+      // 4. Tab Navigation in Upload Modal
+      const tabBtnFile = document.getElementById('tabBtnFile');
+      const tabBtnPaste = document.getElementById('tabBtnPaste');
+      const tabContentFile = document.getElementById('tabContentFile');
+      const tabContentPaste = document.getElementById('tabContentPaste');
+
+      tabBtnFile.addEventListener('click', () => {
+        tabBtnFile.classList.add('border-blue-600', 'text-blue-600');
+        tabBtnFile.classList.remove('border-transparent', 'text-slate-500');
+        tabBtnPaste.classList.remove('border-blue-600', 'text-blue-600');
+        tabBtnPaste.classList.add('border-transparent', 'text-slate-500');
+        tabContentFile.classList.remove('hidden');
+        tabContentPaste.classList.add('hidden');
+      });
+
+      tabBtnPaste.addEventListener('click', () => {
+        tabBtnPaste.classList.add('border-blue-600', 'text-blue-600');
+        tabBtnPaste.classList.remove('border-transparent', 'text-slate-500');
+        tabBtnFile.classList.remove('border-blue-600', 'text-blue-600');
+        tabBtnFile.classList.add('border-transparent', 'text-slate-500');
+        tabContentPaste.classList.remove('hidden');
+        tabContentFile.classList.add('hidden');
+      });
+
+      // 5. Excel File Drag & Drop + Input
+      const dragDropArea = document.getElementById('dragDropArea');
+      const excelFileInput = document.getElementById('excelFileInput');
+
+      // CRITICAL FIX: Reset value BEFORE triggering click so the same file
+      // can be selected again and the 'change' event fires every time.
+      dragDropArea.addEventListener('click', () => {
+        excelFileInput.value = '';
+        excelFileInput.click();
+      });
+
+      dragDropArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dragDropArea.classList.add('border-blue-500', 'bg-blue-50');
+      });
+      dragDropArea.addEventListener('dragleave', () => {
+        dragDropArea.classList.remove('border-blue-500', 'bg-blue-50');
+      });
+      dragDropArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dragDropArea.classList.remove('border-blue-500', 'bg-blue-50');
+        if (e.dataTransfer.files.length > 0) {
+          handleExcelFile(e.dataTransfer.files[0]);
+        }
+      });
+
+      excelFileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+          const file = e.target.files[0];
+          // Show immediate visual feedback: file name + "Reading..." status
+          const indicator = document.getElementById('fileSelectedIndicator');
+          const nameEl    = document.getElementById('selectedFileName');
+          const statusEl  = document.getElementById('selectedFileStatus');
+          const browseBtn = document.getElementById('dragDropBrowseBtn');
+          if (indicator && nameEl && statusEl) {
+            nameEl.textContent   = file.name;
+            statusEl.textContent = `— Reading... (${(file.size / 1024).toFixed(1)} KB)`;
+            indicator.classList.remove('hidden');
+            if (browseBtn) browseBtn.classList.add('hidden');
+          }
+          handleExcelFile(file);
+        }
+      });
+
+      function handleExcelFile(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            
+            // First attempt: standard object conversion
+            const json = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+            let parsed = parseUploadedData(json);
+
+            // Fallback attempt: if no records recognized, parse with header: 1 to find header row
+            if (parsed.length === 0) {
+              const rawRows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
+              parsed = parseUploadedData(rawRows);
+            }
+
+            // Update the file indicator to show parse result
+            const indicator = document.getElementById('fileSelectedIndicator');
+            const statusEl  = document.getElementById('selectedFileStatus');
+            if (parsed.length > 0) {
+              appState.pendingUploadRecords = parsed;
+              if (statusEl) statusEl.textContent = `— ✅ ${parsed.length} records parsed`;
+              document.getElementById('parseStatusText').textContent = `✅ Parsed ${parsed.length} service records from "${file.name}".`;
+              document.getElementById('parseDetailText').textContent = `Sheet: ${firstSheetName} · ${parsed.length} calls recognized`;
+              document.getElementById('parseFeedbackBox').classList.remove('hidden');
+              document.getElementById('btnApplyUpload').disabled = false;
+              showToast(`Loaded ${parsed.length} calls from ${file.name}`);
+            } else {
+              if (statusEl) statusEl.textContent = '— ⚠️ No recognizable records found';
+              document.getElementById('parseStatusText').textContent = '⚠️ No records recognized. Check column headers match the expected template.';
+              document.getElementById('parseDetailText').textContent = `File: ${file.name} · ${json.length} rows read`;
+              document.getElementById('parseFeedbackBox').classList.remove('hidden');
+              showToast('No records recognized. Check column headers.', 'error');
+            }
+          } catch(err) {
+            console.error(err);
+            const statusEl = document.getElementById('selectedFileStatus');
+            if (statusEl) statusEl.textContent = '— ❌ Parse error';
+            showToast('Failed to parse Excel file: ' + err.message, 'error');
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      }
+
+      // 6. Paste Data Handler
+      document.getElementById('btnProcessPastedData').addEventListener('click', () => {
+        const text = document.getElementById('pasteDataTextarea').value.trim();
+        if (!text) {
+          showToast('Please paste table data first.', 'error');
+          return;
+        }
+
+        try {
+          // Parse TSV (tab separated values)
+          const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+          if (lines.length < 1) {
+            showToast('Please paste valid table data.', 'error');
+            return;
+          }
+
+          const standard25 = [
+            'Date', 'Branch Name', 'No', 'Service Order No.', 'ASC Job No',
+            'Created', 'Assigned', 'Assigned Time', 'Model', 'Serial',
+            'Wty Status', 'VOC', 'REDO', 'Risk Sensing', 'RED', 'High Priority',
+            'Customer Name', 'City', 'App Date', 'App Time', 'Service Type',
+            'Status', 'Reason', 'B2B', 'Risk Reason'
+          ];
+
+          let headers = lines[0].split('\t').map(h => h.trim());
+          let dataStartIndex = 1;
+
+          // Check if first line contains "Date   Branch Name   No" with spaces instead of tabs
+          if (headers.length < 25 && headers[0].includes('Date') && headers[0].includes('Branch Name')) {
+            const sub = headers[0].split(/\s{2,}/).map(s => s.trim()).filter(Boolean);
+            if (sub.length >= 2) {
+              headers.splice(0, 1, ...sub);
+            }
+          }
+
+          // Check if line 0 is actually a data row, not a header row
+          const isHeader = headers.some(h => ['SERVICE ORDER NO.', 'SO NO', 'ASC JOB NO', 'MODEL', 'BRANCH NAME', 'CUSTOMER NAME'].includes(h.toUpperCase()));
+          if (!isHeader) {
+            headers = standard25;
+            dataStartIndex = 0;
+          }
+
+          const rows = [];
+          for (let i = dataStartIndex; i < lines.length; i++) {
+            const parts = lines[i].split('\t');
+            const rowObj = {};
+            const targetCols = (parts.length === 25 && headers.length !== 25) ? standard25 : headers;
+            targetCols.forEach((h, idx) => {
+              rowObj[h] = parts[idx] ? parts[idx].trim() : '';
+            });
+            rows.push(rowObj);
+          }
+
+          const parsed = parseUploadedData(rows);
+          if (parsed.length > 0) {
+            appState.pendingUploadRecords = parsed;
+            document.getElementById('parseStatusText').textContent = `Parsed ${parsed.length} pasted records successfully.`;
+            document.getElementById('parseDetailText').textContent = `${headers.length} columns detected.`;
+            document.getElementById('parseFeedbackBox').classList.remove('hidden');
+            document.getElementById('btnApplyUpload').disabled = false;
+            showToast(`Parsed ${parsed.length} records from paste!`);
+          } else {
+            showToast('Unable to parse columns. Ensure headers match expected list.', 'error');
+          }
+        } catch (err) {
+          console.error(err);
+          showToast('Error parsing text: ' + err.message, 'error');
+        }
+      });
+
+      // Apply Upload to Dashboard — with dropdown rebuild & filter reset
+      document.getElementById('btnApplyUpload').addEventListener('click', () => {
+        if (appState.pendingUploadRecords && appState.pendingUploadRecords.length > 0) {
+          appState.records = appState.pendingUploadRecords;
+          appState.pendingUploadRecords = null;
+
+          // ── Rebuild Branch & ASC dropdowns from actual uploaded data + standard branches ──
+          const uploadedBranches = appState.records.map(r => String(r.cpName || '').trim()).filter(Boolean);
+          const uniqueBranches = [...new Set([...uploadedBranches, ...STANDARD_BRANCHES])];
+          const uniqueAscs    = [...new Set(appState.records.map(r => String(r.cpCode || '').trim()).filter(Boolean))];
+
+          const branchSel = document.getElementById('branchSelect');
+          const ascSel    = document.getElementById('ascSelect');
+
+          // Rebuild branch dropdown
+          branchSel.innerHTML = '<option value="ALL">All Branches</option>';
+          uniqueBranches.forEach(b => {
+            const opt = document.createElement('option');
+            opt.value = b;
+            opt.textContent = b;
+            branchSel.appendChild(opt);
+          });
+
+          // Rebuild ASC dropdown
+          ascSel.innerHTML = '<option value="ALL">All ASC Codes</option>';
+          uniqueAscs.forEach(a => {
+            const opt = document.createElement('option');
+            opt.value = a;
+            opt.textContent = a;
+            ascSel.appendChild(opt);
+          });
+
+          // Reset filters to ALL so all uploaded data is visible immediately
+          appState.selectedBranch = 'ALL';
+          appState.selectedAsc    = 'ALL';
+          branchSel.value = 'ALL';
+          ascSel.value    = 'ALL';
+
+          // Auto-detect report date from the data if Date column is present
+          const dateCandidates = appState.records
+            .map(r => r['Date'] || r.date || r.dateCol || r['App Date'] || r.appDate || r['Created'] || r.created || r['Assigned'] || r.assigned || '')
+            .filter(Boolean);
+          if (dateCandidates.length > 0) {
+            // Use the most recent date as the report cutoff
+            const parsed = dateCandidates
+              .map(d => parseDate(d))
+              .filter(d => d && !isNaN(d.getTime()));
+            if (parsed.length > 0) {
+              const maxDate = new Date(Math.max(...parsed.map(d => d.getTime())));
+              const iso = `${maxDate.getFullYear()}-${String(maxDate.getMonth()+1).padStart(2,'0')}-${String(maxDate.getDate()).padStart(2,'0')}`;
+              appState.reportDate = iso;
+              document.getElementById('reportDatePicker').value = iso;
+            }
+          }
+
+          // Reset the file input so the same file can be re-uploaded
+          document.getElementById('excelFileInput').value = '';
+          document.getElementById('parseFeedbackBox').classList.add('hidden');
+          document.getElementById('btnApplyUpload').disabled = true;
+
+          uploadModal.classList.add('hidden');
+          refreshDashboard();
+          showToast(`✅ Dashboard updated with ${appState.records.length} records from ${uniqueBranches.length} branch(es)!`);
+        }
+      });
+
+      // Reset to default
+      document.getElementById('btnResetToDefaultData').addEventListener('click', () => {
+        appState.records = generateDefaultDataset();
+        uploadModal.classList.add('hidden');
+        refreshDashboard();
+        showToast('Reset to authentic screenshot dataset.');
+      });
+
+      // Download Sample
+      document.getElementById('btnDownloadSampleExcel').addEventListener('click', downloadSampleExcel);
+
+      // 7. Clipboard Copy Logic for Mail
+      document.getElementById('btnConfirmCopyEmailHtml').addEventListener('click', async () => {
+        const html = generateEmailTableHtml();
+        
+        try {
+          if (navigator.clipboard && window.ClipboardItem) {
+            const blobHtml = new Blob([html], { type: 'text/html' });
+            const blobText = new Blob([html.replace(/<[^>]+>/g, ' ')], { type: 'text/plain' });
+            const item = new ClipboardItem({
+              'text/html': blobHtml,
+              'text/plain': blobText
+            });
+            await navigator.clipboard.write([item]);
+          } else {
+            // Fallback
+            const el = document.createElement('div');
+            el.innerHTML = html;
+            el.style.position = 'fixed';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            const range = document.createRange();
+            range.selectNodeContents(el);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+            document.execCommand('copy');
+            document.body.removeChild(el);
+          }
+
+          showToast('HTML Table Copied! Press Ctrl+V in Outlook / Gmail to paste.');
+          mailModal.classList.add('hidden');
+        } catch (err) {
+          console.error(err);
+          showToast('Could not copy directly to clipboard. You can use "Copy Raw HTML Code".', 'error');
+        }
+      });
+
+      // Copy Raw HTML Code
+      document.getElementById('btnCopyRawHtmlCode').addEventListener('click', () => {
+        const html = generateEmailTableHtml();
+        navigator.clipboard.writeText(html).then(() => {
+          showToast('Raw HTML code copied to clipboard!');
+        });
+      });
+
+      // 8. Export to Excel via SheetJS
+      document.getElementById('btnExportExcel').addEventListener('click', () => {
+        const table = document.getElementById('mainExecutiveTable');
+        const wb = XLSX.utils.table_to_book(table, { sheet: "RC-GD_Pendency" });
+        const dateStr = formatDateToDot(appState.reportDate);
+        XLSX.writeFile(wb, `RC-GD_Pendency_Report_${dateStr}.xlsx`);
+        showToast('Excel report generated and downloaded!');
+      });
+    });
+  </script>
+</body>
+</html>
